@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>TravelEasy</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -58,7 +58,9 @@
                         @endif
                     </header>
 
-                   
+                   <a href="{{ route('chat') }}" class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
+                        Start Chatting
+                    </a>
 
                     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
                         PHP v{{ PHP_VERSION }}
