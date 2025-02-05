@@ -26,7 +26,7 @@ class ChatbotController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
         ])->post('https://api.openai.com/v1/completions', [
-            'model' => 'text-davinci-003',
+            'model' => 'gpt-3.5-turbo',
             'prompt' => $formattedConversation,
             'max_tokens' => 150,
             'temperature' => 0.7,

@@ -14,4 +14,10 @@
             </div>
         </div>
     </div>
+
+    <div class="py-12">
+    <a href="{{ route('chat') }}" class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
+        Start Chatting with a chatbot
+    </a>
+    </div>
 </x-app-layout>
