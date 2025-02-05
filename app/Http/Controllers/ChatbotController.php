@@ -16,7 +16,9 @@ class ChatbotController extends Controller
         $conversationHistory[] = ['role' => 'user', 'content' => $message];
     
         // Create a formatted prompt
-        $formattedConversation = '';
+        $systemMessage = "You are a helpful assistant.";
+        $formattedConversation = $systemMessage . "\n";
+        
         foreach ($conversationHistory as $entry) {
             $formattedConversation .= $entry['role'] . ": " . $entry['content'] . "\n";
         }
@@ -30,7 +32,14 @@ class ChatbotController extends Controller
             'temperature' => 0.7,
         ]);
     
-        $botResponse = $response->json()['choices'][0]['text'];
+        if ($response->failed()) {
+            return response()->json([
+                'error' => 'Failed to get a response from the AI.',
+                'messages' => $conversationHistory
+            ], 500);
+        }
+
+        $botResponse = $response->json()['choices'][0]['text'] ?? 'Sorry, I did not understand that.';
     
         // Add bot's response
         $conversationHistory[] = ['role' => 'assistant', 'content' => $botResponse];
@@ -44,4 +53,3 @@ class ChatbotController extends Controller
         ]);
     }    
 }
-
