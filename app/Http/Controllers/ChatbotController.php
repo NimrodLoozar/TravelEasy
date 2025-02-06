@@ -23,12 +23,37 @@ class ChatbotController extends Controller
     // Verwerk de prompt en geef de reactie van de AI weer
     public function generate(Request $request)
     {
+        // Validate the prompt
+        $request->validate([
+            'prompt' => 'required|string|max:255',
+        ]);
+    
         $prompt = $request->input('prompt');
-
-        // Gebruik de HuggingFaceService om de respons te genereren
-        $response = $this->huggingFaceService->generateResponse($prompt);
-
-        // Geef de chatpagina weer met de AI-respons
-        return view('chat', ['response' => $response['generated_text']]);
+    
+        try {
+            // Make the API request
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('HUGGINGFACE_API_KEY'),
+            ])->post('https://api-inference.huggingface.co/models/gpt2', [
+                'inputs' => $prompt,
+            ]);
+    
+            // Check if the response is successful
+            if ($response->successful()) {
+                $data = $response->json();
+                $generatedText = $data['generated_text'] ?? 'No response';
+                return view('chat', ['response' => $generatedText]);
+            } else {
+                // Log the response body if it's not successful
+                \Log::error('API request failed', ['response' => $response->body()]);
+                return view('chat', ['error' => 'API call failed']);
+            }
+        } catch (\Exception $e) {
+            // Log the exception error
+            \Log::error('API call exception', ['error' => $e->getMessage()]);
+            return view('chat', ['error' => 'Error: ' . $e->getMessage()]);
+        }
     }
+    
+    
 }

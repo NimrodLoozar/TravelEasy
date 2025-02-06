@@ -20,8 +20,7 @@ Route::get('/', function () {
 
 
 Route::get('chat', [ChatbotController::class, 'showChatForm'])->name('chat');
-Route::post('huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
-
+Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
