@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with AI</title>
+    <title>Chatbot</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex justify-center items-center min-h-screen py-12">
@@ -79,7 +79,7 @@
         chatBox.appendChild(loadingMessage);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        fetch('/huggingface/generate', {  // Change this to the correct route
+        fetch("{{ route('huggingface.generate') }}", {  // ✅ Use Laravel route helper
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

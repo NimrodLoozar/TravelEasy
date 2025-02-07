@@ -11,15 +11,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/chat', function () {
-//     return view('chat');  // Return the chat interface
-// })->name('chat');
 
-
-// Route::post('huggingface/generate', [ChatbotController::class, 'generate']);
-
-
-Route::get('chat', [ChatbotController::class, 'showChatForm'])->name('chat');
+Route::get('/chat', [ChatbotController::class, 'showChatForm'])->name('chat');
 Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
 
 Route::get('/dashboard', function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\HuggingFaceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ChatbotController extends Controller
 {
@@ -23,37 +24,35 @@ class ChatbotController extends Controller
     // Verwerk de prompt en geef de reactie van de AI weer
     public function generate(Request $request)
     {
-        // Validate the prompt
         $request->validate([
             'prompt' => 'required|string|max:255',
         ]);
     
-        $prompt = $request->input('prompt');
-    
         try {
-            // Make the API request
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('HUGGINGFACE_API_KEY'),
-            ])->post('https://api-inference.huggingface.co/models/gpt2', [
-                'inputs' => $prompt,
+            ])->withoutVerifying()->timeout(60)->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
+                'inputs' => $request->input('prompt'),
+                'parameters' => [
+                    'max_length' => 50,  // Shorter, focused response
+                    'temperature' => 0.5, // Less randomness
+                    'top_p' => 0.9,       // Controlled creativity
+                ]
             ]);
     
-            // Check if the response is successful
             if ($response->successful()) {
                 $data = $response->json();
-                $generatedText = $data['generated_text'] ?? 'No response';
-                return view('chat', ['response' => $generatedText]);
+                $generatedText = $data[0]['generated_text'] ?? 'No response';
+    
+                return response()->json(['response' => $generatedText]);  // ✅ Return JSON
             } else {
-                // Log the response body if it's not successful
                 \Log::error('API request failed', ['response' => $response->body()]);
-                return view('chat', ['error' => 'API call failed']);
+                return response()->json(['error' => 'API call failed'], 500);  // ✅ Return JSON
             }
         } catch (\Exception $e) {
-            // Log the exception error
             \Log::error('API call exception', ['error' => $e->getMessage()]);
-            return view('chat', ['error' => 'Error: ' . $e->getMessage()]);
+            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);  // ✅ Return JSON
         }
     }
-    
     
 }
