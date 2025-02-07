@@ -23,39 +23,50 @@ class ChatbotController extends Controller
 
     // Verwerk de prompt en geef de reactie van de AI weer
     public function generate(Request $request)
-    {
-        $request->validate([
-            'prompt' => 'required|string|max:255',
-        ]);
-    
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('HUGGINGFACE_API_KEY'),
-            ])->withoutVerifying()->timeout(60)->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
-                'inputs' => $request->input('prompt'),
-                'parameters' => [
-                    'max_length' => 20,  // Further reduced length for shorter responses
-                    'temperature' => 0.5, // Less randomness
-                    'top_p' => 0.9,       // Controlled creativity
-                ]
-            ]);
-    
-            if ($response->successful()) {
-                $data = $response->json();
-                $generatedText = $data[0]['generated_text'] ?? 'No response';
-    
-                // Truncate the response to a maximum of 100 characters
-                $truncatedText = strlen($generatedText) > 100 ? substr($generatedText, 0, 100) . '...' : $generatedText;
+{
+    $request->validate([
+        'prompt' => 'required|string|max:255',
+        'language' => 'nullable|string|in:nl,en',
+    ]);
 
-                return response()->json(['response' => $truncatedText]);  // ✅ Return JSON
-            } else {
-                \Log::error('API request failed', ['response' => $response->body()]);
-                return response()->json(['error' => 'API call failed'], 500);  // ✅ Return JSON
-            }
-        } catch (\Exception $e) {
-            \Log::error('API call exception', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);  // ✅ Return JSON
-        }
+    $language = $request->input('language', 'en');
+    $prompt = $request->input('prompt');
+
+    // Verwijder de extra instructie om vertalingen te vermijden
+    if ($language == 'nl') {
+        // Gebruik alleen de prompt en vertrouw op het model om de taal te detecteren
+        // Laat de instructie weg en stuur de vraag zoals deze is
     }
-    
+
+    try {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('HUGGINGFACE_API_KEY'),
+        ])->withoutVerifying()->timeout(60)->post('https://api-inference.huggingface.co/models/google/flan-t5-large', [
+            'inputs' => $prompt,  // Direct de prompt sturen, zonder de vertaling
+            'parameters' => [
+                'max_length' => 150,
+                'temperature' => 0.3,
+                'top_p' => 0.95,
+                'repetition_penalty' => 2.0,
+            ]
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $generatedText = $data[0]['generated_text'] ?? 'Geen reactie';
+
+            $truncatedText = strlen($generatedText) > 100 ? substr($generatedText, 0, 100) . '...' : $generatedText;
+
+            return response()->json(['response' => $truncatedText]);
+        } else {
+            \Log::error('API-aanroep mislukt', ['response' => $response->body()]);
+            return response()->json(['error' => 'API-aanroep mislukt'], 500);
+        }
+    } catch (\Exception $e) {
+        \Log::error('API-aanroep fout', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Fout: ' . $e->getMessage()], 500);
+    }
+}
+
+        
 }

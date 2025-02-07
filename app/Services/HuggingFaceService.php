@@ -3,11 +3,17 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 class HuggingFaceService
 {
-    protected $apiUrl = 'https://api-inference.huggingface.co/models/';
-    protected $model = 'mistralai/Mistral-7B-Instruct'; // You can change this model
+    protected $client;
+    protected $apiUrl = 'https://api-inference.huggingface.co/models/google/flan-t5-large';
+
+    public function __construct()
+    {
+        $this->client = new Client();
+    }
 
     public function generateResponse($prompt)
     {
@@ -18,10 +24,10 @@ class HuggingFaceService
         ])
         ->timeout(60)
         ->withoutVerifying()
-        ->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
+        ->post('https://api-inference.huggingface.co/models/google/flan-t5-large', [
             'inputs' => $prompt,  // Changed from $request->input('prompt') to $prompt
             'parameters' => [
-                'max_length' => 20,  // Further reduced length for shorter responses
+                'max_length' => 50,  // Further reduced length for shorter responses
                 'temperature' => 0.5,
                 'top_p' => 0.9,
             ]
