@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('person_id')->nullable()->constrained('people')->onDelete('cascade');
-            $table->string('name')->unique();
-            $table->string('email')->unique();
+            $table->string('name');
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_logged_in')->default(false);

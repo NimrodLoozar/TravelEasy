@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Person;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -27,7 +27,7 @@ class UserFactory extends Factory
         return [
             'person_id' => null,
             'name' => 'Default User',
-            'email' => 'default@example.com',
+            'email' => $this->faker->email(), // Generate unique email using Faker
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'is_logged_in' => false,
@@ -54,7 +54,7 @@ class UserFactory extends Factory
         return $this->state(fn(array $attributes) => [
             'person_id' => null,
             'name' => 'Test User',
-            'email' => 'test@gmail.com',
+            'email' => 'test@gmail.com', // Keep specific email for testing if needed
             'password' => Hash::make('Test1234'),
             'email_verified_at' => now(),
             'is_logged_in' => false,
@@ -71,7 +71,7 @@ class UserFactory extends Factory
         return $this->state(fn(array $attributes) => [
             'person_id' => null,
             'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@gmail.com', // Keep specific email for admin if needed
             'password' => Hash::make('Admin1234'),
             'email_verified_at' => now(),
             'is_logged_in' => false,
