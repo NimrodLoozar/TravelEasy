@@ -36,7 +36,7 @@ Route::post('/chat', function (Request $request) {
 
 
     // Log the response for debugging
-    \Log::info('OpenAI API Response:', $response->json());
+    Log::info('OpenAI API Response:', $response->json());
 
     // Check if response contains choices
     if ($response->successful() && isset($response->json()['choices'][0]['text'])) {
