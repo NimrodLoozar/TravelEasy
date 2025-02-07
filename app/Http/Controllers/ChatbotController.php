@@ -34,7 +34,7 @@ class ChatbotController extends Controller
             ])->withoutVerifying()->timeout(60)->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
                 'inputs' => $request->input('prompt'),
                 'parameters' => [
-                    'max_length' => 50,  // Shorter, focused response
+                    'max_length' => 20,  // Further reduced length for shorter responses
                     'temperature' => 0.5, // Less randomness
                     'top_p' => 0.9,       // Controlled creativity
                 ]
@@ -44,7 +44,10 @@ class ChatbotController extends Controller
                 $data = $response->json();
                 $generatedText = $data[0]['generated_text'] ?? 'No response';
     
-                return response()->json(['response' => $generatedText]);  // ✅ Return JSON
+                // Truncate the response to a maximum of 100 characters
+                $truncatedText = strlen($generatedText) > 100 ? substr($generatedText, 0, 100) . '...' : $generatedText;
+
+                return response()->json(['response' => $truncatedText]);  // ✅ Return JSON
             } else {
                 \Log::error('API request failed', ['response' => $response->body()]);
                 return response()->json(['error' => 'API call failed'], 500);  // ✅ Return JSON

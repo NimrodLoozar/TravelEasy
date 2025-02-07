@@ -18,17 +18,19 @@ class HuggingFaceService
         ])
         ->timeout(60)
         ->withoutVerifying()
-        ->post('https://api-inference.huggingface.co/models/gpt2', [
-            'inputs' => $prompt,
+        ->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
+            'inputs' => $prompt,  // Changed from $request->input('prompt') to $prompt
             'parameters' => [
-                'max_length' => 100, // Limit to 100 tokens
-                'temperature' => 0.7, // Control randomness
-                'top_k' => 50, // Limit possible next tokens to the top 50
+                'max_length' => 20,  // Further reduced length for shorter responses
+                'temperature' => 0.5,
+                'top_p' => 0.9,
             ]
         ]);
         
         $data = $response->json();
-        
-        
+        $generatedText = $data[0]['generated_text'] ?? 'No response';
+
+        // Truncate the response to a maximum of 100 characters
+        return strlen($generatedText) > 100 ? substr($generatedText, 0, 100) . '...' : $generatedText;
     }
 }
