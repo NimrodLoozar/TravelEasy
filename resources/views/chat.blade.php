@@ -65,39 +65,43 @@
     }
 
     chatForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const message = promptInput.value.trim();
-        if (!message) return;
+    event.preventDefault();
+    const message = promptInput.value.trim();
+    if (!message) return;
 
-        addMessage('user', message);
-        promptInput.value = '';
+    addMessage('user', message);
+    promptInput.value = '';
 
-        // Show loading indicator
-        const loadingMessage = document.createElement('p');
-        loadingMessage.textContent = 'Thinking...';
-        loadingMessage.classList.add('text-gray-400', 'text-sm', 'italic');
-        chatBox.appendChild(loadingMessage);
-        chatBox.scrollTop = chatBox.scrollHeight;
+    // Show loading indicator
+    const loadingMessage = document.createElement('p');
+    loadingMessage.textContent = 'Thinking...';
+    loadingMessage.classList.add('text-gray-400', 'text-sm', 'italic');
+    chatBox.appendChild(loadingMessage);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-        fetch("{{ route('huggingface.generate') }}", {  // ✅ Use Laravel route helper
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ prompt: message })  // Change 'message' to 'prompt'
+    fetch("{{ route('huggingface.generate') }}", {  // ✅ Use Laravel route helper
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ 
+            prompt: message,
+            language: 'nl'  // Specify Dutch language
         })
-        .then(response => response.json())
-        .then(data => {
-            chatBox.removeChild(loadingMessage);
-            addMessage('bot', data.response || 'No response from AI');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            chatBox.removeChild(loadingMessage);
-            addMessage('bot', 'Oops! Something went wrong.');
-        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        chatBox.removeChild(loadingMessage);
+        addMessage('bot', data.response || 'No response from AI');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        chatBox.removeChild(loadingMessage);
+        addMessage('bot', 'Oops! Something went wrong.');
     });
+});
+
 </script>
 
 </body>
