@@ -11,6 +11,26 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/destinations', function () {
+    return view('destinations');
+})->name('destinations');
+
+Route::get('/packages', function () {
+    return view('packages');
+})->name('packages');
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+Route::post('/contact', function () {
+    // Handle form submission
+    return redirect()->route('contact')->with('success', 'Your message has been sent!');
+})->name('contact.submit');
 
 Route::get('/chat', [ChatbotController::class, 'showChatForm'])->name('chat');
 Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
