@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Invoice;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,5 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->testuser()->create();
         User::factory()->admin()->create();
+        Invoice::factory(10)->create();
     }
 }
