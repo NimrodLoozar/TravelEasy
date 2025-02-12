@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <footer class="bg-gray-900 text-white py-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -42,11 +41,7 @@
             </div>
         </div>
     </div>
-</footer>
-=======
-<footer class="bg-gray-800 text-white mt-12 py-6">
     <div class="container mx-auto text-center">
         <p>&copy; {{ date('Y') }} TravelEasy. Alle rechten voorbehouden.</p>
     </div>
 </footer>
->>>>>>> feature

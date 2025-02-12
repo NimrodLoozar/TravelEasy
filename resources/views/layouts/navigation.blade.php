@@ -1,6 +1,6 @@
-<nav x-data="{ open: false }" class="bg-teal-400 background-color: #54b9bd;">
+<nav x-data="{ open: false }" class="bg-gray-900 background-color: #54b9bd;">
     <!-- Primary Navigation Menu -->
-    <div class="bg-teal-400 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-gray-900 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Navigation Links -->
@@ -10,9 +10,6 @@
                     </x-nav-link>
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
-                        {{ __('Home') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -79,9 +76,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                onclick="event.preventDefault();
-                                this.closest('form').submit();">
+                                onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Uitloggen') }}
                             </x-dropdown-link>
                         </form>
@@ -150,7 +145,6 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
                         onclick="event.preventDefault();
                         this.closest('form').submit();">
                         {{ __('Uitloggen') }}
