@@ -10,10 +10,10 @@
             <div>
                 <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
                 <ul class="text-sm">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Destinations</a></li>
-                    <li><a href="#">Packages</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li><a href="{{ url('/destinations') }}">Destinations</a></li>
+                    <li><a href="{{ url('/packages') }}">Packages</a></li>
+                    <li><a href="{{ url('/contact') }}">Contact</a></li>
                 </ul>
             </div>
             <div>
@@ -25,14 +25,17 @@
                 <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
                 <div class="flex space
                 -x-4">
-                    <a href="#" class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        {{-- <x-heroicon-o-facebook /> --}}
+                    <a href="https://facebook.com" target="_blank"
+                        class="text-xl text-white hover:text-gray-300 transition duration-300">
+                        <img src="{{ asset('img/facebook.png') }}" alt="">
                     </a>
-                    <a href="#" class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        {{-- <x-heroicon-o-twitter /> --}}
+                    <a href="#" target="_blank"
+                        class="text-xl text-white hover:text-gray-300 transition duration-300">
+                        <img src="{{ asset('img/twitter.png') }}" alt="">
                     </a>
-                    <a href="#" class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        {{-- <x-heroicon-o-instagram /> --}}
+                    <a href="#" target="_blank"
+                        class="text-xl text-white hover:text-gray-300 transition duration-300">
+                        <img src="{{ asset('img/instagram.png') }}" alt="">
                     </a>
                 </div>
             </div>

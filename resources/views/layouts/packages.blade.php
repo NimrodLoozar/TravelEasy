@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div x-blade="foreach($packages as $package)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Package" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/Rome.png') }}" alt="Package" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$package['title']" class="text-xl font-semibold mb-2"></h3>
                         <p x-blade="$package['description']" class="text-gray-600 mb-4"></p>
@@ -22,7 +22,7 @@
 
             <div x-blade="foreach($packages as $package)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Package" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/Paris.png') }}" alt="Package" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$package['title']" class="text-xl font-semibold mb-2"></h3>
                         <p x-blade="$package['description']" class="text-gray-600 mb-4"></p>
@@ -40,7 +40,7 @@
 
             <div x-blade="foreach($packages as $package)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Package" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/Tokyo.png') }}" alt="Package" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$package['title']" class="text-xl font-semibold mb-2"></h3>
                         <p x-blade="$package['description']" class="text-gray-600 mb-4"></p>

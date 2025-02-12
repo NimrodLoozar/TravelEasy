@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div x-blade="foreach(['Paris', 'Bali', 'New York', 'Tokyo', 'Rome', 'Maldives'] as $destination)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Destination" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/Maldives.png') }}" alt="Destination" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$destination" class="text-xl font-semibold mb-2"></h3>
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
@@ -18,7 +18,7 @@
 
             <div x-blade="foreach(['Paris', 'Bali', 'New York', 'Tokyo', 'Rome', 'Maldives'] as $destination)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Destination" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/New_York.png') }}" alt="Destination" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$destination" class="text-xl font-semibold mb-2"></h3>
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
@@ -32,7 +32,7 @@
 
             <div x-blade="foreach(['Paris', 'Bali', 'New York', 'Tokyo', 'Rome', 'Maldives'] as $destination)">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200" alt="Destination" class="w-full h-48 object-cover">
+                    <img src="{{ asset('img/Bali.png') }}" alt="Destination" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 x-blade="$destination" class="text-xl font-semibold mb-2"></h3>
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
