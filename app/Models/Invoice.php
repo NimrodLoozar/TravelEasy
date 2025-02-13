@@ -25,6 +25,7 @@ class Invoice extends Model
         'vat',
         'amount_incl_vat',
         'status',
+        'note',
     ];
 
     public function tasks()

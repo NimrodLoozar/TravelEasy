@@ -33,9 +33,70 @@
                     readonly>
             </div>
 
+            <!-- Booking Selectie -->
+            <div>
+                <label for="booking_id" class="block text-sm font-medium text-gray-700">Booking</label>
+                <select name="booking_id" id="booking_id"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    @foreach($bookings as $booking)
+                        <option value="{{ $booking->id }}" {{ old('booking_id', $invoice->booking_id) == $booking->id ? 'selected' : '' }}>
+                            {{ $booking->name }} (ID: {{ $booking->id }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-            <!-- pending -->
-          
+            <!-- Datum -->
+            <div>
+                <label for="date" class="block text-sm font-medium text-gray-700">Datum</label>
+                <input type="date" name="date" id="date" value="{{ old('date', $invoice->date) }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    required>
+            </div>
+
+            <!-- Bedrag exclusief BTW -->
+            <div>
+                <label for="amount_excl_vat" class="block text-sm font-medium text-gray-700">Bedrag exclusief BTW</label>
+                <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01"
+                    value="{{ old('amount_excl_vat', $invoice->amount_excl_vat) }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    required>
+            </div>
+
+            <!-- BTW Percentage -->
+            <div>
+                <label for="vat" class="block text-sm font-medium text-gray-700">BTW Percentage</label>
+                <input type="number" name="vat" id="vat" step="0.01" value="{{ old('vat', $invoice->vat) }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    required>
+            </div>
+
+            <!-- Bedrag inclusief BTW -->
+            <div>
+                <label for="amount_incl_vat" class="block text-sm font-medium text-gray-700">Bedrag inclusief BTW</label>
+                <input type="number" name="amount_incl_vat" id="amount_incl_vat" step="0.01"
+                    value="{{ old('amount_incl_vat', $invoice->amount_incl_vat) }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    readonly>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" id="status"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <option value="in behandeling" {{ old('status', $invoice->status) == 'in behandeling' ? 'selected' : '' }}>In Behandeling</option>
+                    <option value="betaald" {{ old('status', $invoice->status) == 'betaald' ? 'selected' : '' }}>Betaald</option>
+                    <option value="onbetaald" {{ old('status', $invoice->status) == 'onbetaald' ? 'selected' : '' }}>Onbetaald</option>
+                </select>
+            </div>
+
+            <!-- Notitie -->
+            <div>
+                <label for="note" class="block text-sm font-medium text-gray-700">Notitie</label>
+                <textarea name="note" id="note" rows="3"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('note', $invoice->note) }}</textarea>
+            </div>
 
             <!-- Actieknoppen -->
             <div class="flex justify-end gap-4">
@@ -63,6 +124,22 @@
         document.getElementById('dataContainer').classList.toggle('hidden', !this.checked);
         document.getElementById('errorContainer').classList.toggle('hidden', this.checked);
     });
+
+    // BTW-berekening
+    document.getElementById('amount_excl_vat').addEventListener('input', calculateVat);
+    document.getElementById('vat').addEventListener('input', calculateVat);
+
+    function calculateVat() {
+        const amountExclVat = parseFloat(document.getElementById('amount_excl_vat').value) || 0;
+        const vatPercentage = parseFloat(document.getElementById('vat').value) || 0;
+        const vatAmount = (amountExclVat * vatPercentage) / 100;
+        const amountInclVat = amountExclVat + vatAmount;
+
+        document.getElementById('amount_incl_vat').value = amountInclVat.toFixed(2);
+    }
+
+    // Bereken BTW bij het laden van de pagina
+    calculateVat();
 </script>
 
 <style>

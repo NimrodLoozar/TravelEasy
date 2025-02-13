@@ -80,10 +80,14 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
+        // Haal de factuur op die bewerkt moet worden
         $invoice = Invoice::findOrFail($id);
 
-       
-        return view('invoice.edit', compact('invoice'));
+        // Haal alle bookings op (of een gefilterde lijst, afhankelijk van je behoeften)
+        $bookings = Booking::all();
+
+        // Geef de factuur en bookings door aan de view
+        return view('invoice.edit', compact('invoice', 'bookings'));
     }
 
     /**
@@ -91,22 +95,20 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $invoice = Invoice::findOrFail($id);
-
-        // Valideer invoer
-        $validated = $request->validate([
-            // 'treatment_id' => 'required|exists:treatments,id',
-           
-            'number' => 'required|max:6',
+        $request->validate([
             'date' => 'required|date',
-            
-            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+            'amount_excl_vat' => 'required|numeric|min:0',
+            'vat' => 'required|numeric|min:0',
+            'amount_incl_vat' => 'required|numeric|min:0',
+            'status' => 'required|in:in behandeling,betaald,onbetaald',
+            'booking_id' => 'required|exists:bookings,id',
+            'note' => 'nullable|string',
         ]);
 
-        // Update de factuur
-        $invoice->update($validated);
+        $invoice = Invoice::findOrFail($id);
+        $invoice->update($request->all());
 
-        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt.');
+        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt!');
     }
 
     /**
