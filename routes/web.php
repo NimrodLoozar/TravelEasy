@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReizenOverzichtController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,8 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('ReizenOverzicht', function () {
-    return view('ReizenOverzicht.index');
+Route::get('ReisOverzicht', function () {
+    return view('ReisOverzicht.index');
 });
 
 
