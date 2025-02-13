@@ -37,46 +37,46 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $bookings = Booking::all();
-        $lastInvoice = Invoice::latest('id')->first();
-        $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
-       
-        return view('invoice.create', [
-            'bookings' => $bookings,
-            'newNumber' => $newNumber,
-        ]);
-    }
+        $bookings = Booking::with(['customer.person', 'trip'])->get();
 
+        // Bepaal het volgende factuurnummer
+        $latestInvoice = Invoice::latest()->first();
+        $newNumber = $latestInvoice ? $latestInvoice->number + 1 : 1001;
+
+        return view('invoice.create', compact('bookings', 'newNumber'));
+    }
     /**
      * Sla een nieuwe factuur op.
      */
     public function store(Request $request)
     {
-        // Haal het laatste factuurnummer op
-        $lastInvoice = Invoice::latest('id')->first();
-        $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
-
-        // Validate the request data
-        $validated = $request->validate([
-            'booking_id' => 'required|exists:bookings,id', // Ensure booking_id is provided and valid
-            'number' => 'required|string', // Validate number field
-            'date' => 'required|date',
-            'amount_excl_vat' => 'required|numeric|min:0', // Validate amount fields
-            'vat' => 'required|numeric|min:0',
-            'amount_incl_vat' => 'required|numeric|min:0',
-            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
-            'note' => 'nullable|string', // Validate note field
+        $request->validate([
+            'booking_id'      => 'required|exists:bookings,id',
+            'status'          => 'required|in:in behandeling,betaald,onbetaald',
+            'amount_excl_vat' => 'required|numeric|min:0',
+            'note'            => 'nullable|string|max:500',
         ]);
 
-        // Add the generated invoice number to the validated data
-        $validated['number'] = $newNumber;
+        $booking = Booking::with(['customer.person', 'trip'])->findOrFail($request->booking_id);
 
-        // dd($validated);
+        // Bereken bedragen
+        $vat = $request->amount_excl_vat * 0.21;
+        $total = $request->amount_excl_vat + $vat;
 
-        // Create a new invoice
-        Invoice::create($validated);
+        // Genereer een factuur
+        $invoice = Invoice::create([
+            'number'          => Invoice::latest()->first()->number + 1 ?? 1001,
+            'date'            => now()->toDateString(),
+            'status'          => $request->status,
+            'amount_excl_vat' => $request->amount_excl_vat,
+            'vat'             => $vat,
+            'amount_incl_vat' => $total,
+            'note'            => $request->note,
+            'booking_id'      => $booking->id,
+        ]);
 
-        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
+        return redirect()->route('invoice.show', $invoice->id)
+            ->with('success', 'Factuur succesvol aangemaakt.');
     }
 
     /**
