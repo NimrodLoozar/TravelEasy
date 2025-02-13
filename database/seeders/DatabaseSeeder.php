@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-<<<<<<<<< Temporary merge branch 1
 use App\Models\User;
 use App\Models\Invoice;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-=========
->>>>>>>>> Temporary merge branch 2
 use Illuminate\Database\Seeder;
 use App\Models\Person;
 use App\Models\Role;

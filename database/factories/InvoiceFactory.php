@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Invoice;
 use App\Models\Booking;
 
-<<<<<<<<< Temporary merge branch 1
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Invoice>
  */
-=========
->>>>>>>>> Temporary merge branch 2
 class InvoiceFactory extends Factory
 {
 
