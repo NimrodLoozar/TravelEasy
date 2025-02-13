@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-
-        // $invoices = DB::select('CALL spGetInvoices()');
-
-        $invoices = Invoice::orderBy('id', 'desc')->paginate(12);
+        $invoices = Invoice::with(['booking.customer.person'])->orderBy('id', 'desc')->paginate(12);
         return view('invoice.index', compact('invoices'));
     }
 

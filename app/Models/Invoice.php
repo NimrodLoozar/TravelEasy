@@ -5,9 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Task;
-
-// use App\Models\Patient;
-// use App\Models\Treatment;
+use App\Models\Booking;
 
 class Invoice extends Model
 {
@@ -20,12 +18,13 @@ class Invoice extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        // 'patient_id',
-        // 'treatment_id',
-        // 'number',
-        // 'date',
-        // 'amount',
-        // 'status',
+        'booking_id',
+        'number',
+        'date',
+        'amount_exl_vat',
+        'vat',
+        'amount_incl_vat',
+        'status',
     ];
 
     public function tasks()
@@ -33,15 +32,10 @@ class Invoice extends Model
         return $this->hasMany(Task::class);
     }
 
-    // public function patient()
-    // {
-    //     return $this->belongsTo(Patient::class);
-    // }
-
-    // public function treatment()
-    // {
-    //     return $this->belongsTo(Treatment::class);
-    // }
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 
     protected static function boot()
     {

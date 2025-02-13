@@ -31,10 +31,8 @@
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
                                         <th class="py-4 px-6 text-left">Factuurnummer</th>
+                                        <th class="py-4 px-6 text-left">Naam</th>
                                         <th class="py-4 px-6 text-left">Datum</th>
-
-                                        <!-- person -->
-                                       
                                         <th class="py-4 px-6 text-left">Status</th>
                                         <th class="py-4 px-6 text-center">Acties</th>
                                     </tr>
@@ -43,15 +41,15 @@
                                     @foreach ($invoices as $invoice)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
+                                            <!-- person -->
+                                            <td class="py-3 px-6 text-left">
+                                                @if ($invoice->booking && $invoice->booking->customer && $invoice->booking->customer->person)
+                                                    {{ $invoice->booking->customer->person->first_name }} {{ $invoice->booking->customer->person->middle_name }} {{ $invoice->booking->customer->person->last_name }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
                                             <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}</td>
-
-                                            <!-- person naam -->
-
-                                            <!-- <td class="py-3 px-6 text-left">€ {{ number_format($invoice->amount_excl_vat, 2, ',', '.') }}</td>
-                                            <td class="py-3 px-6 text-left">€ {{ number_format($invoice->vat, 2, ',', '.') }}</td>
-                                            <td class="py-3 px-6 text-left font-bold">€ {{ number_format($invoice->amount_incl_vat, 2, ',', '.') }}</td> -->
-
-
                                             <td class="py-3 px-6 text-left">
                                                 @if($invoice->status == 'in behandeling')
                                                     <span class="bg-yellow-400 text-white py-1 px-3 rounded-full text-xs font-medium">in behandeling</span>
