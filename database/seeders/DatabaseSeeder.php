@@ -25,10 +25,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
-        $people = Person::factory()->count(50)->create();
+        $people = Person::factory()->count(10)->create();
 
         // Maak een admin en testgebruiker (specifieke users)
         User::factory()->testuser()->create();
         User::factory()->admin()->create();
+
+        // Maak 10 facturen aan
+        Invoice::factory()->count(10)->create();
     }
 }
