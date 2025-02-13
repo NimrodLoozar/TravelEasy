@@ -40,11 +40,9 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
 
-        $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
-
         Customer::create([
             'person_id' => $person->id,
-            'relation_number' => $relationNumber,
+            'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
         ]);
 
         return $user;
@@ -64,15 +62,14 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $person = Person::factory()->create([
-                'first_name' => 'Test',
-                'last_name' => 'User',
+                'first_name' => $this->faker->firstName,
+                'middle_name' => $this->faker->optional()->lastName,
+                'last_name' => $this->faker->lastName,
             ]);
-
-            $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
 
             $customer = Customer::create([
                 'person_id' => $person->id,
-                'relation_number' => $relationNumber,
+                'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
             ]);
 
             Contact::create([
@@ -93,15 +90,14 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $person = Person::factory()->create([
-                'first_name' => 'Admin',
-                'last_name' => 'User',
+                'first_name' => $this->faker->firstName,
+                'middle_name' => $this->faker->optional()->lastName,
+                'last_name' => $this->faker->lastName,
             ]);
-
-            $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
 
             $customer = Customer::create([
                 'person_id' => $person->id,
-                'relation_number' => $relationNumber,
+                'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
             ]);
 
             Contact::create([

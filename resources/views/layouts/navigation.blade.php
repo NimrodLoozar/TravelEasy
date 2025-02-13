@@ -14,6 +14,9 @@
                     <x-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
                         {{ __('Factuuren') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                        {{ __('Klanten') }}
+                    </x-nav-link>
                 </div>
             </div>
 
