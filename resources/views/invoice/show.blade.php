@@ -76,6 +76,11 @@
     </p>
 </div>
 
+<!-- note -->
+<div class="mb-4">
+    <p><strong>Opmerking:</strong> {{ $invoice->note }}</p>
+</div>
+
                 <!-- Actieknoppen -->
                 <div class="flex justify-end">
                     <a href="{{ route('invoice.index') }}" class="bg-blue-600 text-white px-5 py-2 rounded-md transition duration-300 hover:bg-green-700 transform hover:scale-105">
