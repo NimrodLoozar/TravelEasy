@@ -125,6 +125,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        // part of invoices. HURRY UP
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');

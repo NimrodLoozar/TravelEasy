@@ -18,14 +18,14 @@ class InvoiceFactory extends Factory
 
         return [
             'booking_id' => Booking::factory(),
-            'invoice_number' => strtoupper($this->faker->unique()->bothify('INV###??')),
-            'invoice_date' => $this->faker->date,
-            'amount_excl_vat' => $amountExclVat,
-            'vat' => $vat,
-            'amount_incl_vat' => $amountInclVat,
-            'invoice_status' => $this->faker->randomElement(['Paid', 'Unpaid', 'Overdue']),
-            'is_active' => $this->faker->boolean,
-            'note' => $this->faker->optional()->text(100),
+            'invoice_number' => self::$invoiceNumber++, // increment invoice number
+            'invoice_date' => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
+            'amount_excl_vat' => $this->faker->randomFloat(2, 100, 1000),
+            'vat' => $this->faker->randomFloat(2, 10, 100),
+            'amount_incl_vat' => $this->faker->randomFloat(2, 110, 1100),
+            'status' => $this->faker->randomElement(['betaald', 'onbetaald', 'in behandeling']),
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 }
