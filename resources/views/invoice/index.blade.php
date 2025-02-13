@@ -33,7 +33,7 @@
                                         <th class="py-4 px-6 text-left">Factuurnummer</th>
                                         <th class="py-4 px-6 text-left">Datum</th>
 
-                                        <!-- klant -->
+                                        <!-- person -->
                                        
                                         <th class="py-4 px-6 text-left">Status</th>
                                         <th class="py-4 px-6 text-center">Acties</th>
@@ -45,7 +45,7 @@
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
                                             <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}</td>
 
-                                            <!-- klant naam -->
+                                            <!-- person naam -->
 
                                             <!-- <td class="py-3 px-6 text-left">€ {{ number_format($invoice->amount_excl_vat, 2, ',', '.') }}</td>
                                             <td class="py-3 px-6 text-left">€ {{ number_format($invoice->vat, 2, ',', '.') }}</td>
