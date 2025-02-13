@@ -148,9 +148,9 @@ return new class extends Migration {
             $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
             $table->string('number')->unique();
             $table->date('date');
-            $table->decimal('amount_excl_vat', 8, 2);
+            $table->decimal('amount_excl_vat', 10, 2);
             $table->decimal('vat', 8, 2);
-            $table->decimal('amount_incl_vat', 8, 2);
+            $table->decimal('amount_incl_vat', 10, 2);
             $table->string('status');
             $table->boolean('is_active')->default(true);
             $table->text('note')->nullable();

@@ -35,17 +35,16 @@
             <div>
                 <label for="booking_id" class="block text-sm font-medium text-gray-700">Booking</label>
                 <select name="booking_id" id="booking_id"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                @if($bookings->isEmpty())
-                    <option value="" disabled>Geen bookings beschikbaar</option>
-                @else
-                    @foreach($bookings as $booking)
-                        <option value="{{ $booking->id }}">{{ $booking->name }} (ID: {{ $booking->id }})</option>
-                    @endforeach
-                @endif
-            </select>
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    @if($bookings->isEmpty())
+                        <option value="" disabled>Geen bookings beschikbaar</option>
+                    @else
+                        @foreach($bookings as $booking)
+                            <option value="{{ $booking->id }}">{{ $booking->name }} (ID: {{ $booking->id }})</option>
+                        @endforeach
+                    @endif
+                </select>
             </div>
-
 
             <!-- Datum -->
             <div>
@@ -55,7 +54,7 @@
                     required>
             </div>
 
-                        <!-- Bedrag exclusief BTW -->
+            <!-- Bedrag exclusief BTW -->
             <div>
                 <label for="amount_excl_vat" class="block text-sm font-medium text-gray-700">Bedrag exclusief BTW</label>
                 <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01"
@@ -65,8 +64,8 @@
 
             <!-- BTW Percentage -->
             <div>
-                <label for="vat_percentage" class="block text-sm font-medium text-gray-700">BTW Percentage</label>
-                <input type="number" name="vat_percentage" id="vat_percentage" step="0.01"
+                <label for="vat" class="block text-sm font-medium text-gray-700">BTW Percentage</label>
+                <input type="number" name="vat" id="vat" step="0.01"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     value="21" required readonly>
             </div>
@@ -148,11 +147,11 @@
 
     // Calculate amount incl. VAT
     document.getElementById('amount_excl_vat').addEventListener('input', calculateVat);
-    document.getElementById('vat_percentage').addEventListener('input', calculateVat);
+    document.getElementById('vat').addEventListener('input', calculateVat);
 
     function calculateVat() {
         const amountExclVat = parseFloat(document.getElementById('amount_excl_vat').value) || 0;
-        const vatPercentage = parseFloat(document.getElementById('vat_percentage').value) || 0;
+        const vatPercentage = parseFloat(document.getElementById('vat').value) || 0;
         const vatAmount = (amountExclVat * vatPercentage) / 100;
         const amountInclVat = amountExclVat + vatAmount;
 

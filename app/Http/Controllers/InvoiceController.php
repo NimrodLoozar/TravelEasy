@@ -52,24 +52,24 @@ class InvoiceController extends Controller
         $lastInvoice = Invoice::latest('id')->first();
         $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
 
-        // dd($request->all());
-
+        // Validate the request data
         $validated = $request->validate([
-            
-            // 'patient_id' => 'required|exists:patients,id',
-            
+            'booking_id' => 'required|exists:bookings,id', // Ensure booking_id is provided and valid
+            'number' => 'required|string', // Validate number field
             'date' => 'required|date',
-
+            'amount_excl_vat' => 'required|numeric|min:0', // Validate amount fields
+            'vat' => 'required|numeric|min:0',
+            'amount_incl_vat' => 'required|numeric|min:0',
             'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+            'note' => 'nullable|string', // Validate note field
         ]);
 
-
-        // dd($request->all());
-
-        
+        // Add the generated invoice number to the validated data
         $validated['number'] = $newNumber;
 
-        // maak een nieuwe factuur aan
+        // dd($validated);
+
+        // Create a new invoice
         Invoice::create($validated);
 
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
