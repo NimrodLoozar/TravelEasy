@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
-// use App\Models\Patient;
-// use App\Models\Treatment;
+
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -14,7 +13,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::paginate(12);
+        $invoices = Invoice::orderBy('id', 'desc')->paginate(12);
         return view('invoice.index', compact('invoices'));
     }
 
@@ -24,10 +23,8 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-        // $patient = $invoice->patient; // Relatie gebruiken
 
         return view('invoice.show', compact('invoice'));
-        // return view('invoice.show', compact('invoice', 'patient'));
     }
 
     /**
@@ -39,12 +36,8 @@ class InvoiceController extends Controller
         $lastInvoice = Invoice::latest('id')->first();
         $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
 
-        // $patients = Patient::all(['id', 'name']);
-        // $treatments = Treatment::all();
-        // $treatmentTypes = Treatment::distinct()->pluck('treatment_type');
-
+       
         return view('invoice.create', compact('newNumber'));
-        // return view('invoice.create', compact('patients', 'treatments', 'treatmentTypes', 'newNumber'));
 
     }
 
@@ -60,11 +53,12 @@ class InvoiceController extends Controller
         // dd($request->all());
 
         $validated = $request->validate([
+            
             // 'patient_id' => 'required|exists:patients,id',
-            // 'treatment_type' => 'required|string',
-            // 'date' => 'required|date',
-            // 'amount' => 'required|numeric|min:0',
-            // 'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+            
+            'date' => 'required|date',
+
+            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
         ]);
 
 
@@ -86,12 +80,8 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        // $patients = Patient::all(['id', 'name']);
-        // $treatments = Treatment::all();
-        // $treatmentTypes = Treatment::distinct()->pluck('treatment_type');
-
+       
         return view('invoice.edit', compact('invoice'));
-        // return view('invoice.edit', compact('invoice', 'patients', 'treatments', 'treatmentTypes'));
     }
 
     /**
@@ -104,11 +94,11 @@ class InvoiceController extends Controller
         // Valideer invoer
         $validated = $request->validate([
             // 'treatment_id' => 'required|exists:treatments,id',
-            // 'patient_id' => 'required|exists:patients,id',
-            // 'number' => 'required|max:6',
-            // 'date' => 'required|date',
-            // 'amount' => 'required|numeric|min:0',
-            // 'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+           
+            'number' => 'required|max:6',
+            'date' => 'required|date',
+            
+            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
         ]);
 
         // Update de factuur

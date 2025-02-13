@@ -125,7 +125,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        // part of invoices. HURRY UP
+        // part of invoices
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
@@ -147,7 +147,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
             $table->string('number')->unique();
-            $table->date('invoice_date');
+            $table->date('date');
             $table->decimal('amount_excl_vat', 8, 2);
             $table->decimal('vat', 8, 2);
             $table->decimal('amount_incl_vat', 8, 2);
