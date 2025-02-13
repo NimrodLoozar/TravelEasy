@@ -6,6 +6,16 @@ use App\Models\User;
 use App\Models\Invoice;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Person;
+use App\Models\Role;
+use App\Models\Customer;
+use App\Models\Contact;
+use App\Models\Employee;
+use App\Models\Departure;
+use App\Models\Destination;
+use App\Models\Trip;
+use App\Models\Booking;
+use App\Models\Communication;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,8 +24,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
+        $people = Person::factory()->count(50)->create();
+
+        // Maak een admin en testgebruiker (specifieke users)
         User::factory()->testuser()->create();
         User::factory()->admin()->create();
-        Invoice::factory(10)->create();
     }
 }

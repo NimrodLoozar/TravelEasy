@@ -1,24 +1,21 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Invoice;
 use App\Models\Booking;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Invoice>
- */
 class InvoiceFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    private static $invoiceNumber = 1;
+    protected $model = Invoice::class;
 
-    public function definition(): array
+    public function definition()
     {
+        $amountExclVat = $this->faker->randomFloat(2, 50, 1000);
+        $vat = $amountExclVat * 0.21; // 21% BTW
+        $amountInclVat = $amountExclVat + $vat;
+
         return [
             'booking_id' => Booking::factory(),
             'invoice_number' => self::$invoiceNumber++, // increment invoice number
