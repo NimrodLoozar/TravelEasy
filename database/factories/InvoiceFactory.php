@@ -18,7 +18,7 @@ class InvoiceFactory extends Factory
 
         return [
             'booking_id' => Booking::factory(),
-            'invoice_number' => self::$invoiceNumber++, // increment invoice number
+            'invoice_number' => $this->faker->numberBetween(100000, 999999),
             'invoice_date' => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
             'amount_excl_vat' => $this->faker->randomFloat(2, 100, 1000),
             'vat' => $this->faker->randomFloat(2, 10, 100),

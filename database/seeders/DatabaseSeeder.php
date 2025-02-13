@@ -60,9 +60,9 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         // Facturen (gekoppeld aan boekingen)
-        // Invoice::factory()
-        //     ->count(30)
-        //     ->create();
+        //  Invoice::factory()
+        //      ->count(30)
+        //      ->create();
 
         // Communicatie tussen klanten en medewerkers
         Communication::factory()
