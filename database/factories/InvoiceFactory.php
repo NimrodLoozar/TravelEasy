@@ -8,7 +8,6 @@ use App\Models\Booking;
 
 class InvoiceFactory extends Factory
 {
-    protected $model = Invoice::class;
 
     public function definition()
     {
@@ -20,9 +19,9 @@ class InvoiceFactory extends Factory
             'booking_id' => Booking::factory(),
             'invoice_number' => self::$invoiceNumber++, // increment invoice number
             'invoice_date' => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
-            'amount_excl_vat' => $this->faker->randomFloat(2, 100, 1000),
-            'vat' => $this->faker->randomFloat(2, 10, 100),
-            'amount_incl_vat' => $this->faker->randomFloat(2, 110, 1100),
+            'amount_excl_vat' => $amountExclVat,
+            'vat' => $vat,
+            'amount_incl_vat' => $amountInclVat,
             'status' => $this->faker->randomElement(['betaald', 'onbetaald', 'in behandeling']),
             'created_at' => now(),
             'updated_at' => now()
