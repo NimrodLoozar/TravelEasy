@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use App\models\Invoice;
 
 return new class extends Migration
 {
@@ -11,17 +13,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stored_procedure_get_invoices', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
 
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS GetInvoices;
+            CREATE PROCEDURE GetInvoices()
+            BEGIN
+                SELECT * FROM invoices;
+            END
+        ');
+    }
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('stored_procedure_get_invoices');
+        DB::unprepared('DROP PROCEDURE IF EXISTS GetInvoices');
     }
 };
