@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-=======
 use App\Models\Invoice;
 // use App\Models\Patient;
 // use App\Models\Treatment;
->>>>>>> origin/feature
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-<<<<<<< HEAD
-    //
-}
-=======
     /**
      * Toon de lijst met facturen.
      */
@@ -146,4 +139,3 @@ class InvoiceController extends Controller
         return response()->json(['nextNumber' => str_pad($nextNumber, 6, '0', STR_PAD_LEFT)]);
     }
 }
->>>>>>> origin/feature
