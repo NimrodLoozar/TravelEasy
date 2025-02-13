@@ -16,7 +16,7 @@ class InvoiceController extends Controller
 
         // $invoices = DB::select('CALL spGetInvoices()');
 
-        // $invoices = Invoice::orderBy('id', 'desc')->paginate(12);
+        $invoices = Invoice::orderBy('id', 'desc')->paginate(12);
         return view('invoice.index', compact('invoices'));
     }
 
