@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+<<<<<<<<< Temporary merge branch 1
 use App\Models\User;
 use App\Models\Invoice;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+=========
+>>>>>>>>> Temporary merge branch 2
 use Illuminate\Database\Seeder;
 use App\Models\Person;
 use App\Models\Role;
@@ -30,6 +33,45 @@ class DatabaseSeeder extends Seeder
         // Maak een admin en testgebruiker (specifieke users)
         User::factory()->testuser()->create();
         User::factory()->admin()->create();
+
+        // Nu de rest van de gebruikers (gekoppeld aan een persoon)
+        User::factory()->count(20)->create();
+
+        // Rollen aanmaken
+        Role::factory()->count(20)->create();
+
+        // Klanten aanmaken (gekoppeld aan een persoon)
+        $customers = Customer::factory()->count(30)->create();
+
+        // Contactgegevens van klanten
+        Contact::factory()->count(30)->create();
+
+        // Werknemers aanmaken (gekoppeld aan een persoon)
+        $employees = Employee::factory()->count(20)->create();
+
+        // Luchthavens en bestemmingen
+        $departures = Departure::factory()->count(10)->create();
+        $destinations = Destination::factory()->count(10)->create();
+
+        // Reizen genereren (gekoppeld aan medewerkers, luchthavens)
+        $trips = Trip::factory()
+            ->count(20)
+            ->create();
+
+        // Boekingen (gekoppeld aan klanten en reizen)
+        $bookings = Booking::factory()
+            ->count(50)
+            ->create();
+
+        // Facturen (gekoppeld aan boekingen)
+        //  Invoice::factory()
+        //      ->count(30)
+        //      ->create();
+
+        // Communicatie tussen klanten en medewerkers
+        Communication::factory()
+            ->count(20)
+            ->create();
 
         // Maak 10 facturen aan
         Invoice::factory()->count(10)->create();
