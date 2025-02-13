@@ -1,35 +1,31 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Invoice;
+use App\Models\Booking;
 
-// use App\Models\Patient;
-// use App\Models\Treatment;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Invoice>
- */
 class InvoiceFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    private static $invoiceNumber = 1;
+    protected $model = Invoice::class;
 
-    public function definition(): array
+    public function definition()
     {
+        $amountExclVat = $this->faker->randomFloat(2, 50, 1000);
+        $vat = $amountExclVat * 0.21; // 21% BTW
+        $amountInclVat = $amountExclVat + $vat;
+
         return [
-            // 'patient_id' => Patient::factory(),
-            // 'treatment_id' => $treatment->id,
-            // 'number' => self::$invoiceNumber++,
-            // 'date' => $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
-            // 'amount' => $this->faker->randomFloat(2, $amountRange[0], $amountRange[1]),
-            // 'status' => $this->faker->randomElement(['betaald', 'onbetaald', 'in behandeling']),
-            'created_at' => now(),
-            'updated_at' => now()
+            'booking_id' => Booking::factory(),
+            'invoice_number' => strtoupper($this->faker->unique()->bothify('INV###??')),
+            'invoice_date' => $this->faker->date,
+            'amount_excl_vat' => $amountExclVat,
+            'vat' => $vat,
+            'amount_incl_vat' => $amountInclVat,
+            'invoice_status' => $this->faker->randomElement(['Paid', 'Unpaid', 'Overdue']),
+            'is_active' => $this->faker->boolean,
+            'note' => $this->faker->optional()->text(100),
         ];
     }
 }

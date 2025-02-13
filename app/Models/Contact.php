@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-<<<<<<< HEAD
-    /** @use HasFactory<\Database\Factories\ContactFactory> */
-    use HasFactory;
-=======
     use HasFactory;
 
     protected $fillable = [
@@ -40,5 +36,4 @@ class Contact extends Model
     {
         return $this->belongsTo(User::class);
     }
->>>>>>> origin/feature
 }
