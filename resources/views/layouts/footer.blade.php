@@ -23,19 +23,18 @@
             </div>
             <div>
                 <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
-                <div class="flex space
-                -x-4">
+                <div class="flex flex-col space-y-4">
                     <a href="https://facebook.com" target="_blank"
                         class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        <img src="{{ asset('img/facebook.png') }}" alt="">
+                        <img src="{{ asset('img/facebook.png') }}" alt="" class="w-6 h-6">
                     </a>
                     <a href="#" target="_blank"
                         class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        <img src="{{ asset('img/twitter.png') }}" alt="">
+                        <img src="{{ asset('img/twitter.png') }}" alt="" class="w-6 h-6">
                     </a>
                     <a href="#" target="_blank"
                         class="text-xl text-white hover:text-gray-300 transition duration-300">
-                        <img src="{{ asset('img/instagram.png') }}" alt="">
+                        <img src="{{ asset('img/instagram.png') }}" alt="" class="w-6 h-6">
                     </a>
                 </div>
             </div>
