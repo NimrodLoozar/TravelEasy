@@ -3,18 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Person;
-use App\Models\Role;
-use App\Models\Customer;
-use App\Models\Contact;
-use App\Models\Employee;
-use App\Models\Departure;
-use App\Models\Destination;
-use App\Models\Trip;
-use App\Models\Booking;
-use App\Models\Invoice;
-use App\Models\Communication;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

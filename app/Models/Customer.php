@@ -7,6 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'person_id',
+        'relation_number',
+        'is_active',
+        'note',
+    ];
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
+    }
+
+    public function contacts()
+    {
+        return $this->hasOne(Contact::class);
+    }
 }
