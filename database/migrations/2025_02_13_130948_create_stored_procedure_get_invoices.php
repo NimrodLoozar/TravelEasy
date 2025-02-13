@@ -15,8 +15,8 @@ return new class extends Migration
     {
 
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS GetInvoices;
-            CREATE PROCEDURE GetInvoices()
+            DROP PROCEDURE IF EXISTS spGetInvoices;
+            CREATE PROCEDURE spGetInvoices()
             BEGIN
                 SELECT * FROM invoices;
             END
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::unprepared('DROP PROCEDURE IF EXISTS GetInvoices');
+        DB::unprepared('DROP PROCEDURE IF EXISTS spGetInvoices');
     }
 };
