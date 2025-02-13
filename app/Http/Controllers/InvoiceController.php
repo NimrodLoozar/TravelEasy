@@ -82,37 +82,36 @@ class InvoiceController extends Controller
     /**
      * Toon de edit view voor een bestaande factuur.
      */
-    public function edit($id)
+    public function edit(Invoice $invoice)
     {
-        // Haal de factuur op die bewerkt moet worden
-        $invoice = Invoice::findOrFail($id);
-
-        // Haal alle bookings op (of een gefilterde lijst, afhankelijk van je behoeften)
-        $bookings = Booking::all();
-
-        // Geef de factuur en bookings door aan de view
-        return view('invoice.edit', compact('invoice', 'bookings'));
+        return view('invoice.edit', compact('invoice'));
     }
-
-    /**
-     * Werk een bestaande factuur bij.
-     */
-    public function update(Request $request, $id)
+    
+    public function update(Request $request, Invoice $invoice)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date'            => 'required|date',
+            'status'          => 'required|in:in behandeling,betaald,onbetaald',
             'amount_excl_vat' => 'required|numeric|min:0',
-            'vat' => 'required|numeric|min:0',
-            'amount_incl_vat' => 'required|numeric|min:0',
-            'status' => 'required|in:in behandeling,betaald,onbetaald',
-            'booking_id' => 'required|exists:bookings,id',
-            'note' => 'nullable|string',
+            'note'            => 'nullable|string|max:500',
         ]);
-
-        $invoice = Invoice::findOrFail($id);
-        $invoice->update($request->all());
-
-        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt!');
+    
+        // Bereken bedragen
+        $vat = $request->amount_excl_vat * 0.21;
+        $total = $request->amount_excl_vat + $vat;
+    
+        // Update factuur
+        $invoice->update([
+            'date'            => $request->date,
+            'status'          => $request->status,
+            'amount_excl_vat' => $request->amount_excl_vat,
+            'vat'             => $vat,
+            'amount_incl_vat' => $total,
+            'note'            => $request->note,
+        ]);
+    
+        return redirect()->route('invoice.show', $invoice->id)
+            ->with('success', 'Factuur succesvol bijgewerkt.');
     }
 
     /**
