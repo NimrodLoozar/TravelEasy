@@ -31,6 +31,9 @@
                 value="{{ $newNumber }}" readonly placeholder="Factuurnummer wordt automatisch gegenereerd">
             </div>
 
+
+            <!-- booking info still needed for flights and stuff. -->
+
             <!-- Booking Selectie -->
             <div>
                 <label for="booking_id" class="block text-sm font-medium text-gray-700">Booking</label>
