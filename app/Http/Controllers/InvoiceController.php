@@ -29,7 +29,7 @@ class InvoiceController extends Controller
             'booking.trip'
         ])->findOrFail($id);
 
-        return view('invoices.show', compact('invoice'));
+        return view('invoice.show', compact('invoice'));
     }
 
     /**

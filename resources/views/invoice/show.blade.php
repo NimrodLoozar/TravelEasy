@@ -16,7 +16,7 @@
                     <!-- Bedrijfsgegevens -->
                     <div>
                         <h3 class="text-lg font-bold">Uitgegeven door:</h3>
-                        <p>SmilePro B.V.</p>
+                        <p>TravelEasy B.V.</p>
                         <p>Hoofdstraat 123, 1000 AB Amsterdam</p>
                         <p>KvK: 12345678</p>
                         <p>BTW-nummer: NL123456789B01</p>
