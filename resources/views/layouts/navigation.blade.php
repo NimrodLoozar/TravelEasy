@@ -1,6 +1,6 @@
-<nav x-data="{ open: false }" class="bg-teal-400 background-color: #54b9bd;">
+<nav x-data="{ open: false }" class="bg-gray-900 background-color: #54b9bd;">
     <!-- Primary Navigation Menu -->
-    <div class="bg-teal-400 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-gray-900 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Navigation Links -->
@@ -60,7 +60,7 @@
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                         clip-rule="evenodd" />
                                 </svg>
                             </div>
@@ -76,8 +76,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Uitloggen') }}
                             </x-dropdown-link>
                         </form>
@@ -110,23 +109,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-    
+
             @if (Auth::check() && Auth::user()->role === 'admin')
-               
                 <!-- <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                     {{ __('Admin Dashboard') }}
                 </x-responsive-nav-link> -->
 
-                
+
                 <x-responsive-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
                     {{ __('Invoice') }}
                 </x-responsive-nav-link>
-                
             @elseif (Auth::check() && Auth::user()->role === 'dentist')
                 <x-responsive-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.index')">
                     {{ __('Berichten') }}
                 </x-responsive-nav-link>
             @endif
+            <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
+                {{ __('Home') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -146,7 +146,7 @@
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                        this.closest('form').submit();">
                         {{ __('Uitloggen') }}
                     </x-responsive-nav-link>
                 </form>

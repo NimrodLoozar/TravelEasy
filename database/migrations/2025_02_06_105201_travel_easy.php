@@ -12,11 +12,40 @@ return new class extends Migration {
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->text('passport_details')->nullable();
             $table->boolean('is_active')->default(true);
             $table->text('note')->nullable();
             $table->timestamps();
+        });
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('person_id')->nullable()->constrained('people')->onDelete('cascade');
+            $table->string('name')->unique();
+            $table->string('password');
+            $table->boolean('is_logged_in')->default(false);
+            $table->timestamp('logged_in')->nullable();
+            $table->timestamp('logged_out')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->text('note')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
         });
 
         Schema::create('roles', function (Blueprint $table) {
@@ -40,11 +69,11 @@ return new class extends Migration {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->string('street');
-            $table->string('house_number');
+            $table->string('street')->nullable();
+            $table->string('house_number')->nullable();
             $table->string('addition')->nullable();
-            $table->string('postal_code');
-            $table->string('city');
+            $table->string('postal_code')->nullable();
+            $table->string('city')->nullable();
             $table->string('mobile')->nullable();
             $table->string('email')->unique();
             $table->boolean('is_active')->default(true);
@@ -142,6 +171,7 @@ return new class extends Migration {
 
     public function down()
     {
+
         Schema::dropIfExists('communications');
         Schema::dropIfExists('invoices');
         Schema::dropIfExists('bookings');
@@ -154,5 +184,7 @@ return new class extends Migration {
         Schema::dropIfExists('roles');
         Schema::dropIfExists('users');
         Schema::dropIfExists('people');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };

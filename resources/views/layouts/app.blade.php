@@ -16,9 +16,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Styles / Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     @vite(['resources/js/app.js'])
-
 </head>
 
 <body class="font-sans antialiased bg-gray-900">

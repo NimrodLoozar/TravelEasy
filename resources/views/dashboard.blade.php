@@ -19,7 +19,8 @@
             @endif
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Gebruikersgegevens -->
-                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8 lg:mb-0">
+                <div
+                    class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8 lg:mb-0">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <h3 class="text-2xl font-bold mb-4">Mijn Gegevens</h3>
 
@@ -30,16 +31,22 @@
                         <h4 class="text-xl font-semibold mt-4">Email</h4>
                         <p>{{ Auth::user()->email }}</p>
 
-            
+
                     </div>
-                </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
     <div class="py-12">
-    <a href="{{ route('chat') }}" class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
-        Start Chatting with a chatbot
-    </a>
-</div>
+        <x-responsive-nav-link :href="route('logout')"
+            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+            {{ __('Log Out') }}
+        </x-responsive-nav-link>
+        <a href="{{ route('chat') }}"
+            class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
+            Start Chatting with a chatbot
+        </a>
+    </div>
 </x-app-layout>
