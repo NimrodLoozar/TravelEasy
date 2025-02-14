@@ -111,23 +111,33 @@ class InvoiceController extends Controller
         // Redirect back or show a success message
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
     }
+
+    public function edit($id)
+        {
+            // Retrieve the invoice by ID
+            $invoice = Invoice::findOrFail($id);
+
+            // Pass the invoice data to the view
+            return view('invoice.edit', compact('invoice'));
+        }
     
 
     /**
      * Update een bestaande factuur.
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'date'            => 'required|date',
-            'status'          => 'required|in:in behandeling,betaald,onbetaald',
-            'amount_excl_vat' => 'required|numeric|min:0',
-            'note'            => 'nullable|string|max:500',
-        ]);
+{
+    $request->validate([
+        'date'            => 'required|date',
+        'status'          => 'required|in:in behandeling,betaald,onbetaald',
+        'amount_excl_vat' => 'required|numeric|min:0',
+        'note'            => 'nullable|string|max:500',
+    ]);
 
-        $vat = $request->amount_excl_vat * 0.21;
-        $total = $request->amount_excl_vat + $vat;
+    $vat = $request->amount_excl_vat * 0.21;
+    $total = $request->amount_excl_vat + $vat;
 
+    try {
         DB::statement('CALL spUpdateInvoice(?, ?, ?, ?, ?, ?, ?)', [
             $id,
             $request->date,
@@ -138,8 +148,17 @@ class InvoiceController extends Controller
             $request->note,
         ]);
 
+        // Log the update
+        \Log::info('Factuur bijgewerkt', ['invoice_id' => $id, 'updated_by' => auth()->user()->id]);
+
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt.');
+    } catch (\Exception $e) {
+        // Log the error
+        \Log::error('Fout bij het bijwerken van de factuur', ['error' => $e->getMessage()]);
+
+        return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van de factuur.');
     }
+}
 
     /**
      * Verwijder een factuur.
