@@ -17,8 +17,11 @@ return new class extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS spGetInvoices;
             CREATE PROCEDURE spGetInvoices()
+
             BEGIN
-                SELECT * FROM invoices ORDER BY id DESC;
+                SELECT * FROM invoices, bookings WHERE invoices.booking_id = bookings.id 
+                
+                ORDER BY id DESC;
             END
         ');
 

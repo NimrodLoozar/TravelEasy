@@ -53,12 +53,12 @@
                                                     </span>
                                                 </td>
                                                 <td class="py-3 px-6 flex space-x-2">
-                                                    <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">Bekijken</a>
-                                                    <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">Bewerken</a>
+                                                    <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">ⓘ</a>
+                                                    <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">✎</a>
                                                     <form action="{{ route('account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit account wilt verwijderen?');">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="text-red-500 hover:underline">Verwijderen</button>
+                                                        <button type="submit" class="text-red-500 hover:underline">🗑️</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -67,7 +67,7 @@
                                 </tbody>
                             </table>
                         @else
-                            <p class="text-red-500 p-4">Geen accounts gevonden. Probeer later opnieuw.</p>
+                            <p class="text-red-500 p-6">Geen accounts gevonden. Probeer later opnieuw.</p>
                         @endif
                     </div>
                 </div>

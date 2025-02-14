@@ -8,6 +8,8 @@ use App\Models\Booking;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 class InvoiceController extends Controller
 {
     /**
@@ -16,6 +18,7 @@ class InvoiceController extends Controller
     public function index()
     {
         $invoices = DB::select('CALL spGetAllInvoices()');
+        log::info('Fetched all invoices', ['count' => count($invoices)]);
         return view('invoice.index', compact('invoices'));
     }
     
@@ -26,6 +29,7 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = DB::select('CALL spGetInvoiceById(?)', [$id]);
+        \Illuminate\Support\Facades\Log::info('Fetched invoice by ID', ['id' => $id, 'found' => !empty($invoice)]);
     
         if (empty($invoice)) {
             abort(404, 'Factuur niet gevonden');
