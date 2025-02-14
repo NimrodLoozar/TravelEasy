@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::resource('customers', CustomerController::class);
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::get('/customers/{customers}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    Route::get('/customers/{customers}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    Route::delete('/customers/{customers}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
     // invoices
     Route::resource('invoice', InvoiceController::class);

@@ -16,6 +16,7 @@ use App\Models\Destination;
 use App\Models\Trip;
 use App\Models\Booking;
 use App\Models\Communication;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,52 +26,84 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
-        $people = Person::factory()->count(10)->create();
+        //$people = Person::factory()->count(10)->create();
 
         // Maak een admin en testgebruiker (specifieke users)
-        User::factory()->testuser()->create();
-        User::factory()->admin()->create();
+        $person = Person::factory()->create([
+            'first_name' => fake()->firstName,
+            'middle_name' => fake()->optional()->lastName,
+            'last_name' => fake()->lastName,
+        ]);
+
+        $customer = Customer::create([
+            'person_id' => $person->id,
+            'relation_number' => fake()->unique()->numberBetween(100000, 999999),
+        ]);
+
+        Contact::create([
+            'customer_id' => $customer->id,
+            'email' => 'test@gmail.com',
+            // ...other required fields for Contact model...
+        ]);
+
+        User::create([
+            'person_id' => $person->id,
+            'name' => 'TestUser',
+            'password' => Hash::make('Test1234'),
+        ]);
+
+        $adminPerson = Person::factory()->create([
+            'first_name' => fake()->firstName,
+            'middle_name' => fake()->optional()->lastName,
+            'last_name' => fake()->lastName,
+        ]);
+
+        $adminCustomer = Customer::create([
+            'person_id' => $adminPerson->id,
+            'relation_number' => fake()->unique()->numberBetween(100000, 999999),
+        ]);
+
+        Contact::create([
+            'customer_id' => $adminCustomer->id,
+            'email' => 'admin@gmail.com',
+            // ...other required fields for Contact model...
+        ]);
+
+        User::create([
+            'person_id' => $adminPerson->id,
+            'name' => 'AdminUser',
+            'password' => Hash::make('Admin1234'),
+        ]);
 
         // Nu de rest van de gebruikers (gekoppeld aan een persoon)
-        User::factory()->count(20)->create();
+        User::factory()->count(10)->create();
 
         // Rollen aanmaken
-        Role::factory()->count(20)->create();
+        // Role::factory()->count(10)->create();
 
         // Klanten aanmaken (gekoppeld aan een persoon)
-        $customers = Customer::factory()->count(30)->create();
+        // $customers = Customer::factory()->count(10)->create();
 
         // Contactgegevens van klanten
-        Contact::factory()->count(30)->create();
+        // Contact::factory()->count(10)->create();
 
         // Werknemers aanmaken (gekoppeld aan een persoon)
-        $employees = Employee::factory()->count(20)->create();
+        // $employees = Employee::factory()->count(10)->create();
 
         // Luchthavens en bestemmingen
-        $departures = Departure::factory()->count(10)->create();
-        $destinations = Destination::factory()->count(10)->create();
+        // $departures = Departure::factory()->count(10)->create();
+        // $destinations = Destination::factory()->count(10)->create();
 
         // Reizen genereren (gekoppeld aan medewerkers, luchthavens)
-        $trips = Trip::factory()
-            ->count(20)
-            ->create();
+        // $trips = Trip::factory()->count(20)->create();
 
         // Boekingen (gekoppeld aan klanten en reizen)
-        $bookings = Booking::factory()
-            ->count(50)
-            ->create();
+        // $bookings = Booking::factory()->count(50)->create();
 
-        // Facturen (gekoppeld aan boekingen)
-        //  Invoice::factory()
-        //      ->count(30)
-        //      ->create();
+        //// Facturen (gekoppeld aan boekingen)
+        //// Invoice::factory()->count(30)->create();
 
         // Communicatie tussen klanten en medewerkers
-        Communication::factory()
-            ->count(20)
-            ->create();
-
-        // Maak 10 facturen aan
-        Invoice::factory()->count(10)->create();
+        // Communication::factory()->count(20)->create();
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Booking;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class InvoiceController extends Controller
 {
     /**
@@ -40,7 +41,7 @@ class InvoiceController extends Controller
         $bookings = Booking::all();
         $lastInvoice = Invoice::latest('id')->first();
         $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
-       
+
         return view('invoice.create', [
             'bookings' => $bookings,
             'newNumber' => $newNumber,
