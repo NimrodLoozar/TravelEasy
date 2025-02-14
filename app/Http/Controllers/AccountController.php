@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Person;
 use App\Models\Customer;
 use App\Models\Contact;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -14,8 +16,8 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $customers = Customer::with(['person', 'contacts'])->get();
-        return view('accounts.index', compact('customers'));
+        $accounts = Customer::with(['person', 'contacts'])->get();
+        return view('account.index', compact('accounts'));
     }
 
     /**
@@ -23,7 +25,7 @@ class AccountController extends Controller
      */
     public function create()
     {
-        return view('accounts.create');
+        return view('account.create');
     }
 
     /**
@@ -73,7 +75,7 @@ class AccountController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('accounts.index')->with('success', 'Account succesvol aangemaakt.');
+        return redirect()->route('account.index')->with('success', 'Account succesvol aangemaakt.');
     }
 
     /**
@@ -82,7 +84,7 @@ class AccountController extends Controller
     public function show(Customer $customer)
     {
         $customer->load(['person', 'contacts']);
-        return view('accounts.show', compact('customer'));
+        return view('account.show', compact('customer'));
     }
 
     /**
@@ -91,7 +93,7 @@ class AccountController extends Controller
     public function edit(Customer $customer)
     {
         $customer->load('person', 'contacts');
-        return view('accounts.edit', compact('customer'));
+        return view('account.edit', compact('customer'));
     }
 
     /**
@@ -139,7 +141,7 @@ class AccountController extends Controller
             'city' => $request->city,
         ]);
 
-        return redirect()->route('accounts.index')->with('success', 'Account succesvol bijgewerkt.');
+        return redirect()->route('account.index')->with('success', 'Account succesvol bijgewerkt.');
     }
 
     /**
@@ -148,6 +150,6 @@ class AccountController extends Controller
     public function destroy(Customer $customer)
     {
         $customer->delete();
-        return redirect()->route('accounts.index')->with('success', 'Account succesvol verwijderd.');
+        return redirect()->route('account.index')->with('success', 'Account succesvol verwijderd.');
     }
 }

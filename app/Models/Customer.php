@@ -9,6 +9,10 @@ class Customer extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'person_id',
         'relation_number',

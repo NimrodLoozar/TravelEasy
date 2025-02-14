@@ -53,8 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/create', [AccountController::class, 'create'])->name('account.create');
     Route::get('/account/{customer}', [AccountController::class, 'show'])->name('account.show');
     Route::post('/account', [AccountController::class, 'store'])->name('account.store');
-    Route::get('/account/{customer}/edit', [AccountController::class, 'edit'])->name('account.edit');
-    Route::put('/account/{customer}', [AccountController::class, 'update'])->name('account.update');
+    Route::get('/account/{id}/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::put('/account/{id}', [AccountController::class, 'update'])->name('account.update');
     Route::delete('/account/{customer}', [AccountController::class, 'destroy'])->name('account.destroy');
 
     // invoices

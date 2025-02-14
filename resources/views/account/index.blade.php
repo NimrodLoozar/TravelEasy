@@ -23,44 +23,57 @@
     <div id="dataContainer" class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8">
-
-                <!-- account List -->
-
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
                         @if ($accounts->count() > 0)
                             <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
-
-                                    <th class="py-4 px-6 text-left"> </th>
-
+                                        <th class="py-4 px-6 text-left">#</th>
+                                        <th class="py-4 px-6 text-left">Naam</th>
+                                        <th class="py-4 px-6 text-left">Relatienummer</th>
+                                        <th class="py-4 px-6 text-left">E-mail</th>
+                                        <th class="py-4 px-6 text-left">Telefoon</th>
+                                        <th class="py-4 px-6 text-left">Status</th>
+                                        <th class="py-4 px-6 text-left">Acties</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
                                     @foreach ($accounts as $account)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
-
-                                            <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># </td>
-                                            
-                                            
+                                            <td class="py-3 px-6">{{ $loop->iteration }}</td>
+                                            <td class="py-3 px-6">{{ $account->person->first_name }} {{ $account->person->middle_name }} {{ $account->person->last_name }}</td>
+                                            <td class="py-3 px-6">{{ $account->relation_number }}</td>
+                                            <td class="py-3 px-6">{{ $account->contacts->first()->email ?? '-' }}</td>
+                                            <td class="py-3 px-6">{{ $account->contacts->first()->mobile ?? '-' }}</td>
+                                            <td class="py-3 px-6">
+                                                <span class="px-2 py-1 rounded {{ $account->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                                    {{ $account->is_active ? 'Actief' : 'Inactief' }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-6 flex space-x-2">
+                                                <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">Bekijken</a>
+                                                <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">Bewerken</a>
+                                                <form action="{{ route('account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit account wilt verwijderen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:underline">Verwijderen</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         @else
-                            <tbody class="text-gray-600 text-sm font-light">
-                                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                    <td class="bg-red-500 text-white p-4 rounded mb-4" colspan="7">Geen accounts gevonden. Probeer later opnieuw.</td>
-                                </tr>
-                            </tbody>
+                            <p class="text-red-500 p-4">Geen accounts gevonden. Probeer later opnieuw.</p>
                         @endif
                     </div>
                 </div>
+           
             </div>
-            <div class="py-4">
-                {{ $accounts->links() }}
-            </div>
+        
+            
+        
         </div>
     </div>
 
@@ -81,7 +94,6 @@
             errorContainer.classList.remove('hidden');
         }
     });
-    
 </script>
 
 <style>
