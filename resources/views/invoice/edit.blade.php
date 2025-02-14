@@ -25,28 +25,80 @@
             @csrf
             @method('PUT')
 
-            <!-- Factuurnummer -->
+            <!-- Klantgegevens -->
             <div>
-                <label for="number" class="block text-sm font-medium text-gray-700">Factuurnummer</label>
-                <input type="text" name="number" id="number" value="{{ old('number', $invoice->number) }}"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    readonly>
+                <h3 class="text-lg font-bold">Factuur voor:</h3>
+                @if ($invoice->booking && $invoice->booking->customer && $invoice->booking->customer->person)
+                    <p>{{ $invoice->booking->customer->person->first_name }} 
+                       {{ $invoice->booking->customer->person->middle_name }} 
+                       {{ $invoice->booking->customer->person->last_name }}</p>
+                    <p>Relatienummer: {{ $invoice->booking->customer->relation_number }}</p>
+                @else
+                    <p>N/A</p>
+                @endif
             </div>
 
+            <!-- Factuurnummer -->
+            <div>
+                <label for="number" class="block text-sm font-bold text-gray-700">Factuurnummer</label>
+                <input type="text" id="number" value="{{ $invoice->number }}" readonly 
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
 
-            <!-- pending -->
-          
+            <!-- Datum -->
+            <div>
+                <label for="date" class="block text-sm font-bold text-gray-700">Datum</label>
+                <input type="date" name="date" id="date" value="{{ $invoice->date }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label for="status" class="block text-sm font-bold text-gray-700">Status</label>
+                <select name="status" id="status"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="in behandeling" @selected($invoice->status == 'in behandeling')>In Behandeling</option>
+                    <option value="betaald" @selected($invoice->status == 'betaald')>Betaald</option>
+                    <option value="onbetaald" @selected($invoice->status == 'onbetaald')>Onbetaald</option>
+                </select>
+            </div>
+
+            <!-- Bedragen -->
+            <div>
+                <label for="amount_excl_vat" class="block text-sm font-bold text-gray-700">Bedrag excl. BTW (€)</label>
+                <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01" value="{{ $invoice->amount_excl_vat }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+                <label for="vat" class="block text-sm font-bold text-gray-700">BTW (21%)</label>
+                <input type="number" id="vat" value="{{ $invoice->vat }}" readonly 
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="amount_incl_vat" class="block text-sm font-bold text-gray-700">Totaal incl. BTW (€)</label>
+                <input type="number" id="amount_incl_vat" value="{{ $invoice->amount_incl_vat }}" readonly 
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- Notitie -->
+            <div>
+                <label for="note" class="block text-sm font-bold text-gray-700">Notitie</label>
+                <textarea name="note" id="note" rows="3"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ $invoice->note }}</textarea>
+            </div>
 
             <!-- Actieknoppen -->
             <div class="flex justify-end gap-4">
-                <button type="submit"
-                    class="bg-blue-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Opslaan
-                </button>
-                <a href="{{ route('invoice.index') }}"
+            <a href="{{ route('invoice.index') }}"
                     class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
                     Annuleren
-                </a>
+                </a>    
+            <button type="submit"
+                    class="bg-blue-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Opslaan
+                </button>
             </div>
         </form>
     </div>
@@ -63,6 +115,22 @@
         document.getElementById('dataContainer').classList.toggle('hidden', !this.checked);
         document.getElementById('errorContainer').classList.toggle('hidden', this.checked);
     });
+
+    // BTW-berekening
+    document.getElementById('amount_excl_vat').addEventListener('input', calculateVat);
+    document.getElementById('vat').addEventListener('input', calculateVat);
+
+    function calculateVat() {
+        const amountExclVat = parseFloat(document.getElementById('amount_excl_vat').value) || 0;
+        const vatPercentage = parseFloat(document.getElementById('vat').value) || 0;
+        const vatAmount = (amountExclVat * vatPercentage) / 100;
+        const amountInclVat = amountExclVat + vatAmount;
+
+        document.getElementById('amount_incl_vat').value = amountInclVat.toFixed(2);
+    }
+
+    // Bereken BTW bij het laden van de pagina
+    calculateVat();
 </script>
 
 <style>

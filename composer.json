@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.9",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9"
     },
@@ -71,6 +72,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

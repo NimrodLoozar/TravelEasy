@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Booking;
+use App\Models\Customer;
+use App\Models\Trip;
+
+class BookingFactory extends Factory
+{
+    protected $model = Booking::class;
+
+    public function definition()
+    {
+        return [
+            'customer_id' => Customer::factory(),
+            'trip_id' => Trip::factory(),
+            'seat_number' => $this->faker->bothify('##?'),
+            'purchase_date' => $this->faker->date,
+            'purchase_time' => $this->faker->time,
+            'booking_status' => $this->faker->randomElement(['Confirmed', 'Pending', 'Cancelled']),
+            'price' => $this->faker->randomFloat(2, 50, 1000),
+            'quantity' => $this->faker->numberBetween(1, 5),
+            'special_requests' => $this->faker->optional()->text(100),
+            'is_active' => $this->faker->boolean,
+            'note' => $this->faker->optional()->text(100),
+        ];
+    }
+}
