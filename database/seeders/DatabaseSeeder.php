@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
         // Contact::factory()->count(10)->create();
 
         // Werknemers aanmaken (gekoppeld aan een persoon)
-        $employees = Employee::factory()->count(1)->create();
+        $employees = Employee::factory()->count(10)->create();
 
         // Luchthavens en bestemmingen
         // $departures = Departure::factory()->count(10)->create();
