@@ -33,15 +33,16 @@ class InvoiceController extends Controller
      * Toon details van een specifieke factuur.
      */
     public function show($id)
-    {
-        $invoice = DB::select('CALL spGetInvoiceById(?)', [$id]);
+        {
+            $invoices = DB::select('CALL spGetInvoiceById(?)', [$id]);
 
-        if (empty($invoice)) {
-            abort(404);
+            if (empty($invoices)) {
+                abort(404, 'Factuur niet gevonden.');
+            }
+
+            return view('invoice.show', ['invoices' => $invoices[0]]);
         }
 
-        return view('invoice.show', ['invoice' => $invoice[0]]);
-    }
 
     /**
      * Toon de create view voor een nieuwe factuur.
