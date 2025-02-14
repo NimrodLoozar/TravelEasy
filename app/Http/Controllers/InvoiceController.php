@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class InvoiceController extends Controller
 {
@@ -12,17 +12,22 @@ class InvoiceController extends Controller
      * Toon de lijst met facturen.
      */
     public function index()
-    {
-        $invoices = DB::select('CALL spGetInvoices()');
+{
+    $invoices = DB::select('CALL spGetInvoices()') ?? [];
 
-        $invoices = new \Illuminate\Pagination\LengthAwarePaginator(
-            collect($invoices)->forPage(\Request::get('page', 1), 12),
-            count($invoices),
-            12
-        );
-        
-        return view('invoice.index', compact('invoices'));
-    }
+    $currentPage = request('page', 1); // Correct way to get query parameters
+    $perPage = 12;
+
+    $paginatedInvoices = new LengthAwarePaginator(
+        collect($invoices)->forPage($currentPage, $perPage),
+        count($invoices),
+        $perPage,
+        $currentPage,
+        ['path' => request()->url(), 'query' => request()->query()] // Ensure pagination works properly
+    );
+
+    return view('invoice.index', compact('paginatedInvoices'));
+}
 
     /**
      * Toon details van een specifieke factuur.

@@ -26,7 +26,7 @@
                 <!-- Facturen List -->
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
-                        @if (count($invoices) > 0)
+                        @if (count($paginatedInvoices) > 0)
                             <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
@@ -38,7 +38,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
-                                    @foreach ($invoices as $invoice)
+                                    @foreach ($paginatedInvoices as $invoice)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
                                             
@@ -87,7 +87,7 @@
             </div>
 
             <div class="mt-4">
-                {{ $invoices->links() }}
+            {{ $paginatedInvoices->links() }}
             </div>
         </div>
     </div>
