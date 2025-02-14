@@ -16,7 +16,8 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Customer::with(['person', 'contacts'])->get();
+        // Haal alle klanten op met hun gerelateerde personen en contacten in aflopende volgorde
+        $accounts = Customer::with(['person', 'contacts'])->orderBy('created_at', 'desc')->get();
         return view('account.index', compact('accounts'));
     }
 
