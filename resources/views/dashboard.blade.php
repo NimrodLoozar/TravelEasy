@@ -31,7 +31,7 @@
                         <h4 class="text-xl font-semibold mt-4">Email</h4>
                         <p>{{ Auth::user()->email }}</p>
 
-
+                        <a href="{{ route('communications.index') }}">View All Communications</a>
                     </div>
                 </div>
             </div>

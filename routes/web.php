@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\InvoiceController;
 
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,8 @@ Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->na
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::resource('communications', CommunicationController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
