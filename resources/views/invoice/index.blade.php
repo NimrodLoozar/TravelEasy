@@ -41,11 +41,35 @@
                                     @foreach ($invoices as $invoice)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
-                                            <!-- person -->
+                                            
                                             <td class="py-3 px-6 text-left">
                                             {{ $invoice->first_name }} {{ $invoice->last_name }} 
-                                            
-                                    
+                                            </td>
+
+                                            <td class="py-3 px-6 text-left whitespace-nowrap">
+                                            {{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}
+                                            </td>
+
+                                            <td class="py-3 px-6 text-left">
+                                                @if($invoice->status == 'in behandeling')
+                                                    <span class="bg-yellow-400 text-white py-1 px-3 rounded-full text-xs font-medium">in behandeling</span>
+                                                @elseif($invoice->status == 'betaald')
+                                                    <span class="bg-green-500 text-white py-1 px-3 rounded-full text-xs font-medium">betaald</span>
+                                                @elseif($invoice->status == 'onbetaald')
+                                                    <span class="bg-red-500 text-white py-1 px-3 rounded-full text-xs font-medium">onbetaald</span>
+                                                @else
+                                                    <span class="bg-gray-500 text-white py-1 px-3 rounded-full text-xs font-medium">{{ $invoice->status }}</span>
+                                                @endif
+                                            </td>
+
+                                            <td class="py-3 px-6 text-center space-x-4">
+                                                <a href="{{ route('invoice.show', $invoice->id) }}" class="text-blue-600 hover:text-blue-800 transition duration-300">ⓘ</a>
+                                                <a href="{{ route('invoice.edit', $invoice->id) }}" class="text-yellow-500 hover:text-yellow-700 transition duration-300">✎</a>
+                                                <form action="{{ route('invoice.destroy', $invoice->id) }}" method="POST" class="inline-block" onsubmit="return confirmDeletion('{{ $invoice->date }}');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 transition duration-300">🗑️</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -61,7 +85,10 @@
                     </div>
                 </div>
             </div>
-           
+
+            <div class="mt-4">
+                {{ $invoices->links() }}
+            </div>
         </div>
     </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class InvoiceController extends Controller
 {
@@ -13,6 +14,13 @@ class InvoiceController extends Controller
     public function index()
     {
         $invoices = DB::select('CALL spGetInvoices()');
+
+        $invoices = new \Illuminate\Pagination\LengthAwarePaginator(
+            collect($invoices)->forPage(\Request::get('page', 1), 12),
+            count($invoices),
+            12
+        );
+        
         return view('invoice.index', compact('invoices'));
     }
 
