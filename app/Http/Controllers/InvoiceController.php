@@ -15,22 +15,25 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['booking.customer.person'])->orderBy('id', 'desc')->paginate(12);
+        $invoices = DB::select('CALL spGetAllInvoices()');
         return view('invoice.index', compact('invoices'));
     }
+    
 
     /**
      * Toon details van een specifieke factuur.
      */
     public function show($id)
     {
-        $invoice = Invoice::with([
-            'booking.customer.person',
-            'booking.trip'
-        ])->findOrFail($id);
-
-        return view('invoice.show', compact('invoice'));
+        $invoice = DB::select('CALL spGetInvoiceById(?)', [$id]);
+    
+        if (empty($invoice)) {
+            abort(404, 'Factuur niet gevonden');
+        }
+    
+        return view('invoice.show', ['invoice' => $invoice[0]]);
     }
+    
 
     /**
      * Toon de create view voor een nieuwe factuur.
@@ -56,28 +59,20 @@ class InvoiceController extends Controller
             'amount_excl_vat' => 'required|numeric|min:0',
             'note'            => 'nullable|string|max:500',
         ]);
-
-        $booking = Booking::with(['customer.person', 'trip'])->findOrFail($request->booking_id);
-
-        // Bereken bedragen
+    
         $vat = $request->amount_excl_vat * 0.21;
         $total = $request->amount_excl_vat + $vat;
-
-        // Genereer een factuur
-        $invoice = Invoice::create([
-            'number'          => Invoice::latest()->first()->number + 1 ?? 1001,
-            'date'            => now()->toDateString(),
-            'status'          => $request->status,
-            'amount_excl_vat' => $request->amount_excl_vat,
-            'vat'             => $vat,
-            'amount_incl_vat' => $total,
-            'note'            => $request->note,
-            'booking_id'      => $booking->id,
+        $newNumber = Invoice::latest()->first()->number + 1 ?? 1001;
+    
+        DB::statement('CALL spAddInvoice(?, ?, ?, ?, ?, ?, ?, ?)', [
+            $newNumber, now()->toDateString(), $request->status, 
+            $request->amount_excl_vat, $vat, $total, 
+            $request->note, $request->booking_id
         ]);
-
-        return redirect()->route('invoice.show', $invoice->id)
-            ->with('success', 'Factuur succesvol aangemaakt.');
+    
+        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
     }
+    
 
     /**
      * Toon de edit view voor een bestaande factuur.
@@ -96,34 +91,28 @@ class InvoiceController extends Controller
             'note'            => 'nullable|string|max:500',
         ]);
     
-        // Bereken bedragen
         $vat = $request->amount_excl_vat * 0.21;
         $total = $request->amount_excl_vat + $vat;
     
-        // Update factuur
-        $invoice->update([
-            'date'            => $request->date,
-            'status'          => $request->status,
-            'amount_excl_vat' => $request->amount_excl_vat,
-            'vat'             => $vat,
-            'amount_incl_vat' => $total,
-            'note'            => $request->note,
+        DB::statement('CALL spUpdateInvoice(?, ?, ?, ?, ?, ?, ?)', [
+            $invoice->id, $request->date, $request->status, 
+            $request->amount_excl_vat, $vat, $total, $request->note
         ]);
     
-        return redirect()->route('invoice.show', $invoice->id)
-            ->with('success', 'Factuur succesvol bijgewerkt.');
+        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt.');
     }
+    
 
     /**
      * Verwijder een factuur.
      */
     public function destroy($id)
     {
-        $invoice = Invoice::findOrFail($id);
-        $invoice->delete();
-
+        DB::statement('CALL spDeleteInvoice(?)', [$id]);
+    
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol verwijderd.');
     }
+    
 
     /**
      * Genereer het volgende factuurnummer.
