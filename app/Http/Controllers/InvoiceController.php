@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-=======
 use App\Models\Invoice;
-// use App\Models\Patient;
-// use App\Models\Treatment;
->>>>>>> origin/feature
+use App\Models\Customer;
+use App\Models\Booking;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-<<<<<<< HEAD
-    //
-}
-=======
     /**
      * Toon de lijst met facturen.
      */
     public function index()
     {
-        $invoices = Invoice::paginate(12);
+        $invoices = Invoice::with(['booking.customer.person'])->orderBy('id', 'desc')->paginate(12);
         return view('invoice.index', compact('invoices'));
     }
 
@@ -30,11 +25,12 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoice = Invoice::findOrFail($id);
-        // $patient = $invoice->patient; // Relatie gebruiken
+        $invoice = Invoice::with([
+            'booking.customer.person',
+            'booking.trip'
+        ])->findOrFail($id);
 
-        return view('invoice.show', compact('invoice'));
-        // return view('invoice.show', compact('invoice', 'patient'));
+        return view('invoices.show', compact('invoice'));
     }
 
     /**
@@ -42,17 +38,14 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-
+        $bookings = Booking::all();
         $lastInvoice = Invoice::latest('id')->first();
         $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
 
-        // $patients = Patient::all(['id', 'name']);
-        // $treatments = Treatment::all();
-        // $treatmentTypes = Treatment::distinct()->pluck('treatment_type');
-
-        return view('invoice.create', compact('newNumber'));
-        // return view('invoice.create', compact('patients', 'treatments', 'treatmentTypes', 'newNumber'));
-
+        return view('invoice.create', [
+            'bookings' => $bookings,
+            'newNumber' => $newNumber,
+        ]);
     }
 
     /**
@@ -64,23 +57,24 @@ class InvoiceController extends Controller
         $lastInvoice = Invoice::latest('id')->first();
         $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
 
-        // dd($request->all());
-
+        // Validate the request data
         $validated = $request->validate([
-            // 'patient_id' => 'required|exists:patients,id',
-            // 'treatment_type' => 'required|string',
-            // 'date' => 'required|date',
-            // 'amount' => 'required|numeric|min:0',
-            // 'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+            'booking_id' => 'required|exists:bookings,id', // Ensure booking_id is provided and valid
+            'number' => 'required|string', // Validate number field
+            'date' => 'required|date',
+            'amount_excl_vat' => 'required|numeric|min:0', // Validate amount fields
+            'vat' => 'required|numeric|min:0',
+            'amount_incl_vat' => 'required|numeric|min:0',
+            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+            'note' => 'nullable|string', // Validate note field
         ]);
 
-
-        // dd($request->all());
-
-        
+        // Add the generated invoice number to the validated data
         $validated['number'] = $newNumber;
 
-        // maak een nieuwe factuur aan
+        // dd($validated);
+
+        // Create a new invoice
         Invoice::create($validated);
 
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
@@ -91,14 +85,14 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
+        // Haal de factuur op die bewerkt moet worden
         $invoice = Invoice::findOrFail($id);
 
-        // $patients = Patient::all(['id', 'name']);
-        // $treatments = Treatment::all();
-        // $treatmentTypes = Treatment::distinct()->pluck('treatment_type');
+        // Haal alle bookings op (of een gefilterde lijst, afhankelijk van je behoeften)
+        $bookings = Booking::all();
 
-        return view('invoice.edit', compact('invoice'));
-        // return view('invoice.edit', compact('invoice', 'patients', 'treatments', 'treatmentTypes'));
+        // Geef de factuur en bookings door aan de view
+        return view('invoice.edit', compact('invoice', 'bookings'));
     }
 
     /**
@@ -106,22 +100,20 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $invoice = Invoice::findOrFail($id);
-
-        // Valideer invoer
-        $validated = $request->validate([
-            // 'treatment_id' => 'required|exists:treatments,id',
-            // 'patient_id' => 'required|exists:patients,id',
-            // 'number' => 'required|max:6',
-            // 'date' => 'required|date',
-            // 'amount' => 'required|numeric|min:0',
-            // 'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
+        $request->validate([
+            'date' => 'required|date',
+            'amount_excl_vat' => 'required|numeric|min:0',
+            'vat' => 'required|numeric|min:0',
+            'amount_incl_vat' => 'required|numeric|min:0',
+            'status' => 'required|in:in behandeling,betaald,onbetaald',
+            'booking_id' => 'required|exists:bookings,id',
+            'note' => 'nullable|string',
         ]);
 
-        // Update de factuur
-        $invoice->update($validated);
+        $invoice = Invoice::findOrFail($id);
+        $invoice->update($request->all());
 
-        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt.');
+        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt!');
     }
 
     /**
@@ -146,4 +138,3 @@ class InvoiceController extends Controller
         return response()->json(['nextNumber' => str_pad($nextNumber, 6, '0', STR_PAD_LEFT)]);
     }
 }
->>>>>>> origin/feature

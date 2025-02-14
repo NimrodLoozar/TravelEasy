@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <h2 class="font-semibold text-xl text-white-900 leading-tight">
                 {{ __('Facturen') }}
             </h2>
-            <div class="flex items-center">
-                <label class="flex items-center mr-4">
-                    <span class="mr-2 text-white-900 toon" >Toon Data</span>
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                <label class="flex items-center">
+                    <span class="mr-2 text-white-900 toon">Toon Data</span>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                         <input type="checkbox" id="dataToggle"
                             class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
@@ -24,29 +24,33 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Facturen List -->
-                <div class="w-full">
-                    <div class="bg-white shadow-lg rounded-lg my-6 overflow-x-auto">
+                <div class="w-full overflow-x-auto">
+                    <div class="bg-white shadow-lg rounded-lg my-6">
                         @if ($invoices->count() > 0)
-                            <table class="min-w-max w-full table-auto">
+                            <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
                                         <th class="py-4 px-6 text-left">Factuurnummer</th>
-                                        <!-- <th class="py-4 px-6 text-left">Patient</th>
+                                        <th class="py-4 px-6 text-left">Naam</th>
                                         <th class="py-4 px-6 text-left">Datum</th>
-                                        <th class="py-4 px-6 text-center">Bedrag</th>
-                                        <th class="py-4 px-6 text-center">Status</th>
-                                        <th class="py-4 px-6 text-center">Acties</th> -->
+                                        <th class="py-4 px-6 text-left">Status</th>
+                                        <th class="py-4 px-6 text-center">Acties</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
                                     @foreach ($invoices as $invoice)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
-                                            <!-- <td class="py-3 px-6 text-left">{{ $invoice->patient->name }}</td>
-                                            <td class="py-3 px-6 text-left">{{ $invoice->date }}</td>
-                                            <td class="py-3 px-6 text-center">€ {{ $invoice->amount }}</td> -->
-
-                                            <!-- <td class="py-3 px-6 text-center">
+                                            <!-- person -->
+                                            <td class="py-3 px-6 text-left">
+                                                @if ($invoice->booking && $invoice->booking->customer && $invoice->booking->customer->person)
+                                                    {{ $invoice->booking->customer->person->first_name }} {{ $invoice->booking->customer->person->middle_name }} {{ $invoice->booking->customer->person->last_name }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
+                                            <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}</td>
+                                            <td class="py-3 px-6 text-left">
                                                 @if($invoice->status == 'in behandeling')
                                                     <span class="bg-yellow-400 text-white py-1 px-3 rounded-full text-xs font-medium">in behandeling</span>
                                                 @elseif($invoice->status == 'betaald')
@@ -56,19 +60,15 @@
                                                 @else
                                                     <span class="bg-gray-500 text-white py-1 px-3 rounded-full text-xs font-medium">{{ $invoice->status }}</span>
                                                 @endif
-                                            </td> -->
-
-
+                                            </td>
                                             <td class="py-3 px-6 text-center space-x-4">
                                                 <a href="{{ route('invoice.show', $invoice->id) }}" class="text-blue-600 hover:text-blue-800 transition duration-300">ⓘ</a>
                                                 <a href="{{ route('invoice.edit', $invoice->id) }}" class="text-yellow-500 hover:text-yellow-700 transition duration-300">✎</a>
-                                                
-                                                <!-- <form action="{{ route('invoice.destroy', $invoice->id) }}" method="POST" class="inline-block" onsubmit="return confirmDeletion('{{ $invoice->date }}');">
+                                                <form action="{{ route('invoice.destroy', $invoice->id) }}" method="POST" class="inline-block" onsubmit="return confirmDeletion('{{ $invoice->date }}');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-500 hover:text-red-700 transition duration-300">🗑️</button>
-                                                </form> -->
-
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -77,7 +77,7 @@
                         @else
                             <tbody class="text-gray-600 text-sm font-light">
                                 <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                    <td class="bg-red-500 text-white p-4 rounded mb-4" colspan="6">Geen facturen gevonden. Probeer later opnieuw.</td>
+                                    <td class="bg-red-500 text-white p-4 rounded mb-4" colspan="7">Geen facturen gevonden. Probeer later opnieuw.</td>
                                 </tr>
                             </tbody>
                         @endif
@@ -123,7 +123,6 @@
 </script>
 
 <style>
-
     h2 {
         color: #fff;
     }

@@ -27,14 +27,87 @@
             <div>
                 <label for="number" class="block text-sm font-medium text-gray-700">Factuurnummer</label>
                 <input type="text" name="number" id="number"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    value="{{ $newNumber }}" readonly>
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                value="{{ $newNumber }}" readonly placeholder="Factuurnummer wordt automatisch gegenereerd">
             </div>
 
-           
-            <!-- pending -->
 
+            <!-- booking info still needed for flights and stuff. -->
 
+            <!-- Booking Selectie -->
+            <div>
+                <label for="booking_id" class="block text-sm font-medium text-gray-700">Booking</label>
+                <select name="booking_id" id="booking_id"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    @if($bookings->isEmpty())
+                        <option value="" disabled>Geen bookings beschikbaar</option>
+                    @else
+                        @foreach($bookings as $booking)
+                            <option value="{{ $booking->id }}">{{ $booking->name }} (ID: {{ $booking->id }})</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+            <!-- Datum -->
+            <div>
+                <label for="date" class="block text-sm font-medium text-gray-700">Datum</label>
+                <input type="date" name="date" id="date"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    required>
+            </div>
+
+            <!-- Bedrag exclusief BTW -->
+            <div>
+                <label for="amount_excl_vat" class="block text-sm font-medium text-gray-700">Bedrag exclusief BTW</label>
+                <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    required>
+            </div>
+
+            <!-- BTW Percentage -->
+            <div>
+                <label for="vat" class="block text-sm font-medium text-gray-700">BTW Percentage</label>
+                <input type="number" name="vat" id="vat" step="0.01"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    value="21" required readonly>
+            </div>
+
+            <!-- Bedrag inclusief BTW -->
+            <div>
+                <label for="amount_incl_vat" class="block text-sm font-medium text-gray-700">Bedrag inclusief BTW</label>
+                <input type="number" name="amount_incl_vat" id="amount_incl_vat" step="0.01"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    readonly>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" id="status"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="in behandeling">In Behandeling</option>
+                    <option value="betaald">Betaald</option>
+                    <option value="onbetaald">Onbetaald</option>
+                </select>
+            </div>
+
+            <!-- Notitie -->
+            <div>
+                <label for="note" class="block text-sm font-medium text-gray-700">Notitie</label>
+                <textarea name="note" id="note" rows="3"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <!-- Actieknoppen -->
             <div class="flex flex-wrap gap-4">
@@ -58,9 +131,35 @@
 <script>
     // Toggle visibility
     document.getElementById('dataToggle').addEventListener('change', function () {
-        document.getElementById('dataContainer').classList.toggle('hidden', !this.checked);
-        document.getElementById('errorContainer').classList.toggle('hidden', this.checked);
+    const dataContainer = document.getElementById('dataContainer');
+    const errorContainer = document.getElementById('errorContainer');
+
+    dataContainer.classList.toggle('hidden', !this.checked);
+    errorContainer.classList.toggle('hidden', this.checked);
+
+    if (!this.checked) {
+        errorContainer.classList.add('hidden'); // Zorg ervoor dat foutmeldingen ook verborgen zijn
+    }
     });
+
+    document.querySelector('a[href="{{ route('invoice.index') }}"]').addEventListener('click', function (e) {
+        if (!confirm('Weet je zeker dat je wilt annuleren? Niet-opgeslagen gegevens gaan verloren.')) {
+            e.preventDefault();
+        }
+    });
+
+    // Calculate amount incl. VAT
+    document.getElementById('amount_excl_vat').addEventListener('input', calculateVat);
+    document.getElementById('vat').addEventListener('input', calculateVat);
+
+    function calculateVat() {
+        const amountExclVat = parseFloat(document.getElementById('amount_excl_vat').value) || 0;
+        const vatPercentage = parseFloat(document.getElementById('vat').value) || 0;
+        const vatAmount = (amountExclVat * vatPercentage) / 100;
+        const amountInclVat = amountExclVat + vatAmount;
+
+        document.getElementById('amount_incl_vat').value = amountInclVat.toFixed(2);
+    }
 </script>
 
 <style>

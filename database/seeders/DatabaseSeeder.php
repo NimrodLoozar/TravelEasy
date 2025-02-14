@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use App\Models\Invoice;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Person;
-use App\Models\User;
 use App\Models\Role;
 use App\Models\Customer;
 use App\Models\Contact;
@@ -13,8 +15,8 @@ use App\Models\Departure;
 use App\Models\Destination;
 use App\Models\Trip;
 use App\Models\Booking;
-use App\Models\Invoice;
 use App\Models\Communication;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,111 +25,85 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create base roles
-        $roles = Role::factory()
-            ->count(5) // Reduced from 10 as most systems don't need that many roles
-            ->create();
+        // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
+        //$people = Person::factory()->count(10)->create();
 
-        // Create people first as they're the base for many relationships
-        $people = Person::factory()
-            ->count(42) // Increased to accommodate all relationships
-            ->create();
+        // Maak een admin en testgebruiker (specifieke users)
+        $person = Person::factory()->create([
+            'first_name' => fake()->firstName,
+            'middle_name' => fake()->optional()->lastName,
+            'last_name' => fake()->lastName,
+        ]);
 
-        // Create specific users
-        $adminUser = User::factory()->admin()->create();
-        $testUser = User::factory()->testuser()->create();
+        $customer = Customer::create([
+            'person_id' => $person->id,
+            'relation_number' => fake()->unique()->numberBetween(100000, 999999),
+        ]);
 
-        // Create regular users with person relationships
-        $users = User::factory()
-            ->count(10)
-            ->state(function () use ($people) {
-                return [
-                    'person_id' => $people->random()->id,
-                ];
-            })
-            ->create();
+        Contact::create([
+            'customer_id' => $customer->id,
+            'email' => 'test@gmail.com',
+            // ...other required fields for Contact model...
+        ]);
 
-        // Create customers with person relationships
-        $customers = Customer::factory()
-            ->count(20)
-            ->state(function () use ($people) {
-                return [
-                    'person_id' => $people->random()->id,
-                ];
-            })
-            ->create();
+        User::create([
+            'person_id' => $person->id,
+            'name' => 'TestUser',
+            'password' => Hash::make('Test1234'),
+        ]);
 
-        // Create contacts for customers
-        Contact::factory()
-            ->count(20) // Increased to match customer count
-            ->state(function () use ($customers) {
-                return [
-                    'customer_id' => $customers->random()->id,
-                ];
-            })
-            ->create();
+        $adminPerson = Person::factory()->create([
+            'first_name' => fake()->firstName,
+            'middle_name' => fake()->optional()->lastName,
+            'last_name' => fake()->lastName,
+        ]);
 
-        // Create employees with person relationships
-        $employees = Employee::factory()
-            ->count(10)
-            ->state(function () use ($people) {
-                return [
-                    'person_id' => $people->random()->id,
-                ];
-            })
-            ->create();
+        $adminCustomer = Customer::create([
+            'person_id' => $adminPerson->id,
+            'relation_number' => fake()->unique()->numberBetween(100000, 999999),
+        ]);
 
-        // Create departures and destinations
-        $departures = Departure::factory()
-            ->count(10)
-            ->create();
+        Contact::create([
+            'customer_id' => $adminCustomer->id,
+            'email' => 'admin@gmail.com',
+            // ...other required fields for Contact model...
+        ]);
 
-        $destinations = Destination::factory()
-            ->count(20) // Increased for more variety
-            ->create();
+        User::create([
+            'person_id' => $adminPerson->id,
+            'name' => 'AdminUser',
+            'password' => Hash::make('Admin1234'),
+        ]);
 
-        // Create trips with proper relationships
-        $trips = Trip::factory()
-            ->count(30)
-            ->state(function () use ($employees, $departures, $destinations) {
-                return [
-                    'employee_id' => $employees->random()->id,
-                    'departure_id' => $departures->random()->id,
-                    'destination_id' => $destinations->random()->id,
-                ];
-            })
-            ->create();
+        // Nu de rest van de gebruikers (gekoppeld aan een persoon)
+        User::factory()->count(10)->create();
 
-        // Create bookings with proper relationships
-        $bookings = Booking::factory()
-            ->count(40)
-            ->state(function () use ($customers, $trips) {
-                return [
-                    'customer_id' => $customers->random()->id,
-                    'trip_id' => $trips->random()->id,
-                ];
-            })
-            ->create();
+        // Rollen aanmaken
+        // Role::factory()->count(10)->create();
 
-        // Create invoices for bookings
-        // Invoice::factory()
-        //     ->count(40) // Match booking count
-        //     ->state(function () use ($bookings) {
-        //         return [
-        //             'booking_id' => $bookings->random()->id,
-        //         ];
-        //     })
-        //     ->create();
+        // Klanten aanmaken (gekoppeld aan een persoon)
+        // $customers = Customer::factory()->count(10)->create();
 
-        // Create communications between customers and employees
-        Communication::factory()
-            ->count(10)
-            ->state(function () use ($customers, $employees) {
-                return [
-                    'customer_id' => $customers->random()->id,
-                    'employee_id' => $employees->random()->id,
-                ];
-            })
-            ->create();
+        // Contactgegevens van klanten
+        // Contact::factory()->count(10)->create();
+
+        // Werknemers aanmaken (gekoppeld aan een persoon)
+        // $employees = Employee::factory()->count(10)->create();
+
+        // Luchthavens en bestemmingen
+        // $departures = Departure::factory()->count(10)->create();
+        // $destinations = Destination::factory()->count(10)->create();
+
+        // Reizen genereren (gekoppeld aan medewerkers, luchthavens)
+        // $trips = Trip::factory()->count(20)->create();
+
+        // Boekingen (gekoppeld aan klanten en reizen)
+        // $bookings = Booking::factory()->count(50)->create();
+
+        //// Facturen (gekoppeld aan boekingen)
+        //// Invoice::factory()->count(30)->create();
+
+        // Communicatie tussen klanten en medewerkers
+        // Communication::factory()->count(20)->create();
     }
 }
