@@ -23,6 +23,6 @@ class Customer extends Model
 
     public function contacts()
     {
-        return $this->hasOne(Contact::class);
+        return $this->hasMany(Contact::class);
     }
 }

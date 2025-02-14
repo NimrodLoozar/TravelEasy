@@ -15,7 +15,6 @@ class Person extends Model
         'last_name',
         'birth_date',
         'passport_details',
-        'is_active',
         'note',
     ];
 

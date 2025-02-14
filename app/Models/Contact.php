@@ -18,7 +18,6 @@ class Contact extends Model
         'city',
         'mobile',
         'email',
-        'is_active',
         'note',
     ];
 
