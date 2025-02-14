@@ -9,13 +9,16 @@ class Person extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'first_name',
         'middle_name',
         'last_name',
         'birth_date',
         'passport_details',
-        'is_active',
         'note',
     ];
 

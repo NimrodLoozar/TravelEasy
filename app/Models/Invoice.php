@@ -21,7 +21,7 @@ class Invoice extends Model
         'booking_id',
         'number',
         'date',
-        'amount_excl_vat', // Ensure this is included
+        'amount_excl_vat',
         'vat',
         'amount_incl_vat',
         'status',

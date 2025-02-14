@@ -9,6 +9,10 @@ class Contact extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'customer_id',
         'street',
@@ -18,7 +22,6 @@ class Contact extends Model
         'city',
         'mobile',
         'email',
-        'is_active',
         'note',
     ];
 
