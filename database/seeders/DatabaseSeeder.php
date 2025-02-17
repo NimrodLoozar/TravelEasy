@@ -69,10 +69,24 @@ class DatabaseSeeder extends Seeder
             // ...other required fields for Contact model...
         ]);
 
-        User::create([
+        $adminUser = User::create([
             'person_id' => $adminPerson->id,
             'name' => 'AdminUser',
             'password' => Hash::make('Admin1234'),
+        ]);
+
+        $adminRole = Role::create([
+            'user_id' => $adminUser->id,
+            'name' => 'admin',
+        ]);
+
+        // Associate the role with the user
+        $adminUser->roles()->save($adminRole);
+
+        Employee::create([
+            'person_id' => $adminPerson->id,
+            'number' => fake()->unique()->numberBetween(100000, 999999),
+            'employee_type' => 'Administrator',
         ]);
 
         // Nu de rest van de gebruikers (gekoppeld aan een persoon)
