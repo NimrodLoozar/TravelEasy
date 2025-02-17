@@ -157,22 +157,35 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('communications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-            $table->text('message');
-            $table->date('sent_date');
-            $table->boolean('is_active')->default(true);
-            $table->text('note')->nullable();
+        // Conversations table
+        Schema::create('conversations', function (Blueprint $table) {
+            $table->id();   
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('recipient');
             $table->timestamps();
         });
+
+        // Messages table
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->text('content');
+            $table->boolean('is_read')->default(false);
+            $table->timestamps();
+
+            // $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+        // DB::statement('ALTER TABLE messages MODIFY is_read BIT(1) default 0');
+
     }
 
     public function down()
     {
-
-        Schema::dropIfExists('communications');
+        // Drop tables in reverse order to avoid foreign key constraints
+        Schema::dropIfExists('messages'); // Add this
+        Schema::dropIfExists('conversations'); // Add this
         Schema::dropIfExists('invoices');
         Schema::dropIfExists('bookings');
         Schema::dropIfExists('trips');
@@ -182,9 +195,9 @@ return new class extends Migration {
         Schema::dropIfExists('contacts');
         Schema::dropIfExists('customers');
         Schema::dropIfExists('roles');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
         Schema::dropIfExists('people');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
     }
 };

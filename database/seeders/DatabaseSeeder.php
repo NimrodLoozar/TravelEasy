@@ -109,6 +109,6 @@ class DatabaseSeeder extends Seeder
         //// Invoice::factory()->count(30)->create();
 
         // Communicatie tussen klanten en medewerkers
-        Communication::factory()->count(20)->create();
+        // Communication::factory()->count(20)->create();
     }
 }
