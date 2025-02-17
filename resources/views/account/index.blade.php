@@ -73,7 +73,7 @@
                                             <td class="py-3 px-6 flex space-x-2">
                                                 <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">ⓘ</a>
                                                 <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">✎</a>
-                                                <form action="{{ route('account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit account wilt verwijderen?');">
+                                                <form action="{{ route('account.destroy', $account->id) }}" method="POST" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-500 hover:underline">🗑️</button>
@@ -153,6 +153,16 @@
 
     document.getElementById('searchName').addEventListener('input', performSearch);
     document.getElementById('searchRelation').addEventListener('input', performSearch);
+
+    // Add this to your existing JavaScript
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (confirm('Weet je zeker dat je dit account permanent wilt verwijderen? Dit kan niet ongedaan worden gemaakt!')) {
+                this.submit();
+            }
+        });
+    });
 </script>
 
 <style>

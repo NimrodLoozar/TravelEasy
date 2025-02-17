@@ -226,6 +226,7 @@ class AccountController extends Controller
     public function destroy($id)
     {
         try {
+            // Check if account exists
             $account = collect(DB::select('CALL spGetAccountById(?)', [$id]))->first();
             
             if (!$account) {
@@ -235,13 +236,12 @@ class AccountController extends Controller
 
             DB::select('CALL spDeleteAccount(?)', [$id]);
             return redirect()->route('account.index')
-                ->with('success', 'Account succesvol verwijderd.');
-        } catch (\PDOException $e) {
-            Log::error('Database error while deleting account: ' . $e->getMessage());
-            return back()->with('error', 'Database fout bij het verwijderen van het account.');
+                ->with('success', 'Account is succesvol verwijderd.');
+                
         } catch (\Exception $e) {
-            Log::error('Error while deleting account: ' . $e->getMessage());
-            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen van het account.');
+            Log::error('Error deleting account: ' . $e->getMessage());
+            return redirect()->route('account.index')
+                ->with('error', 'Er is een fout opgetreden bij het verwijderen van het account.');
         }
     }
 }

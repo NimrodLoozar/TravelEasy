@@ -192,16 +192,21 @@ return new class extends Migration
             CREATE PROCEDURE spDeleteAccount(IN accountId INT)
             BEGIN
                 DECLARE customer_person_id INT;
+            
                 
                 START TRANSACTION;
                 
+                -- Get person_id and verify account exists
                 SELECT person_id INTO customer_person_id
                 FROM customers
                 WHERE id = accountId;
                 
-                UPDATE contacts SET is_active = 0 WHERE customer_id = accountId;
-                UPDATE customers SET is_active = 0 WHERE id = accountId;
-                UPDATE people SET is_active = 0 WHERE id = customer_person_id;
+                
+                -- Delete all related records
+                DELETE FROM bookings WHERE customer_id = accountId;
+                DELETE FROM contacts WHERE customer_id = accountId;
+                DELETE FROM customers WHERE id = accountId;
+                DELETE FROM people WHERE id = customer_person_id;
                 
                 COMMIT;
             END
