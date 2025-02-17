@@ -14,7 +14,7 @@ class CustomerFactory extends Factory
     {
         return [
             'person_id' => Person::factory(),
-            'relation_number' => $this->faker->unique()->randomNumber(8),
+            'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
             'is_active' => $this->faker->boolean,
             'note' => $this->faker->optional()->text(100),
         ];
