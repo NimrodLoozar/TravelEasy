@@ -48,6 +48,7 @@ class UserFactory extends Factory
         Contact::create([
             'customer_id' => $customer->id,
             'email' => $this->faker->unique()->safeEmail,
+            'mobile' => $this->faker->phoneNumber,
             // ...other required fields for Contact model...
         ]);
         return $user;
