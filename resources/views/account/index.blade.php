@@ -45,8 +45,14 @@
                                                 <td class="py-3 px-6">{{ $account->id }}</td>
                                                 <td class="py-3 px-6">{{ $account->person->first_name }} {{ $account->person->middle_name }} {{ $account->person->last_name }}</td>
                                                 <td class="py-3 px-6">{{ $account->relation_number }}</td>
-                                                <td class="py-3 px-6">{{ $account->contacts->first()->email }}</td>
-                                                <td class="py-3 px-6">{{ $account->contacts->first()->mobile }}</td>
+                                                <td class="py-3 px-6">
+                                                    <span class="email" data-email="{{ $account->contacts->first()->email }}">••••@••••.com</span>
+                                                    <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
+                                                </td>
+                                                <td class="py-3 px-6">
+                                                    <span class="phone" data-phone="{{ $account->contacts->first()->mobile }}">••••••••••</span>
+                                                    <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
+                                                </td>
                                                 <td class="py-3 px-6">
                                                     <span class="px-2 py-1 rounded {{ $account->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
                                                         {{ $account->is_active ? 'Actief' : 'Inactief' }}
@@ -92,6 +98,25 @@
             errorContainer.classList.remove('hidden');
         }
     });
+
+    function toggleVisibility(button) {
+        const span = button.previousElementSibling;
+        if (span.textContent.includes('••••')) {
+            if (span.classList.contains('email')) {
+                span.textContent = span.getAttribute('data-email');
+            } else if (span.classList.contains('phone')) {
+                span.textContent = span.getAttribute('data-phone');
+            }
+            button.textContent = '👁️';
+        } else {
+            if (span.classList.contains('email')) {
+                span.textContent = '••••@••••.com';
+            } else if (span.classList.contains('phone')) {
+                span.textContent = '••••••••••';
+            }
+            button.textContent = '👁️';
+        }
+    }
 </script>
 
 <style>
@@ -110,5 +135,12 @@
 
     .toggle-checkbox:checked+.toggle-label {
         background-color: #38A169;
+    }
+
+    .reveal-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 5px;
     }
 </style>
