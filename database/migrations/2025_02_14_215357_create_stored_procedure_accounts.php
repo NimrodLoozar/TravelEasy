@@ -12,8 +12,8 @@ return new class extends Migration
     {
         // Get all accounts - Updated with all fields needed for index
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS spGetAccounts;
-            CREATE PROCEDURE spGetAccounts()
+            DROP PROCEDURE IF EXISTS spGetAllAccounts;
+            CREATE PROCEDURE spGetAllAccounts()
             BEGIN
                 SELECT 
                     c.id,
@@ -38,7 +38,7 @@ return new class extends Migration
                 LEFT JOIN contacts co ON c.id = co.customer_id
                 WHERE co.email IS NOT NULL 
                 AND co.mobile IS NOT NULL
-                ORDER BY c.created_at DESC;
+                ORDER BY p.id DESC;
             END
         ');
 
@@ -197,7 +197,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::unprepared('DROP PROCEDURE IF EXISTS spGetAccounts;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS spGetAllAccounts;');
         DB::unprepared('DROP PROCEDURE IF EXISTS spGetAccountById;');
         DB::unprepared('DROP PROCEDURE IF EXISTS spAddAccount;');
         DB::unprepared('DROP PROCEDURE IF EXISTS spUpdateAccount;');

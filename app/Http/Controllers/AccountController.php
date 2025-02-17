@@ -10,6 +10,7 @@ use App\Models\Person;
 use App\Models\Customer;
 use App\Models\Contact;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class AccountController extends Controller
@@ -21,7 +22,7 @@ class AccountController extends Controller
     {
         // Call the stored procedure
         try {
-            $accounts = DB::select('CALL spGetAccounts()') ?? [];
+            $accounts = DB::select('CALL spGetAllAccounts()') ?? [];
         } catch (\Exception $e) {
             // Log the error and return an empty array
             Log::error('Failed to fetch accounts: ' . $e->getMessage());
