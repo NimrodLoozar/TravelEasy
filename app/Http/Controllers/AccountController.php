@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 use App\Models\Person;
 use App\Models\Customer;
 use App\Models\Contact;
+use Carbon\Carbon;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -16,9 +19,20 @@ class AccountController extends Controller
      */
     public function index()
     {
-        // Haal alle klanten op met hun gerelateerde personen en contacten in aflopende volgorde
-        $accounts = Customer::with(['person', 'contacts'])->orderBy('created_at', 'desc')->get();
-        return view('account.index', compact('accounts'));
+        $accounts = DB::select('CALL spGetAccounts()') ?? [];
+
+        $currentPage = request('page', 1);
+        $perPage = 12;
+    
+        $paginatedAccounts = new LengthAwarePaginator(
+            collect($accounts)->forPage($currentPage, $perPage),
+            count($accounts),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('account.index', compact('paginatedAccounts'));
     }
 
     /**

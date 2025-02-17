@@ -16,10 +16,10 @@ class InvoiceController extends Controller
      * Toon de lijst met facturen.
      */
     public function index()
-{
+    {
     $invoices = DB::select('CALL spGetInvoices()') ?? [];
 
-    $currentPage = request('page', 1); // Correct way to get query parameters
+    $currentPage = request('page', 1); 
     $perPage = 12;
 
     $paginatedInvoices = new LengthAwarePaginator(
@@ -27,11 +27,11 @@ class InvoiceController extends Controller
         count($invoices),
         $perPage,
         $currentPage,
-        ['path' => request()->url(), 'query' => request()->query()] // Ensure pagination works properly
+        ['path' => request()->url(), 'query' => request()->query()]
     );
 
-    return view('invoice.index', compact('paginatedInvoices'));
-}
+        return view('invoice.index', compact('paginatedInvoices'));
+    }
 
     /**
      * Toon details van een specifieke factuur.

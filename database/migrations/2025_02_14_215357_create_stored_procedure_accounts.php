@@ -10,8 +10,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Get all accounts
+        // Get all accounts - Updated with all fields needed for index
         DB::unprepared('
+            DROP PROCEDURE IF EXISTS spGetAccounts;
             CREATE PROCEDURE spGetAccounts()
             BEGIN
                 SELECT 
@@ -19,20 +20,28 @@ return new class extends Migration
                     p.first_name,
                     p.middle_name,
                     p.last_name,
+                    p.birth_date,
+                    p.passport_details,
                     c.relation_number,
                     co.email,
                     co.mobile,
-                    c.is_active
+                    co.street,
+                    co.house_number,
+                    co.addition,
+                    co.postal_code,
+                    co.city,
+                    c.is_active,
+                    c.created_at
                 FROM customers c
                 INNER JOIN people p ON c.person_id = p.id
-                INNER JOIN contacts co ON c.id = co.customer_id
-                WHERE c.is_active = 1
-                ORDER BY c.id;
+                LEFT JOIN contacts co ON c.id = co.customer_id
+                ORDER BY c.created_at DESC;
             END
         ');
 
         // Get account by ID
         DB::unprepared('
+        DROP PROCEDURE IF EXISTS spGetAccountById;
             CREATE PROCEDURE spGetAccountById(IN accountId INT)
             BEGIN
                 SELECT 
@@ -53,6 +62,7 @@ return new class extends Migration
 
         // Add new account
         DB::unprepared('
+        DROP PROCEDURE IF EXISTS spAddAccount;
             CREATE PROCEDURE spAddAccount(
                 IN p_first_name VARCHAR(255),
                 IN p_middle_name VARCHAR(255),
@@ -86,6 +96,7 @@ return new class extends Migration
 
         // Update account
         DB::unprepared('
+        DROP PROCEDURE IF EXISTS spUpdateAccount;
             CREATE PROCEDURE spUpdateAccount(
                 IN p_id INT,
                 IN p_first_name VARCHAR(255),
@@ -127,6 +138,7 @@ return new class extends Migration
 
         // Delete account
         DB::unprepared('
+        DROP PROCEDURE IF EXISTS spDeleteAccount;
             CREATE PROCEDURE spDeleteAccount(IN accountId INT)
             BEGIN
                 DECLARE customer_person_id INT;

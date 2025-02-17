@@ -25,7 +25,7 @@
             <div class="flex flex-col lg:flex-row gap-8">
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
-                        @if ($accounts->count() > 0)
+                    @if ($paginatedAccounts !== null && count($paginatedAccounts) > 0)
                             <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
@@ -39,18 +39,18 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
-                                    @foreach ($accounts as $account)
-                                        @if ($account->contacts->first() && $account->contacts->first()->email && $account->contacts->first()->mobile)
+                                @foreach ($paginatedAccounts as $account)
+                                        @if ($account->email && $account->mobile)
                                             <tr class="border-b border-gray-200 hover:bg-gray-50">
                                                 <td class="py-3 px-6">{{ $account->id }}</td>
-                                                <td class="py-3 px-6">{{ $account->person->first_name }} {{ $account->person->middle_name }} {{ $account->person->last_name }}</td>
+                                                <td class="py-3 px-6">{{ $account->name }}</td>
                                                 <td class="py-3 px-6">{{ $account->relation_number }}</td>
                                                 <td class="py-3 px-6">
-                                                    <span class="email" data-email="{{ $account->contacts->first()->email }}">••••@••••.com</span>
+                                                    <span class="email" data-email="{{ $account->email }}">••••@••••.com</span>
                                                     <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
                                                 </td>
                                                 <td class="py-3 px-6">
-                                                    <span class="phone" data-phone="{{ $account->contacts->first()->mobile }}">••••••••••</span>
+                                                    <span class="phone" data-phone="{{ $account->mobile }}">••••••••••</span>
                                                     <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
                                                 </td>
                                                 <td class="py-3 px-6">
@@ -77,6 +77,10 @@
                         @endif
                     </div>
                 </div>
+            </div>
+
+            <div class="mt-4">
+            {{ $paginatedAccounts->links() }}
             </div>
         </div>
     </div>
