@@ -39,8 +39,12 @@ class PersonFactory extends Factory
             'middle_name' => $this->faker->optional()->lastName,
             'last_name' => $this->faker->lastName,
             'birth_date' => $this->faker->date,
+
+            // PLEASE FIX THIS
             'passport_details' => $passportDetails, // Structured passport details
             'is_active' => true,
+
+
         ];
     }
 }
