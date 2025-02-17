@@ -5,6 +5,13 @@
                 {{ __('Accounts') }}
             </h2>
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                <!-- Add search form -->
+                <div class="flex space-x-2">
+                    <input type="text" id="searchName" placeholder="naam" 
+                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <input type="text" id="searchRelation" placeholder="relatienummer" 
+                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
                 <label class="flex items-center">
                     <span class="mr-2 text-white-900 toon">Toon Data</span>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
@@ -25,7 +32,7 @@
             <div class="flex flex-col lg:flex-row gap-8">
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
-                    @if ($paginatedAccounts !== null && count($paginatedAccounts) > 0)
+                        @if ($paginatedAccounts->isNotEmpty())
                             <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
@@ -39,36 +46,34 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
-                                @foreach ($paginatedAccounts as $account)
-                                        @if ($account->email && $account->mobile)
-                                            <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                                <td class="py-3 px-6">{{ $account->id }}</td>
-                                                <td class="py-3 px-6">{{ $account->name }}</td>
-                                                <td class="py-3 px-6">{{ $account->relation_number }}</td>
-                                                <td class="py-3 px-6">
-                                                    <span class="email" data-email="{{ $account->email }}">••••@••••.com</span>
-                                                    <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
-                                                </td>
-                                                <td class="py-3 px-6">
-                                                    <span class="phone" data-phone="{{ $account->mobile }}">••••••••••</span>
-                                                    <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
-                                                </td>
-                                                <td class="py-3 px-6">
-                                                    <span class="px-2 py-1 rounded {{ $account->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                                                        {{ $account->is_active ? 'Actief' : 'Inactief' }}
-                                                    </span>
-                                                </td>
-                                                <td class="py-3 px-6 flex space-x-2">
-                                                    <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">ⓘ</a>
-                                                    <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">✎</a>
-                                                    <form action="{{ route('account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit account wilt verwijderen?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-500 hover:underline">🗑️</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endif
+                                    @foreach ($paginatedAccounts as $account)
+                                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                            <td class="py-3 px-6">{{ $account->id }}</td>
+                                            <td class="py-3 px-6">{{ $account->first_name }} {{ $account->middle_name }} {{ $account->last_name }}</td>
+                                            <td class="py-3 px-6">{{ $account->relation_number }}</td>
+                                            <td class="py-3 px-6">
+                                                <span class="email" data-email="{{ $account->email }}">••••@••••.com</span>
+                                                <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
+                                            </td>
+                                            <td class="py-3 px-6">
+                                                <span class="phone" data-phone="{{ $account->mobile }}">••••••••••</span>
+                                                <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
+                                            </td>
+                                            <td class="py-3 px-6">
+                                                <span class="px-2 py-1 rounded {{ $account->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                                    {{ $account->is_active ? 'Actief' : 'Inactief' }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-6 flex space-x-2">
+                                                <a href="{{ route('account.show', $account->id) }}" class="text-blue-500 hover:underline">ⓘ</a>
+                                                <a href="{{ route('account.edit', $account->id) }}" class="text-yellow-500 hover:underline">✎</a>
+                                                <form action="{{ route('account.destroy', $account->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit account wilt verwijderen?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:underline">🗑️</button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -80,7 +85,7 @@
             </div>
 
             <div class="mt-4">
-            {{ $paginatedAccounts->links() }}
+                {{ $paginatedAccounts->links() }}
             </div>
         </div>
     </div>
@@ -104,23 +109,44 @@
     });
 
     function toggleVisibility(button) {
-        const span = button.previousElementSibling;
-        if (span.textContent.includes('••••')) {
-            if (span.classList.contains('email')) {
-                span.textContent = span.getAttribute('data-email');
-            } else if (span.classList.contains('phone')) {
-                span.textContent = span.getAttribute('data-phone');
-            }
-            button.textContent = '👁️';
-        } else {
-            if (span.classList.contains('email')) {
-                span.textContent = '••••@••••.com';
-            } else if (span.classList.contains('phone')) {
-                span.textContent = '••••••••••';
-            }
-            button.textContent = '👁️';
+    const span = button.previousElementSibling;
+    if (span.textContent.includes('••••')) {
+        if (span.classList.contains('email')) {
+            span.textContent = span.getAttribute('data-email');
+        } else if (span.classList.contains('phone')) {
+            span.textContent = span.getAttribute('data-phone');
+        }
+    } else {
+        if (span.classList.contains('email')) {
+            span.textContent = '••••@••••.com';
+        } else if (span.classList.contains('phone')) {
+            span.textContent = '••••••••••';
         }
     }
+}
+
+    // Add search functionality
+    function performSearch() {
+        const nameSearch = document.getElementById('searchName').value.toLowerCase();
+        const relationSearch = document.getElementById('searchRelation').value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const name = row.children[1].textContent.toLowerCase();
+            const relation = row.children[2].textContent.toLowerCase();
+            const matchName = name.includes(nameSearch);
+            const matchRelation = relation.includes(relationSearch);
+            
+            if ((nameSearch === '' || matchName) && (relationSearch === '' || matchRelation)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    document.getElementById('searchName').addEventListener('input', performSearch);
+    document.getElementById('searchRelation').addEventListener('input', performSearch);
 </script>
 
 <style>
@@ -146,5 +172,15 @@
         border: none;
         cursor: pointer;
         margin-left: 5px;
+    }
+
+    .overflow-x-auto {
+        overflow-x: auto;
+    }
+    
+    /* Add search input styles */
+    input[type="text"] {
+        padding: 0.5rem;
+        min-width: 200px;
     }
 </style>

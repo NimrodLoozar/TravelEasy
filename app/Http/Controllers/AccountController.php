@@ -19,14 +19,24 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = DB::select('CALL spGetAccounts()') ?? [];
+        // Call the stored procedure
+        try {
+            $accounts = DB::select('CALL spGetAccounts()') ?? [];
+        } catch (\Exception $e) {
+            // Log the error and return an empty array
+            Log::error('Failed to fetch accounts: ' . $e->getMessage());
+            $accounts = [];
+        }
 
+        // Convert the result to a collection
+        $accountsCollection = collect($accounts);
+
+        // Paginate the collection
         $currentPage = request('page', 1);
         $perPage = 12;
-    
         $paginatedAccounts = new LengthAwarePaginator(
-            collect($accounts)->forPage($currentPage, $perPage),
-            count($accounts),
+            $accountsCollection->forPage($currentPage, $perPage),
+            $accountsCollection->count(),
             $perPage,
             $currentPage,
             ['path' => request()->url(), 'query' => request()->query()]
