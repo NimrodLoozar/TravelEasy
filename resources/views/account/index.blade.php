@@ -5,13 +5,15 @@
                 {{ __('Accounts') }}
             </h2>
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                <!-- Add search form -->
+               
+            <!-- Zoek form -->
                 <div class="flex space-x-2">
                     <input type="text" id="searchName" placeholder="naam" 
                         class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <input type="text" id="searchRelation" placeholder="relatienummer" 
                         class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
+                
                 <label class="flex items-center">
                     <span class="mr-2 text-white-900 toon">Toon Data</span>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">

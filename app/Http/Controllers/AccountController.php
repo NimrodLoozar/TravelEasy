@@ -106,10 +106,21 @@ class AccountController extends Controller
     /**
      * Toon een specifiek account.
      */
-    public function show(Customer $customer)
+    public function show($id)
     {
-        $customer->load(['person', 'contacts']);
-        return view('account.show', compact('customer'));
+        try {
+            $account = collect(DB::select('CALL spGetAccountById(?)', [$id]))->first();
+            
+            if (!$account) {
+                return redirect()->route('account.index')
+                    ->with('error', 'Account niet gevonden.');
+            }
+
+            return view('account.show', compact('account'));
+        } catch (\Exception $e) {
+            return redirect()->route('account.index')
+                ->with('error', 'Er is een fout opgetreden bij het ophalen van het account.');
+        }
     }
 
     /**

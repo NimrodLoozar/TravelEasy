@@ -53,16 +53,22 @@ return new class extends Migration
                     p.middle_name,
                     p.last_name,
                     CONCAT(p.first_name, \' \', IFNULL(p.middle_name, \'\'), \' \', p.last_name) AS full_name,
+                    p.birth_date,
+                    p.passport_details,
                     c.relation_number,
                     co.email,
                     co.mobile,
-                    c.is_active
+                    co.street,
+                    co.house_number,
+                    co.addition,
+                    co.postal_code,
+                    co.city,
+                    c.is_active,
+                    c.created_at
                 FROM customers c
                 INNER JOIN people p ON c.person_id = p.id
-                INNER JOIN contacts co ON c.id = co.customer_id
-                WHERE c.id = accountId
-                AND co.email IS NOT NULL 
-                AND co.mobile IS NOT NULL;
+                LEFT JOIN contacts co ON c.id = co.customer_id
+                WHERE c.id = accountId;
             END
         ');
 
