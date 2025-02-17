@@ -168,6 +168,7 @@
             </div>
         </div>
     </div>
+</x-app-layout>
 
     <script>
         document.getElementById('dataToggle').addEventListener('change', function() {
@@ -218,4 +219,3 @@
             background-color: #38A169;
         }
     </style>
-</x-app-layout>

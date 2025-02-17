@@ -146,47 +146,58 @@ class AccountController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
             'birth_date' => 'nullable|date',
-            'passport_details' => 'nullable|string',
-            'is_active' => 'boolean',
+            'passport_number' => 'nullable|string|max:50',
+            'passport_expiry' => 'nullable|date',
             'relation_number' => 'required|string|unique:customers,relation_number,' . $customer->id,
             'email' => 'required|email|unique:contacts,email,' . $customer->contacts->first()->id,
-            'mobile' => 'nullable|string|max:20',
+            'mobile' => 'required|string|max:20',
             'street' => 'nullable|string|max:255',
             'house_number' => 'nullable|string|max:10',
             'addition' => 'nullable|string|max:10',
             'postal_code' => 'nullable|string|max:10',
             'city' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
-        // Update persoon
-        $customer->person->update($request->only([
-            'first_name', 'middle_name', 'last_name', 'birth_date', 'passport_details', 'is_active'
-        ]));
+        // Prepare passport details as JSON
+        $passportDetails = null;
+        if ($request->filled('passport_number') || $request->filled('passport_expiry')) {
+            $passportDetails = json_encode([
+                'passport_number' => $request->passport_number,
+                'passport_expiry' => $request->passport_expiry,
+            ]);
+        }
 
-        // Update klant
-        $customer->update([
-            'relation_number' => $request->relation_number,
-            'is_active' => $request->is_active ?? true,
-        ]);
+        try {
+            DB::select('CALL spUpdateAccount(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                $customer->id,
+                $validated['first_name'],
+                $validated['middle_name'],
+                $validated['last_name'],
+                $validated['birth_date'],
+                $passportDetails,
+                $validated['relation_number'],
+                $validated['email'],
+                $validated['mobile'],
+                $validated['street'],
+                $validated['house_number'],
+                $validated['addition'],
+                $validated['postal_code'],
+                $validated['city'],
+                $validated['is_active'] ?? true,
+            ]);
 
-        // Update contact
-        $contact = $customer->contacts->first();
-        $contact->update([
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'street' => $request->street,
-            'house_number' => $request->house_number,
-            'addition' => $request->addition,
-            'postal_code' => $request->postal_code,
-            'city' => $request->city,
-        ]);
-
-        return redirect()->route('account.index')->with('success', 'Account succesvol bijgewerkt.');
+            return redirect()->route('account.index')
+                ->with('success', 'Account succesvol bijgewerkt.');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
+        }
     }
 
     /**

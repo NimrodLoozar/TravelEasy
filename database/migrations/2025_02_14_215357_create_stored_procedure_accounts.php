@@ -136,9 +136,16 @@ return new class extends Migration
                 IN p_first_name VARCHAR(255),
                 IN p_middle_name VARCHAR(255),
                 IN p_last_name VARCHAR(255),
+                IN p_birth_date DATE,
+                IN p_passport_details JSON,
                 IN p_relation_number VARCHAR(255),
                 IN p_email VARCHAR(255),
                 IN p_mobile VARCHAR(255),
+                IN p_street VARCHAR(255),
+                IN p_house_number VARCHAR(10),
+                IN p_addition VARCHAR(10),
+                IN p_postal_code VARCHAR(10),
+                IN p_city VARCHAR(255),
                 IN p_is_active BOOLEAN
             )
             BEGIN
@@ -153,7 +160,10 @@ return new class extends Migration
                 UPDATE people
                 SET first_name = p_first_name,
                     middle_name = p_middle_name,
-                    last_name = p_last_name
+                    last_name = p_last_name,
+                    birth_date = p_birth_date,
+                    passport_details = p_passport_details,
+                    is_active = p_is_active
                 WHERE id = customer_person_id;
                 
                 UPDATE customers
@@ -163,7 +173,13 @@ return new class extends Migration
                 
                 UPDATE contacts
                 SET email = p_email,
-                    mobile = p_mobile
+                    mobile = p_mobile,
+                    street = p_street,
+                    house_number = p_house_number,
+                    addition = p_addition,
+                    postal_code = p_postal_code,
+                    city = p_city,
+                    is_active = p_is_active
                 WHERE customer_id = p_id;
                 
                 COMMIT;
