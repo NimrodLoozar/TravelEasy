@@ -79,9 +79,17 @@ return new class extends Migration
                 IN p_first_name VARCHAR(255),
                 IN p_middle_name VARCHAR(255),
                 IN p_last_name VARCHAR(255),
+                IN p_birth_date DATE,
+                IN p_passport_details JSON,
                 IN p_relation_number VARCHAR(255),
                 IN p_email VARCHAR(255),
-                IN p_mobile VARCHAR(255)
+                IN p_mobile VARCHAR(255),
+                IN p_street VARCHAR(255),
+                IN p_house_number VARCHAR(10),
+                IN p_addition VARCHAR(10),
+                IN p_postal_code VARCHAR(10),
+                IN p_city VARCHAR(255),
+                IN p_is_active BOOLEAN
             )
             BEGIN
                 DECLARE new_person_id INT;
@@ -89,18 +97,32 @@ return new class extends Migration
                 
                 START TRANSACTION;
                 
-                INSERT INTO people (first_name, middle_name, last_name, is_active)
-                VALUES (p_first_name, p_middle_name, p_last_name, 1);
+                INSERT INTO people (
+                    first_name, middle_name, last_name, 
+                    birth_date, passport_details, is_active
+                )
+                VALUES (
+                    p_first_name, p_middle_name, p_last_name, 
+                    p_birth_date, p_passport_details, p_is_active
+                );
                 
                 SET new_person_id = LAST_INSERT_ID();
                 
                 INSERT INTO customers (person_id, relation_number, is_active)
-                VALUES (new_person_id, p_relation_number, 1);
+                VALUES (new_person_id, p_relation_number, p_is_active);
                 
                 SET new_customer_id = LAST_INSERT_ID();
                 
-                INSERT INTO contacts (customer_id, email, mobile, is_active)
-                VALUES (new_customer_id, p_email, p_mobile, 1);
+                INSERT INTO contacts (
+                    customer_id, email, mobile, 
+                    street, house_number, addition, 
+                    postal_code, city, is_active
+                )
+                VALUES (
+                    new_customer_id, p_email, p_mobile, 
+                    p_street, p_house_number, p_addition, 
+                    p_postal_code, p_city, p_is_active
+                );
                 
                 COMMIT;
             END

@@ -58,49 +58,57 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
             'birth_date' => 'nullable|date',
-            'passport_details' => 'nullable|string',
-            'is_active' => 'boolean',
+            'passport_number' => 'nullable|string|max:50',
+            'passport_expiry' => 'nullable|date',
             'relation_number' => 'required|string|unique:customers,relation_number',
             'email' => 'required|email|unique:contacts,email',
-            'mobile' => 'nullable|string|max:20',
+            'mobile' => 'required|string|max:20', // Changed from nullable to required
             'street' => 'nullable|string|max:255',
             'house_number' => 'nullable|string|max:10',
             'addition' => 'nullable|string|max:10',
             'postal_code' => 'nullable|string|max:10',
             'city' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
-        // Maak een nieuw persoon aan
-        $person = Person::create($request->only([
-            'first_name', 'middle_name', 'last_name', 'birth_date', 'passport_details', 'is_active'
-        ]));
+        // Prepare passport details as JSON
+        $passportDetails = null;
+        if ($request->filled('passport_number') || $request->filled('passport_expiry')) {
+            $passportDetails = json_encode([
+                'passport_number' => $request->passport_number,
+                'passport_expiry' => $request->passport_expiry,
+            ]);
+        }
 
-        // Maak de klant aan en koppel deze aan de persoon
-        $customer = Customer::create([
-            'person_id' => $person->id,
-            'relation_number' => $request->relation_number,
-            'is_active' => $request->is_active ?? true,
-        ]);
+        try {
+            DB::select('CALL spAddAccount(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                $validated['first_name'],
+                $validated['middle_name'],
+                $validated['last_name'],
+                $validated['birth_date'],
+                $passportDetails,
+                $validated['relation_number'],
+                $validated['email'],
+                $validated['mobile'],
+                $validated['street'],
+                $validated['house_number'],
+                $validated['addition'],
+                $validated['postal_code'],
+                $validated['city'],
+                $validated['is_active'] ?? true,
+            ]);
 
-        // Maak het contact aan en koppel dit aan de klant
-        Contact::create([
-            'customer_id' => $customer->id,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'street' => $request->street,
-            'house_number' => $request->house_number,
-            'addition' => $request->addition,
-            'postal_code' => $request->postal_code,
-            'city' => $request->city,
-            'is_active' => true,
-        ]);
-
-        return redirect()->route('account.index')->with('success', 'Account succesvol aangemaakt.');
+            return redirect()->route('account.index')
+                ->with('success', 'Account succesvol aangemaakt.');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Er is een fout opgetreden bij het aanmaken van het account.');
+        }
     }
 
     /**
