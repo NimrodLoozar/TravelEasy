@@ -39,8 +39,12 @@
                                         <th class="py-4 px-6 text-left">#</th>
                                         <th class="py-4 px-6 text-left">Naam</th>
                                         <th class="py-4 px-6 text-left">Relatienummer</th>
+
+                                        
                                         <th class="py-4 px-6 text-left">E-mail</th>
                                         <th class="py-4 px-6 text-left">Telefoon</th>
+
+
                                         <th class="py-4 px-6 text-left">Status</th>
                                         <th class="py-4 px-6 text-left">Acties</th>
                                     </tr>

@@ -36,6 +36,8 @@ return new class extends Migration
                 FROM customers c
                 INNER JOIN people p ON c.person_id = p.id
                 LEFT JOIN contacts co ON c.id = co.customer_id
+                WHERE co.email IS NOT NULL 
+                AND co.mobile IS NOT NULL
                 ORDER BY c.created_at DESC;
             END
         ');
@@ -58,7 +60,9 @@ return new class extends Migration
                 FROM customers c
                 INNER JOIN people p ON c.person_id = p.id
                 INNER JOIN contacts co ON c.id = co.customer_id
-                WHERE c.id = accountId;
+                WHERE c.id = accountId
+                AND co.email IS NOT NULL 
+                AND co.mobile IS NOT NULL;
             END
         ');
 
