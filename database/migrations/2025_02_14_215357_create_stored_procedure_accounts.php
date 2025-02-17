@@ -132,7 +132,7 @@ return new class extends Migration
         DB::unprepared('
         DROP PROCEDURE IF EXISTS spUpdateAccount;
             CREATE PROCEDURE spUpdateAccount(
-                IN p_id INT,
+                IN p_customer_id INT,
                 IN p_first_name VARCHAR(255),
                 IN p_middle_name VARCHAR(255),
                 IN p_last_name VARCHAR(255),
@@ -155,9 +155,9 @@ return new class extends Migration
                 
                 SELECT person_id INTO customer_person_id
                 FROM customers
-                WHERE id = p_id;
+                WHERE id = p_customer_id;
                 
-                UPDATE people
+                UPDATE people 
                 SET first_name = p_first_name,
                     middle_name = p_middle_name,
                     last_name = p_last_name,
@@ -166,12 +166,12 @@ return new class extends Migration
                     is_active = p_is_active
                 WHERE id = customer_person_id;
                 
-                UPDATE customers
+                UPDATE customers 
                 SET relation_number = p_relation_number,
                     is_active = p_is_active
-                WHERE id = p_id;
+                WHERE id = p_customer_id;
                 
-                UPDATE contacts
+                UPDATE contacts 
                 SET email = p_email,
                     mobile = p_mobile,
                     street = p_street,
@@ -180,7 +180,7 @@ return new class extends Migration
                     postal_code = p_postal_code,
                     city = p_city,
                     is_active = p_is_active
-                WHERE customer_id = p_id;
+                WHERE customer_id = p_customer_id;
                 
                 COMMIT;
             END

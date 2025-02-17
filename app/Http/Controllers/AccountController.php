@@ -135,16 +135,27 @@ class AccountController extends Controller
     /**
      * Toon het formulier om een account te bewerken.
      */
-    public function edit(Customer $customer)
+    public function edit($id)
     {
-        $customer->load('person', 'contacts');
-        return view('account.edit', compact('customer'));
+        try {
+            $account = collect(DB::select('CALL spGetAccountById(?)', [$id]))->first();
+            
+            if (!$account) {
+                return redirect()->route('account.index')
+                    ->with('error', 'Account niet gevonden.');
+            }
+
+            return view('account.edit', compact('account'));
+        } catch (\Exception $e) {
+            return redirect()->route('account.index')
+                ->with('error', 'Er is een fout opgetreden bij het ophalen van het account.');
+        }
     }
 
     /**
      * Werk een bestaand account bij.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -152,9 +163,9 @@ class AccountController extends Controller
             'last_name' => 'required|string|max:255',
             'birth_date' => 'nullable|date',
             'passport_number' => 'nullable|string|max:50',
-            'passport_expiry' => 'nullable|date',
-            'relation_number' => 'required|string|unique:customers,relation_number,' . $customer->id,
-            'email' => 'required|email|unique:contacts,email,' . $customer->contacts->first()->id,
+            'passport_expiry' => 'nullable|date|after:today',
+            'relation_number' => 'required|string|unique:customers,relation_number,'.$id,
+            'email' => 'required|email|unique:contacts,email,'.$id.',customer_id',
             'mobile' => 'required|string|max:20',
             'street' => 'nullable|string|max:255',
             'house_number' => 'nullable|string|max:10',
@@ -164,9 +175,13 @@ class AccountController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        // Prepare passport details as JSON
+        // Prepare passport details with validation
         $passportDetails = null;
         if ($request->filled('passport_number') || $request->filled('passport_expiry')) {
+            if (!$request->filled('passport_number') && !$request->filled('passport_expiry')) {
+                return back()->withInput()
+                    ->withErrors(['passport' => 'Both passport number and expiry date are required when providing passport details.']);
+            }
             $passportDetails = json_encode([
                 'passport_number' => $request->passport_number,
                 'passport_expiry' => $request->passport_expiry,
@@ -175,7 +190,7 @@ class AccountController extends Controller
 
         try {
             DB::select('CALL spUpdateAccount(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-                $customer->id,
+                $id,
                 $validated['first_name'],
                 $validated['middle_name'],
                 $validated['last_name'],
@@ -194,7 +209,12 @@ class AccountController extends Controller
 
             return redirect()->route('account.index')
                 ->with('success', 'Account succesvol bijgewerkt.');
+        } catch (\PDOException $e) {
+            Log::error('Database error while updating account: ' . $e->getMessage());
+            return back()->withInput()
+                ->with('error', 'Database fout bij het bijwerken van het account.');
         } catch (\Exception $e) {
+            Log::error('Error while updating account: ' . $e->getMessage());
             return back()->withInput()
                 ->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
         }
@@ -203,9 +223,25 @@ class AccountController extends Controller
     /**
      * Verwijder een account.
      */
-    public function destroy(Customer $customer)
+    public function destroy($id)
     {
-        $customer->delete();
-        return redirect()->route('account.index')->with('success', 'Account succesvol verwijderd.');
+        try {
+            $account = collect(DB::select('CALL spGetAccountById(?)', [$id]))->first();
+            
+            if (!$account) {
+                return redirect()->route('account.index')
+                    ->with('error', 'Account niet gevonden.');
+            }
+
+            DB::select('CALL spDeleteAccount(?)', [$id]);
+            return redirect()->route('account.index')
+                ->with('success', 'Account succesvol verwijderd.');
+        } catch (\PDOException $e) {
+            Log::error('Database error while deleting account: ' . $e->getMessage());
+            return back()->with('error', 'Database fout bij het verwijderen van het account.');
+        } catch (\Exception $e) {
+            Log::error('Error while deleting account: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen van het account.');
+        }
     }
 }
