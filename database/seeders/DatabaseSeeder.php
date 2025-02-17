@@ -88,7 +88,7 @@ class DatabaseSeeder extends Seeder
         // Contact::factory()->count(10)->create();
 
         // Werknemers aanmaken (gekoppeld aan een persoon)
-        // $employees = Employee::factory()->count(10)->create();
+        $employees = Employee::factory()->count(10)->create();
 
         // Luchthavens en bestemmingen
         // $departures = Departure::factory()->count(10)->create();
@@ -104,6 +104,6 @@ class DatabaseSeeder extends Seeder
         //// Invoice::factory()->count(30)->create();
 
         // Communicatie tussen klanten en medewerkers
-        // Communication::factory()->count(20)->create();
+        Communication::factory()->count(20)->create();
     }
 }
