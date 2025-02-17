@@ -58,11 +58,11 @@
                                             <td class="py-3 px-6">{{ $account->first_name }} {{ $account->middle_name }} {{ $account->last_name }}</td>
                                             <td class="py-3 px-6">{{ $account->relation_number }}</td>
                                             <td class="py-3 px-6">
-                                                <span class="email" data-email="{{ $account->email }}">••••@••••.com</span>
+                                                <span class="email" data-email="{{ $account->email }}">***@***.com</span>
                                                 <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
                                             </td>
                                             <td class="py-3 px-6">
-                                                <span class="phone" data-phone="{{ $account->mobile }}">••••••••••</span>
+                                                <span class="phone" data-phone="{{ $account->mobile }}">+31****</span>
                                                 <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
                                             </td>
                                             <td class="py-3 px-6">
@@ -116,7 +116,7 @@
 
     function toggleVisibility(button) {
     const span = button.previousElementSibling;
-    if (span.textContent.includes('••••')) {
+    if (span.textContent.includes('***')) {
         if (span.classList.contains('email')) {
             span.textContent = span.getAttribute('data-email');
         } else if (span.classList.contains('phone')) {
@@ -124,9 +124,9 @@
         }
     } else {
         if (span.classList.contains('email')) {
-            span.textContent = '••••@••••.com';
+            span.textContent = '***@***.com';
         } else if (span.classList.contains('phone')) {
-            span.textContent = '••••••••••';
+            span.textContent = '+31****';
         }
     }
 }
