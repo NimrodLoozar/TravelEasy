@@ -23,7 +23,7 @@
             </div>
     </x-slot>
 
-    <div class="py-12">
+    <div id="dataContainer" class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <form action="{{ route('account.store') }}" method="POST" class="p-6">
@@ -160,54 +160,62 @@
             </div>
         </div>
     </div>
+
+    <div id="errorContainer" class="py-12 hidden">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+                <p class="text-red-500">Geen account kon aangemaakt worden. Probeer later opnieuw.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('dataToggle').addEventListener('change', function() {
+            const dataContainer = document.getElementById('dataContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            if (this.checked) {
+                dataContainer.classList.remove('hidden');
+                errorContainer.classList.add('hidden');
+            } else {
+                dataContainer.classList.add('hidden');
+                errorContainer.classList.remove('hidden');
+            }
+        });
+
+        function toggleVisibility(button) {
+            const span = button.previousElementSibling;
+            if (span.textContent.includes('***')) {
+                if (span.classList.contains('email')) {
+                    span.textContent = span.getAttribute('data-email');
+                } else if (span.classList.contains('phone')) {
+                    span.textContent = span.getAttribute('data-phone');
+                }
+            } else {
+                if (span.classList.contains('email')) {
+                    span.textContent = '***@***.com';
+                } else if (span.classList.contains('phone')) {
+                    span.textContent = '+31****';
+                }
+            }
+        }
+    </script>
+
+    <style>
+        h2 {
+            color: #fff;
+        }
+
+        .toon {
+            color: #fff;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #38A169;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #38A169;
+        }
+    </style>
 </x-app-layout>
-
-<script>
-    document.getElementById('dataToggle').addEventListener('change', function() {
-        const dataContainer = document.getElementById('dataContainer');
-        const errorContainer = document.getElementById('errorContainer');
-        if (this.checked) {
-            dataContainer.classList.remove('hidden');
-            errorContainer.classList.add('hidden');
-        } else {
-            dataContainer.classList.add('hidden');
-            errorContainer.classList.remove('hidden');
-        }
-    });
-
-    function toggleVisibility(button) {
-    const span = button.previousElementSibling;
-    if (span.textContent.includes('***')) {
-        if (span.classList.contains('email')) {
-            span.textContent = span.getAttribute('data-email');
-        } else if (span.classList.contains('phone')) {
-            span.textContent = span.getAttribute('data-phone');
-        }
-    } else {
-        if (span.classList.contains('email')) {
-            span.textContent = '***@***.com';
-        } else if (span.classList.contains('phone')) {
-            span.textContent = '+31****';
-        }
-    }
-}
-</script>
-
-<style>
-   h2 {
-        color: #fff;
-    }
-
-    .toon {
-        color: #fff;
-    }
-
-    .toggle-checkbox:checked {
-        right: 0;
-        border-color: #38A169;
-    }
-
-    .toggle-checkbox:checked+.toggle-label {
-        background-color: #38A169;
-    }
-</style>
