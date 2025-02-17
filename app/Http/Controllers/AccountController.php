@@ -33,7 +33,7 @@ class AccountController extends Controller
 
         // Paginate the collection
         $currentPage = request('page', 1);
-        $perPage = 12;
+        $perPage = 10;
         $paginatedAccounts = new LengthAwarePaginator(
             $accountsCollection->forPage($currentPage, $perPage),
             $accountsCollection->count(),
