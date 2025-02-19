@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ReizenOverzichtController;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -77,6 +78,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/invoice/{id}', [InvoiceController::class, 'update'])->name('invoice.update');
     Route::delete('/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
     Route::get('/invoice/latest-number', [InvoiceController::class, 'latestNumber'])->name('invoice.latestNumber');
+
+
+    // ReisOverzicht 
+    Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');
+    Route::get('/reisoverzicht/create', [ReizenOverzichtController::class, 'create'])->name('reisoverzicht.create');
+    Route::post('/reisoverzicht', [ReizenOverzichtController::class, 'store'])->name('reisoverzicht.store');
+    Route::get('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'show'])->name('reisoverzicht.show');
+    Route::get('/reisoverzicht/{id}/edit', [ReizenOverzichtController::class, 'edit'])->name('reisoverzicht.edit');
+    Route::put('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'update'])->name('reisoverzicht.update');
+    Route::delete('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'destroy'])->name('reisoverzicht.destroy');
 });
 
 require __DIR__ . '/auth.php';
