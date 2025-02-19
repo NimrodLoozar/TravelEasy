@@ -90,13 +90,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->create();
 
         // Rollen aanmaken
-        // Role::factory()->count(10)->create();
+        Role::factory()->count(10)->create();
 
         // Klanten aanmaken (gekoppeld aan een persoon)
-        // $customers = Customer::factory()->count(10)->create();
+        $customers = Customer::factory()->count(10)->create();
 
         // Contactgegevens van klanten
-        // Contact::factory()->count(10)->create();
+        Contact::factory()->count(10)->create();
 
         // Werknemers aanmaken (gekoppeld aan een persoon)
         $employees = Employee::factory()->count(10)->create();

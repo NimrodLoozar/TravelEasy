@@ -22,7 +22,7 @@
                         {{ __('Accounts') }}
                     </x-nav-link>
                     <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
-                        {{ __('reisoverzicht') }}
+                        {{ __('Reizen') }}
                     </x-nav-link>
                 </div>
             </div>
