@@ -7,11 +7,11 @@
                 <h2 class="text-4xl font-bold mb-4">Discover Your Next Adventure</h2>
                 <p class="text-xl mb-8">Let Travel Easy guide you to the vacation of your dreams.</p>
                 <div class="space-x-4">
-                    <a href="#destinations"
+                    <a href="/destinations"
                         class="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition duration-300">
                         Explore Destinations
                     </a>
-                    <a href="#packages"
+                    <a href="/packages"
                         class="bg-white text-blue-600 px-6 py-3 rounded-lg text-lg border border-blue-600 hover:bg-blue-50 transition duration-300">
                         View Packages
                     </a>
@@ -36,6 +36,8 @@
                 label.classList.remove('active');
             });
             document.getElementById(`${tabId}-tab`).classList.add('active');
+
+            validateFields(tabId);
         }
 
         // Toggle the visibility of the dropdown with the given id
@@ -150,6 +152,37 @@
             const children = document.getElementById('cruiseChildren').value;
             document.getElementById('cruise_people').innerText = `${adults} volwassenen, ${children} kinderen`;
             toggleDropdown('cruisePeopleDropdown');
+        }
+
+        // Function to validate fields and enable the "Boeken" button
+        function validateFields(tabId) {
+            let isValid = true;
+            document.querySelectorAll(`#${tabId} input`).forEach(input => {
+                if (!input.value) {
+                    isValid = false;
+                }
+            });
+            document.getElementById(`${tabId}-book-button`).disabled = !isValid;
+        }
+
+        // Redirect to the corresponding page when "Boeken" button is clicked
+        function book(tabId) {
+            let url = '';
+            switch (tabId) {
+                case 'flights':
+                    url = '/underdevelopment';
+                    // url = '/flights';
+                    break;
+                case 'vacations':
+                    url = '/underdevelopment';
+                    // url = '/vacations';
+                    break;
+                case 'cruises':
+                    url = '/underdevelopment';
+                    // url = '/cruises';
+                    break;
+            }
+            window.location.href = url;
         }
     </script>
 </x-html-layout>
