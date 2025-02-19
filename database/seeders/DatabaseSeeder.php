@@ -25,9 +25,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
-        //$people = Person::factory()->count(10)->create();
-
         // Maak een admin en testgebruiker (specifieke users)
         $person = Person::factory()->create([
             'first_name' => fake()->firstName,
@@ -91,15 +88,6 @@ class DatabaseSeeder extends Seeder
 
         // Nu de rest van de gebruikers (gekoppeld aan een persoon)
         User::factory()->count(10)->create();
-
-        // Rollen aanmaken
-        // Role::factory()->count(10)->create();
-
-        // Klanten aanmaken (gekoppeld aan een persoon)
-        // $customers = Customer::factory()->count(10)->create();
-
-        // Contactgegevens van klanten
-        // Contact::factory()->count(10)->create();
 
         // Werknemers aanmaken (gekoppeld aan een persoon)
         $employees = Employee::factory()->count(10)->create();

@@ -1,7 +1,7 @@
 <banner class="relative overflow-hidden bg-gray-900">
     <div class="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
         <img src="{{ asset('img/jumbo-jet-flying-sky.jpg') }}" alt=""
-            class="absolute inset-0 -z-10 size-full opacity-35 object-cover object-right md:object-center">
+            class="absolute inset-0 -z-10 w-full h-full object-cover object-center">
         <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl"
             aria-hidden="true">
             <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20"
@@ -75,23 +75,30 @@
                         <div class="w-64 mb-6">
                             <x-input-label for="from" :value="__('Van')" />
                             <x-text-input id="from" class="block mt-1 w-full" type="text" name="from"
-                                required />
+                                required oninput="validateFields('flights')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="to" :value="__('Naar')" />
                             <x-text-input id="to" class="block mt-1 w-full" type="text" name="to"
-                                required />
+                                required oninput="validateFields('flights')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="date" :value="__('Waneer')" />
                             <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
-                                required />
+                                required oninput="validateFields('flights')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="return_date" :value="__('Terug')" />
-                            <x-text-input id="return_date" class="block mt-1 w-full" type="date"
-                                name="return_date" />
+                            <x-text-input id="return_date" class="block mt-1 w-full" type="date" name="return_date"
+                                oninput="validateFields('flights')" />
                         </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="flights-book-button"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition duration-300"
+                            disabled onclick="book('flights')">
+                            Boeken
+                        </button>
                     </div>
                 </div>
                 <div id="vacations" class="tab-content hidden">
@@ -99,17 +106,17 @@
                         <div class="w-64 mb-6">
                             <x-input-label for="vacation_type" :value="__('Vakantietype')" />
                             <x-text-input id="vacation_type" class="block mt-1 w-full" type="text"
-                                name="vacation_type" />
+                                name="vacation_type" oninput="validateFields('vacations')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="destination" :value="__('Bestemming')" />
                             <x-text-input id="destination" class="block mt-1 w-full" type="text"
-                                name="destination" />
+                                name="destination" oninput="validateFields('vacations')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="vacation_date" :value="__('Wanneer?')" />
                             <x-text-input id="vacation_date" class="block mt-1 w-full" type="date"
-                                name="vacation_date" />
+                                name="vacation_date" oninput="validateFields('vacations')" />
                         </div>
                         <div class="w-64 mb-6 relative">
                             <x-input-label for="vacation_people" :value="__('Wie?')" />
@@ -154,23 +161,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="text-center">
+                        <button id="vacations-book-button"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition duration-300"
+                            disabled onclick="book('vacations')">
+                            Boeken
+                        </button>
+                    </div>
                 </div>
                 <div id="cruises" class="tab-content hidden">
                     <div class="flex justify-around p-6">
                         <div class="w-64 mb-6">
                             <x-input-label for="cruise_type" :value="__('Soort cruise')" />
                             <x-text-input id="cruise_type" class="block mt-1 w-full" type="text"
-                                name="cruise_type" />
+                                name="cruise_type" oninput="validateFields('cruises')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="cruise_area" :value="__('Vaargebied')" />
                             <x-text-input id="cruise_area" class="block mt-1 w-full" type="text"
-                                name="cruise_area" />
+                                name="cruise_area" oninput="validateFields('cruises')" />
                         </div>
                         <div class="w-64 mb-6">
                             <x-input-label for="cruise_date" :value="__('Wanneer?')" />
                             <x-text-input id="cruise_date" class="block mt-1 w-full" type="date"
-                                name="cruise_date" />
+                                name="cruise_date" oninput="validateFields('cruises')" />
                         </div>
                         <div class="w-64 mb-6 relative">
                             <x-input-label for="cruise_people" :value="__('Wie?')" />
@@ -214,6 +228,13 @@
                                     onclick="saveCruisePeople()">Opslaan</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="cruises-book-button"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700 transition duration-300"
+                            disabled onclick="book('cruises')">
+                            Boeken
+                        </button>
                     </div>
                 </div>
             </div>
