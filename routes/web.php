@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ReizenOverzichtController;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -51,6 +53,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // accounts
+    Route::resource('account', AccountController::class);
+    Route::get('/account', [AccountController::class, 'index'])->name('account.index');
+    Route::get('/account/create', [AccountController::class, 'create'])->name('account.create');
+    Route::get('/account/{customer}', [AccountController::class, 'show'])->name('account.show');
+    Route::post('/account', [AccountController::class, 'store'])->name('account.store');
+    Route::get('/account/{id}/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::put('/account/{id}', [AccountController::class, 'update'])->name('account.update');
+    Route::delete('/account/{customer}', [AccountController::class, 'destroy'])->name('account.destroy');
+
+    // customers
     Route::resource('customers', CustomerController::class);
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
@@ -69,6 +82,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/invoice/{id}', [InvoiceController::class, 'update'])->name('invoice.update');
     Route::delete('/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
     Route::get('/invoice/latest-number', [InvoiceController::class, 'latestNumber'])->name('invoice.latestNumber');
+
+
+    // ReisOverzicht 
+    Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');
+    Route::get('/reisoverzicht/create', [ReizenOverzichtController::class, 'create'])->name('reisoverzicht.create');
+    Route::post('/reisoverzicht', [ReizenOverzichtController::class, 'store'])->name('reisoverzicht.store');
+    Route::get('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'show'])->name('reisoverzicht.show');
+    Route::get('/reisoverzicht/{id}/edit', [ReizenOverzichtController::class, 'edit'])->name('reisoverzicht.edit');
+    Route::put('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'update'])->name('reisoverzicht.update');
+    Route::delete('/reisoverzicht/{id}', [ReizenOverzichtController::class, 'destroy'])->name('reisoverzicht.destroy');
 });
 
 require __DIR__ . '/auth.php';

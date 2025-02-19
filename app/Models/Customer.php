@@ -10,7 +10,9 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $table = 'customers';
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'person_id',
@@ -36,9 +38,7 @@ class Customer extends Model
             ->join('contacts', 'customers.id', '=', 'contacts.customer_id')
             ->select(
                 'customers.*',
-                'people.first_name',
-                'people.middle_name',
-                'people.last_name',
+                DB::raw("CONCAT(people.first_name, ' ', COALESCE(people.middle_name, ''), ' ', people.last_name) as full_name"),
                 'contacts.email'
             );
     }

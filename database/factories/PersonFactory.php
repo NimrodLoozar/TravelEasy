@@ -21,25 +21,27 @@ class PersonFactory extends Factory
         // Generate realistic passport details
         $passportNumber = strtoupper($faker->bothify('??######')); // Example: AB123456
         $nationality = $faker->countryCode; // Example: US, IN, GB
-        $issueDate = $faker->dateTimeBetween('-10 years', 'now')->format('d-m-Y');
-        $expiryDate = $faker->dateTimeBetween('now', '+10 years')->format('d-m-Y');
+        $issueDate = $faker->dateTimeBetween('-10 years', 'now')->format('Y-m-d');
+        $expiryDate = $faker->dateTimeBetween('now', '+10 years')->format('Y-m-d');
         $issuingAuthority = $faker->country; // Example: United States, India, United Kingdom
 
         // Combine details into a structured format
-        $passportDetails = json_encode([
+        $passportDetails = [
             'passport_number' => $passportNumber,
             'nationality' => $nationality,
             'issue_date' => $issueDate,
             'expiry_date' => $expiryDate,
             'issuing_authority' => $issuingAuthority,
-        ]);
+        ];
 
         return [
-            'first_name' => $this->faker->firstName,
-            'middle_name' => $this->faker->optional()->lastName,
-            'last_name' => $this->faker->lastName,
-            'birth_date' => $this->faker->date,
-            'passport_details' => $passportDetails, // Structured passport details
+            'first_name' => $faker->firstName,
+            'middle_name' => $faker->optional()->lastName,
+            'last_name' => $faker->lastName,
+            'birth_date' => $faker->date,
+
+            // Fixed passport details
+            'passport_details' => json_encode($passportDetails), // Encode as JSON
             'is_active' => true,
         ];
     }
