@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CommunicationController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
-
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -43,6 +45,18 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('communications', CommunicationController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('bookings', BookingController::class);
+});
+
+// Messaging routes
+Route::get('/messages', function () {
+    return view('messages.index');
+})->name('messages.index');
+Route::get('/conversations', [MessageController::class, 'getConversations']);
+Route::post('/conversations', [MessageController::class, 'startConversation']);
+Route::get('/conversations/{id}', [MessageController::class, 'getConversation']);
+Route::post('/conversations/{conversationId}/messages', [MessageController::class, 'sendMessage']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

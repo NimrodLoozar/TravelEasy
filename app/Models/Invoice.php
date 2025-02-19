@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Task;
 use App\Models\Booking;
+use Illuminate\Console\View\Components\Task as ComponentsTask;
 
 class Invoice extends Model
 {
@@ -30,7 +31,7 @@ class Invoice extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(ComponentsTask::class);
     }
 
     public function booking()
