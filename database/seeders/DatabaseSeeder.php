@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
         // $bookings = Booking::factory()->count(50)->create();
 
         // Facturen (gekoppeld aan boekingen)
-        // Invoice::factory()->count(10)->create();
+        Invoice::factory()->count(30)->create();
 
         // Communicatie tussen klanten en medewerkers
         // Communication::factory()->count(20)->create();
