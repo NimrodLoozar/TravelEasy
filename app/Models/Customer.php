@@ -38,7 +38,9 @@ class Customer extends Model
             ->join('contacts', 'customers.id', '=', 'contacts.customer_id')
             ->select(
                 'customers.*',
-                DB::raw("CONCAT(people.first_name, ' ', COALESCE(people.middle_name, ''), ' ', people.last_name) as full_name"),
+                'people.first_name',
+                'people.middle_name',
+                'people.last_name',
                 'contacts.email'
             );
     }
