@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }">
     <!-- Primary Navigation Menu -->
-    <div class="bg-teal-400 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-gray-900 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Navigation Links -->
@@ -15,11 +15,14 @@
                     <x-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
                         {{ __('Factuuren') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                        {{ __('Klanten') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('account.index')" :active="request()->routeIs('account.index')">
                         {{ __('Accounts') }}
                     </x-nav-link>
                     <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
-                        {{ __('reisoverzicht') }}
+                        {{ __('Reizen') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -35,22 +38,21 @@
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
-                            <x-slot name="content">
-                                @if (Auth::check() && Auth::user()->role === 'admin')
-                                    <x-dropdown-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
-                                        {{ __('Factuuren') }}
-                                    </x-dropdown-link>
-                                @endif
-                            </x-slot>
-                        </x-dropdown>
+                                        <path fill-rule="evenodd" <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            @if (Auth::check() && Auth::user()->role === 'admin')
+                                <x-dropdown-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
+                                    {{ __('Factuuren') }}
+                                </x-dropdown-link>
+                            @endif
+                        </x-slot>
+                    </x-dropdown>
                 </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -112,7 +114,7 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            
+
 
             @if (Auth::check() && Auth::user()->role === 'admin')
                 <x-responsive-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">

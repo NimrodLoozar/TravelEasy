@@ -35,4 +35,13 @@
     @endauth
     </nav>
     @endif
+    <div id="progress-bar" class="absolute bottom-0 left-0 h-1 bg-red-500 w-0"></div>
 </header>
+<script>
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        document.getElementById('progress-bar').style.width = scrollPercent + '%';
+    });
+</script>

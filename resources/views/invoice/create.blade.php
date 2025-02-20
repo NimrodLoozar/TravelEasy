@@ -39,8 +39,26 @@
                         <!-- Factuurgegevens -->
                         <div class="mt-6">
                             <p class="text-gray-800"><strong>Factuurnummer:</strong> #{{ $newNumber }}</p>
-                            <p class="text-gray-800"><strong>Factuurdatum:</strong> <span id="invoiceDate"></span></p>
-                            <p class="text-gray-800"><strong>Status:</strong>
+                            <p class="text-gray-800"><strong>Factuurdatum:</strong> {{ now()->toDateString() }}</p>
+                        </div>
+
+                         <!-- Bedragen -->
+                         <div class="mt-6 border-t pt-4">
+                            <p class="text-gray-800"><strong>Bedrag excl. BTW (€):</strong> 
+                                <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01" min="0" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100 
+                                    @error('amount_excl_vat') border-red-500 @enderror">
+                            </p>
+                            @error('amount_excl_vat')
+                                <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                            <p class="text-gray-800"><strong>BTW (21%):</strong> € <span id="vatAmount"></span></p>
+                            <p class="text-gray-800 text-xl"><strong>Totaalbedrag (€):</strong> € <span id="totalAmount"></span></p>
+                        </div>
+
+
+                        <div class="mt-6 border-t pt-4">
+                        <p class="text-gray-800"><strong>Status:</strong>
                                 <select name="status" id="status" required
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100">
                                     <option value="in behandeling">In Behandeling</option>
@@ -50,26 +68,6 @@
                             </p>
                         </div>
 
-                        <!-- Vluchtdetails -->
-                        <div class="mt-6 border-t pt-4">
-                            <h3 class="text-lg font-bold text-gray-800">Vluchtinformatie</h3>
-                            <p class="text-gray-600"><strong>Vluchtcode:</strong> <span id="flightNumber"></span></p>
-                            <p class="text-gray-600"><strong>Vertrek:</strong> <span id="departure"></span></p>
-                            <p class="text-gray-600"><strong>Aankomst:</strong> <span id="arrival"></span></p>
-                            <p class="text-gray-600"><strong>Status:</strong> <span id="tripStatus"></span></p>
-                        </div>
-
-                        <!-- Bedragen -->
-                        <div class="mt-6 border-t pt-4">
-                            <p class="text-gray-600"><strong>Stoelnummer:</strong> <span id="seatNumber"></span></p>
-                            <p class="text-gray-600"><strong>Aantal tickets:</strong> <span id="ticketQuantity"></span></p>
-                            <p class="text-gray-800"><strong>Bedrag excl. BTW (€):</strong> 
-                                <input type="number" name="amount_excl_vat" id="amount_excl_vat" step="0.01" min="0" required
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-100">
-                            </p>
-                            <p class="text-gray-800"><strong>BTW (21%):</strong> € <span id="vatAmount"></span></p>
-                            <p class="text-xl font-bold text-gray-800"><strong>Totaal (€):</strong> <span id="totalAmount"></span></p>
-                        </div>
 
                         <!-- Opmerkingen -->
                         <div class="mt-6 border-t pt-4">
@@ -93,6 +91,7 @@
                     <!-- Actieknoppen -->
                     <div class="flex justify-end gap-4">
                         <a href="{{ route('invoice.index') }}"
+
                             class="bg-gray-400 text-white px-5 py-2 rounded-md hover:bg-gray-600 transition">
                             Annuleren
                         </a>

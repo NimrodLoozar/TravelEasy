@@ -40,13 +40,17 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
 
-        $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
-
-        Customer::create([
+        $customer = Customer::factory()->create([
             'person_id' => $person->id,
-            'relation_number' => $relationNumber,
+            'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
         ]);
 
+        Contact::create([
+            'customer_id' => $customer->id,
+            'email' => $this->faker->unique()->safeEmail,
+            'mobile' => $this->faker->phoneNumber,
+            // ...other required fields for Contact model...
+        ]);
         return $user;
     }
 
@@ -60,61 +64,59 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function testuser(): static
-    {
-        return $this->state(function (array $attributes) {
-            $person = Person::factory()->create([
-                'first_name' => 'Test',
-                'last_name' => 'User',
-            ]);
+    // public function testuser(): static
+    // {
+    //     return $this->state(function (array $attributes) {
+    //         $person = Person::factory()->create([
+    //             'first_name' => $this->faker->firstName,
+    //             'middle_name' => $this->faker->optional()->lastName,
+    //             'last_name' => $this->faker->lastName,
+    //         ]);
 
-            $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
+    //         $customer = Customer::create([
+    //             'person_id' => $person->id,
+    //             'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
+    //         ]);
 
-            $customer = Customer::create([
-                'person_id' => $person->id,
-                'relation_number' => $relationNumber,
-            ]);
+    //         Contact::create([
+    //             'customer_id' => $customer->id,
+    //             'email' => 'test@gmail.com',
+    //             // ...other required fields for Contact model...
+    //         ]);
 
-            Contact::create([
-                'customer_id' => $customer->id,
-                'email' => 'test@gmail.com',
-                // ...other required fields for Contact model...
-            ]);
+    //         return [
+    //             'person_id' => $person->id,
+    //             'name' => 'TestUser',
+    //             'password' => Hash::make('Test1234'),
+    //         ];
+    //     });
+    // }
 
-            return [
-                'person_id' => $person->id,
-                'name' => 'TestUser',
-                'password' => Hash::make('Test1234'),
-            ];
-        });
-    }
+    // public function admin(): static
+    // {
+    //     return $this->state(function (array $attributes) {
+    //         $person = Person::factory()->create([
+    //             'first_name' => $this->faker->firstName,
+    //             'middle_name' => $this->faker->optional()->lastName,
+    //             'last_name' => $this->faker->lastName,
+    //         ]);
 
-    public function admin(): static
-    {
-        return $this->state(function (array $attributes) {
-            $person = Person::factory()->create([
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-            ]);
+    //         $customer = Customer::create([
+    //             'person_id' => $person->id,
+    //             'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
+    //         ]);
 
-            $relationNumber = 'REL' . str_pad(Customer::max('id') + 1, 8, '0', STR_PAD_LEFT);
+    //         Contact::create([
+    //             'customer_id' => $customer->id,
+    //             'email' => 'admin@gmail.com',
+    //             // ...other required fields for Contact model...
+    //         ]);
 
-            $customer = Customer::create([
-                'person_id' => $person->id,
-                'relation_number' => $relationNumber,
-            ]);
-
-            Contact::create([
-                'customer_id' => $customer->id,
-                'email' => 'admin@gmail.com',
-                // ...other required fields for Contact model...
-            ]);
-
-            return [
-                'person_id' => $person->id,
-                'name' => 'AdminUser',
-                'password' => Hash::make('Admin1234'),
-            ];
-        });
-    }
+    //         return [
+    //             'person_id' => $person->id,
+    //             'name' => 'AdminUser',
+    //             'password' => Hash::make('Admin1234'),
+    //         ];
+    //     });
+    // }
 }

@@ -10,7 +10,7 @@
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
                             with
                             our exclusive travel packages.</p>
-                        <a href="#packages" class="mt-4 inline-block text-blue-600 hover:underline">View
+                        <a href="/underdevelopment" class="mt-4 inline-block text-blue-600 hover:underline">View
                             Packages</a>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
                             with
                             our exclusive travel packages.</p>
-                        <a href="#packages" class="mt-4 inline-block text-blue-600 hover:underline">View
+                        <a href="/underdevelopment" class="mt-4 inline-block text-blue-600 hover:underline">View
                             Packages</a>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                         <p class="text-gray-600">Experience the magic of <span x-blade="$destination"></span>
                             with
                             our exclusive travel packages.</p>
-                        <a href="#packages" class="mt-4 inline-block text-blue-600 hover:underline">View
+                        <a href="/underdevelopment" class="mt-4 inline-block text-blue-600 hover:underline">View
                             Packages</a>
                     </div>
                 </div>

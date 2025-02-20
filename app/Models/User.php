@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Contact::class);
     }
+
+    public function roles()
+    {
+        return $this->hasOne(Role::class);
+    }
 }
