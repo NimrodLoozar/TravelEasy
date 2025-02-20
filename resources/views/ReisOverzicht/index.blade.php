@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <h2 class="font-semibold text-xl text-white leading-tight">
+            <h2 class="font-semibold text-xl text-white-900 leading-tight">
                 {{ __('Reis Overzicht') }}
             </h2>
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
                 <label class="flex items-center">
-                    <span class="mr-2 text-white toon">Toon Data</span>
+                    <span class="mr-2 text-white-900 toon">Toon Data</span>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                         <input type="checkbox" id="dataToggle"
                             class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
@@ -20,7 +20,7 @@
         </div>
     </x-slot>
 
-    <div>
+    <div id="dataContainer" class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Reis List -->
@@ -63,7 +63,7 @@
                                 </tbody>
                             </table>
                         @else
-                            <p class="text-gray-600">Geen reizen gevonden.</p>
+                            <p class="text-red-500 p-4">Geen reizen gevonden.</p>
                         @endif
                     </div>
                 </div>
@@ -71,38 +71,40 @@
         </div>
     </div>
 
-    <script>
-    // Toggle visibility
-    document.getElementById('dataToggle').addEventListener('change', function () {
-        document.getElementById('dataContainer').classList.toggle('hidden', !this.checked);
-        document.getElementById('errorContainer').classList.toggle('hidden', this.checked);
+    <div id="errorContainer" class="py-12 hidden ml-64">
+        <p class="text-red-500">Geen reizen gevonden. Probeer later opnieuw.</p>
+    </div>
+</x-app-layout>
+
+<script>
+    document.getElementById('dataToggle').addEventListener('change', function() {
+        const dataContainer = document.getElementById('dataContainer');
+        const errorContainer = document.getElementById('errorContainer');
+        if (this.checked) {
+            dataContainer.classList.remove('hidden');
+            errorContainer.classList.add('hidden');
+        } else {
+            dataContainer.classList.add('hidden');
+            errorContainer.classList.remove('hidden');
+        }
     });
-
-    // BTW-berekening
-    document.getElementById('amount_excl_vat').addEventListener('input', calculateVat);
-    document.getElementById('vat').addEventListener('input', calculateVat);
-
-    function calculateVat() {
-        const amountExclVat = parseFloat(document.getElementById('amount_excl_vat').value) || 0;
-        const vatPercentage = parseFloat(document.getElementById('vat').value) || 0;
-        const vatAmount = (amountExclVat * vatPercentage) / 100;
-        const amountInclVat = amountExclVat + vatAmount;
-
-        document.getElementById('amount_incl_vat').value = amountInclVat.toFixed(2);
-    }
-
-    // Bereken BTW bij het laden van de pagina
-    calculateVat();
 </script>
 
 <style>
-    .toggle-checkbox:checked {
-        right: 0;
-        border-color: #68D391;
+    h2 {
+        color: #fff;
     }
 
-    .toggle-checkbox:checked + .toggle-label {
-        background-color: #68D391;
+    .toon {
+        color: #fff;
+    }
+
+    .toggle-checkbox:checked {
+        right: 0;
+        border-color: #38A169;
+    }
+
+    .toggle-checkbox:checked+.toggle-label {
+        background-color: #38A169;
     }
 </style>
-</x-app-layout>
