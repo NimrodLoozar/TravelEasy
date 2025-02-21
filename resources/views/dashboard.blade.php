@@ -31,7 +31,7 @@
                         <h4 class="text-xl font-semibold mt-4">Email</h4>
                         <p>{{ Auth::user()->email }}</p>
 
-                        <a href="{{ route('messages.index') }}">View All Communications</a>
+                        {{-- <a href="{{ route('messages.index') }}">View All Communications</a> --}}
                     </div>
 
                     @if (Auth::check() && Auth::user()->role === 'admin')
@@ -56,7 +56,7 @@
                             Bekijk accounts
                         </a>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -70,15 +70,15 @@
             {{ __('Log Out') }}
         </x-responsive-nav-link>
     </div>
-        
 
 
 
-        <div>
+
+    <div>
         <a href="{{ route('chat') }}"
             class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
             Start Chatting with a chatbot
         </a>
-        </div>
+    </div>
     </div>
 </x-app-layout>
