@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
-
+ 
 Route::get('/destinations', function () {
     return view('destinations');
 })->name('destinations');
