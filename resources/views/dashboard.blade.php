@@ -49,6 +49,13 @@
                             Bekijk facturen
                         </a>
                     </div>
+
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <h3 class="text-2xl font-bold mb-4">Accounts</h3>
+                        <a href="{{ route('account.index') }}" class="text-blue-500 hover:underline">
+                            Bekijk accounts
+                        </a>
+                    </div>
                     
                 </div>
             </div>

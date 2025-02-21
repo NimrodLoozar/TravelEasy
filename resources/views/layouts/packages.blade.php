@@ -12,7 +12,7 @@
                             <span x-blade="$package['duration']" class="text-sm text-gray-500"></span>
                             <span x-blade="$package['price']" class="text-lg font-bold text-blue-600"></span>
                         </div>
-                        <a x-blade="'href=package.html?id=' . $package['id']"
+                        <a href="/underdevelopment" {{-- x-blade="'href=package.html?id=' . $package['id']" --}}
                             class="mt-4 inline-block w-full text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
                             View Details
                         </a>
@@ -30,7 +30,7 @@
                             <span x-blade="$package['duration']" class="text-sm text-gray-500"></span>
                             <span x-blade="$package['price']" class="text-lg font-bold text-blue-600"></span>
                         </div>
-                        <a x-blade="'href=package.html?id=' . $package['id']"
+                        <a href="/underdevelopment" {{-- x-blade="'href=package.html?id=' . $package['id']" --}}
                             class="mt-4 inline-block w-full text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
                             View Details
                         </a>
@@ -48,7 +48,7 @@
                             <span x-blade="$package['duration']" class="text-sm text-gray-500"></span>
                             <span x-blade="$package['price']" class="text-lg font-bold text-blue-600"></span>
                         </div>
-                        <a x-blade="'href=package.html?id=' . $package['id']"
+                        <a href="/underdevelopment" {{-- x-blade="'href=package.html?id=' . $package['id']" --}}
                             class="mt-4 inline-block w-full text-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
                             View Details
                         </a>

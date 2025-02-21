@@ -18,6 +18,12 @@
                     <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
                         {{ __('Klanten') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('account.index')" :active="request()->routeIs('account.index')">
+                        {{ __('Accounts') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
+                        {{ __('Reizen') }}
+                    </x-nav-link>
                 </div>
             </div>
 

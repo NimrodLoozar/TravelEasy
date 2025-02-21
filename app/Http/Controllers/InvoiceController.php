@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
-use App\Models\Customer;
-use App\Models\Booking;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+use App\Models\Booking;
+use App\Models\Invoice;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -16,125 +17,155 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['booking.customer.person'])->orderBy('id', 'desc')->paginate(12);
-        return view('invoice.index', compact('invoices'));
+    $invoices = DB::select('CALL spGetInvoices()') ?? [];
+
+    $currentPage = request('page', 1); 
+    $perPage = 12;
+
+    $paginatedInvoices = new LengthAwarePaginator(
+        collect($invoices)->forPage($currentPage, $perPage),
+        count($invoices),
+        $perPage,
+        $currentPage,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+        return view('invoice.index', compact('paginatedInvoices'));
     }
 
     /**
      * Toon details van een specifieke factuur.
      */
     public function show($id)
-    {
-        $invoice = Invoice::with([
-            'booking.customer.person',
-            'booking.trip'
-        ])->findOrFail($id);
+        {
+            $invoices = DB::select('CALL spGetInvoiceById(?)', [$id]);
 
-        return view('invoices.show', compact('invoice'));
-    }
+            if (empty($invoices)) {
+                abort(404, 'Factuur niet gevonden.');
+            }
+
+            return view('invoice.show', ['invoices' => $invoices[0]]);
+        }
+
 
     /**
      * Toon de create view voor een nieuwe factuur.
      */
     public function create()
     {
-        $bookings = Booking::all();
-        $lastInvoice = Invoice::latest('id')->first();
-        $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
+        $bookings = Booking::with('customer.person', 'trip')->get(); // Zorg ervoor dat je de juiste relaties laadt
+        $newNumber = Invoice::max('number') + 1; // Of een andere manier om een nieuw factuurnummer te genereren
 
-        return view('invoice.create', [
-            'bookings' => $bookings,
-            'newNumber' => $newNumber,
-        ]);
+        return view('invoice.create', compact('bookings', 'newNumber'));
     }
+
 
     /**
      * Sla een nieuwe factuur op.
      */
     public function store(Request $request)
     {
-        // Haal het laatste factuurnummer op
-        $lastInvoice = Invoice::latest('id')->first();
-        $newNumber = $lastInvoice ? str_pad($lastInvoice->number + 1, 6, '0', STR_PAD_LEFT) : '000001';
-
-        // Validate the request data
+        // Validate input data
         $validated = $request->validate([
-            'booking_id' => 'required|exists:bookings,id', // Ensure booking_id is provided and valid
-            'number' => 'required|string', // Validate number field
-            'date' => 'required|date',
-            'amount_excl_vat' => 'required|numeric|min:0', // Validate amount fields
-            'vat' => 'required|numeric|min:0',
-            'amount_incl_vat' => 'required|numeric|min:0',
-            'status' => 'nullable|string|in:in behandeling,betaald,onbetaald',
-            'note' => 'nullable|string', // Validate note field
+            'booking_id' => 'required|exists:bookings,id',
+            'amount_excl_vat' => 'required|numeric|min:0',
+            'status' => 'required|in:in behandeling,betaald,onbetaald',
+            'note' => 'nullable|string|max:500',
         ]);
 
-        // Add the generated invoice number to the validated data
-        $validated['number'] = $newNumber;
+        // Get the necessary data from the request
+        $booking = \App\Models\Booking::findOrFail($validated['booking_id']);
+        $amountExclVat = $validated['amount_excl_vat'];
+        $vatAmount = $amountExclVat * 0.21; // 21% VAT
+        $totalAmount = $amountExclVat + $vatAmount;
+       
+        $invoiceNumber = Invoice::max('number') + 1;
 
-        // dd($validated);
+        $invoiceDate = Carbon::now()->toDateString();
+        $status = $validated['status'];
+        $note = $validated['note'] ?? ''; // If no note is provided, set to empty string
 
-        // Create a new invoice
-        Invoice::create($validated);
+        // Call the stored procedure to insert the invoice
+        DB::statement("
+            CALL spAddInvoice(
+                :number, 
+                :date, 
+                :status, 
+                :amount_excl_vat, 
+                :vat, 
+                :amount_incl_vat, 
+                :note, 
+                :booking_id
+            )
+        ", [
+            'number' => $invoiceNumber,
+            'date' => $invoiceDate,
+            'status' => $status,
+            'amount_excl_vat' => $amountExclVat,
+            'vat' => $vatAmount,
+            'amount_incl_vat' => $totalAmount,
+            'note' => $note,
+            'booking_id' => $booking->id,
+        ]);
 
+        // Redirect back or show a success message
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol aangemaakt.');
     }
 
-    /**
-     * Toon de edit view voor een bestaande factuur.
-     */
     public function edit($id)
-    {
-        // Haal de factuur op die bewerkt moet worden
-        $invoice = Invoice::findOrFail($id);
+        {
+            // Retrieve the invoice by ID
+            $invoice = Invoice::findOrFail($id);
 
-        // Haal alle bookings op (of een gefilterde lijst, afhankelijk van je behoeften)
-        $bookings = Booking::all();
-
-        // Geef de factuur en bookings door aan de view
-        return view('invoice.edit', compact('invoice', 'bookings'));
-    }
+            // Pass the invoice data to the view
+            return view('invoice.edit', compact('invoice'));
+        }
+    
 
     /**
-     * Werk een bestaande factuur bij.
+     * Update een bestaande factuur.
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'date' => 'required|date',
-            'amount_excl_vat' => 'required|numeric|min:0',
-            'vat' => 'required|numeric|min:0',
-            'amount_incl_vat' => 'required|numeric|min:0',
-            'status' => 'required|in:in behandeling,betaald,onbetaald',
-            'booking_id' => 'required|exists:bookings,id',
-            'note' => 'nullable|string',
+{
+    $request->validate([
+        'date'            => 'required|date',
+        'status'          => 'required|in:in behandeling,betaald,onbetaald',
+        'amount_excl_vat' => 'required|numeric|min:0',
+        'note'            => 'nullable|string|max:500',
+    ]);
+
+    $vat = $request->amount_excl_vat * 0.21;
+    $total = $request->amount_excl_vat + $vat;
+
+    try {
+        DB::statement('CALL spUpdateInvoice(?, ?, ?, ?, ?, ?, ?)', [
+            $id,
+            $request->date,
+            $request->status,
+            $request->amount_excl_vat,
+            $vat,
+            $total,
+            $request->note,
         ]);
 
-        $invoice = Invoice::findOrFail($id);
-        $invoice->update($request->all());
+        // Log the update
+        \Log::info('Factuur bijgewerkt', ['invoice_id' => $id, 'updated_by' => auth()->user()->id]);
 
-        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt!');
+        return redirect()->route('invoice.index')->with('success', 'Factuur succesvol bijgewerkt.');
+    } catch (\Exception $e) {
+        // Log the error
+        \Log::error('Fout bij het bijwerken van de factuur', ['error' => $e->getMessage()]);
+
+        return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van de factuur.');
     }
+}
 
     /**
      * Verwijder een factuur.
      */
     public function destroy($id)
     {
-        $invoice = Invoice::findOrFail($id);
-        $invoice->delete();
-
+        DB::statement('CALL spDeleteInvoice(?)', [$id]);
         return redirect()->route('invoice.index')->with('success', 'Factuur succesvol verwijderd.');
-    }
-
-    /**
-     * Genereer het volgende factuurnummer.
-     */
-    public function latestNumber()
-    {
-        $latestInvoice = Invoice::orderBy('number', 'desc')->first();
-        $nextNumber = $latestInvoice ? intval($latestInvoice->number) + 1 : 1;
-
-        return response()->json(['nextNumber' => str_pad($nextNumber, 6, '0', STR_PAD_LEFT)]);
     }
 }

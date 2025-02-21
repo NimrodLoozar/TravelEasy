@@ -9,33 +9,15 @@ class Employee extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'person_id',
-        'number',
-        'employee_type',
-        'is_active',
-        'note',
-    ];
+    protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'is_active', 'note'];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
-    /**
-     * Get the person associated with the employee.
-     */
-    public function person()
+    public function roles()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }
