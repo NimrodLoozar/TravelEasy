@@ -21,7 +21,8 @@
                             <span class="text-lg font-bold text-blue-600">{{ $package['price'] }}</span>
                         </div>
                         <button
-                            class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+                            class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                            onclick="window.location.href='/underdevelopment'">
                             Book Now
                         </button>
                     </div>

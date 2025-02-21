@@ -74,7 +74,7 @@ return new class extends Migration {
             $table->string('addition')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('city')->nullable();
-            $table->string('mobile')->nullable();
+            $table->string('mobile')->unique();
             $table->string('email')->unique();
             $table->boolean('is_active')->default(true);
             $table->text('note')->nullable();

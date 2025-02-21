@@ -25,9 +25,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Eerst mensen genereren, omdat veel andere tabellen hieraan gekoppeld zijn
-        //$people = Person::factory()->count(10)->create();
-
         // Maak een admin en testgebruiker (specifieke users)
         $person = Person::factory()->create([
             'first_name' => fake()->firstName,
@@ -43,6 +40,7 @@ class DatabaseSeeder extends Seeder
         Contact::create([
             'customer_id' => $customer->id,
             'email' => 'test@gmail.com',
+            'mobile' => fake()->phoneNumber,
             // ...other required fields for Contact model...
         ]);
 
@@ -66,6 +64,7 @@ class DatabaseSeeder extends Seeder
         Contact::create([
             'customer_id' => $adminCustomer->id,
             'email' => 'admin@gmail.com',
+            'mobile' => fake()->phoneNumber,
             // ...other required fields for Contact model...
         ]);
 
@@ -105,8 +104,8 @@ class DatabaseSeeder extends Seeder
         // Boekingen (gekoppeld aan klanten en reizen)
         $bookings = Booking::factory()->count(20)->create();
 
-        //// Facturen (gekoppeld aan boekingen)
-        //// Invoice::factory()->count(30)->create();
+        // Facturen (gekoppeld aan boekingen)
+        Invoice::factory()->count(30)->create();
 
         // Communicatie tussen klanten en medewerkers
         // Communication::factory()->count(20)->create();

@@ -4,10 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Customer;
+use App\Models\Person;
+use App\Models\User;
 
 class Contact extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'customer_id',
@@ -18,7 +25,6 @@ class Contact extends Model
         'city',
         'mobile',
         'email',
-        'is_active',
         'note',
     ];
 

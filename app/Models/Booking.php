@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Customer;
+use App\Models\Trip;
 
 class Booking extends Model
 {
@@ -33,7 +34,7 @@ class Booking extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function trip(): BelongsTo
+    public function trip()
     {
         return $this->belongsTo(Trip::class);
     }

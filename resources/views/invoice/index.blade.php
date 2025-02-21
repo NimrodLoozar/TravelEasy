@@ -26,7 +26,7 @@
                 <!-- Facturen List -->
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
-                        @if ($invoices->count() > 0)
+                        @if (count($paginatedInvoices) > 0)
                             <table class="min-w-full table-auto">
                                 <thead>
                                     <tr class="bg-gray-100 text-gray-800 uppercase text-sm font-medium leading-normal">
@@ -38,18 +38,18 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-800 text-sm font-light">
-                                    @foreach ($invoices as $invoice)
+                                    @foreach ($paginatedInvoices as $invoice)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
                                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium"># {{ $invoice->number }}</td>
-                                            <!-- person -->
+                                            
                                             <td class="py-3 px-6 text-left">
-                                                @if ($invoice->booking && $invoice->booking->customer && $invoice->booking->customer->person)
-                                                    {{ $invoice->booking->customer->person->first_name }} {{ $invoice->booking->customer->person->middle_name }} {{ $invoice->booking->customer->person->last_name }}
-                                                @else
-                                                    N/A
-                                                @endif
+                                            {{ $invoice->first_name }} {{ $invoice->last_name }} 
                                             </td>
-                                            <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}</td>
+
+                                            <td class="py-3 px-6 text-left whitespace-nowrap">
+                                            {{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}
+                                            </td>
+
                                             <td class="py-3 px-6 text-left">
                                                 @if($invoice->status == 'in behandeling')
                                                     <span class="bg-yellow-400 text-white py-1 px-3 rounded-full text-xs font-medium">in behandeling</span>
@@ -61,6 +61,7 @@
                                                     <span class="bg-gray-500 text-white py-1 px-3 rounded-full text-xs font-medium">{{ $invoice->status }}</span>
                                                 @endif
                                             </td>
+
                                             <td class="py-3 px-6 text-center space-x-4">
                                                 <a href="{{ route('invoice.show', $invoice->id) }}" class="text-blue-600 hover:text-blue-800 transition duration-300">ⓘ</a>
                                                 <a href="{{ route('invoice.edit', $invoice->id) }}" class="text-yellow-500 hover:text-yellow-700 transition duration-300">✎</a>
@@ -84,8 +85,9 @@
                     </div>
                 </div>
             </div>
-            <div class="py-4">
-                {{ $invoices->links() }}
+
+            <div class="mt-4">
+            {{ $paginatedInvoices->links() }}
             </div>
         </div>
     </div>

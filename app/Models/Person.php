@@ -4,10 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Customer;
+use App\Models\User;
+use App\Models\Contact;
 
 class Person extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'id';
+
+    public $timestamps = false;
 
     protected $fillable = [
         'first_name',
@@ -15,7 +22,6 @@ class Person extends Model
         'last_name',
         'birth_date',
         'passport_details',
-        'is_active',
         'note',
     ];
 
