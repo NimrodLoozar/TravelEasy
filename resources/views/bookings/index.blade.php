@@ -87,10 +87,10 @@
                 <tbody>
                     @foreach ($bookings as $booking)
                         <tr class="border-t border-gray-700 hover:bg-gray-700">
-                            <td class="py-2 px-4 text-gray-300">{{ $booking->customer->name ?? 'N/A' }}</td>
+                            <td class="py-2 px-4 text-gray-300">{{ $booking->customer->person->first_name ?? 'N/A' }}</td>
                             <td class="py-2 px-4 text-gray-300">{{ $booking->trip->flight_number ?? 'N/A' }}</td>
-                            <td class="py-2 px-4 text-gray-300">{{ $booking->trip->departure->name ?? 'N/A' }}</td>
-                            <td class="py-2 px-4 text-gray-300">{{ $booking->trip->destination->name ?? 'N/A' }}</td>
+                            <td class="py-2 px-4 text-gray-300">{{ $booking->trip->departure->country ?? 'N/A' }}</td>
+                            <td class="py-2 px-4 text-gray-300">{{ $booking->trip->destination->country ?? 'N/A' }}</td>
                             <td class="py-2 px-4 text-gray-300">
                                 {{ \Carbon\Carbon::parse($booking->trip->departure_date)->format('d M Y') }}
                                 {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}
