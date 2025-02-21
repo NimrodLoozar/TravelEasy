@@ -86,6 +86,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/latest-number', [InvoiceController::class, 'latestNumber'])->name('invoice.latestNumber');
 
 
+    // Bookings
+    Route::resource('bookings', BookingController::class);
+    
     // ReisOverzicht 
     Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');
     Route::get('/reisoverzicht/create', [ReizenOverzichtController::class, 'create'])->name('reisoverzicht.create');
