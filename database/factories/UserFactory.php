@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Person;
+use App\Models\Customer;
+use App\Models\Contact;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,13 +26,32 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+        $person = Person::factory()->create();
+
+        $user = [
+            'person_id' => $person->id,
+            'name' => $this->faker->userName,
             'password' => static::$password ??= Hash::make('password'),
+            'is_logged_in' => false,
+            'logged_in' => null,
+            'logged_out' => null,
+            'is_active' => true,
+            'note' => null,
             'remember_token' => Str::random(10),
         ];
+
+        $customer = Customer::factory()->create([
+            'person_id' => $person->id,
+            'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
+        ]);
+
+        Contact::create([
+            'customer_id' => $customer->id,
+            'email' => $this->faker->unique()->safeEmail,
+            'mobile' => $this->faker->phoneNumber,
+            // ...other required fields for Contact model...
+        ]);
+        return $user;
     }
 
     /**
@@ -42,25 +64,59 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function testuser(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'name' => 'Test User',
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('Test1234'),
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-        ]);
-    }
+    // public function testuser(): static
+    // {
+    //     return $this->state(function (array $attributes) {
+    //         $person = Person::factory()->create([
+    //             'first_name' => $this->faker->firstName,
+    //             'middle_name' => $this->faker->optional()->lastName,
+    //             'last_name' => $this->faker->lastName,
+    //         ]);
 
-    public function admin(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('Admin1234'),
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-        ]);
-    }
+    //         $customer = Customer::create([
+    //             'person_id' => $person->id,
+    //             'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
+    //         ]);
+
+    //         Contact::create([
+    //             'customer_id' => $customer->id,
+    //             'email' => 'test@gmail.com',
+    //             // ...other required fields for Contact model...
+    //         ]);
+
+    //         return [
+    //             'person_id' => $person->id,
+    //             'name' => 'TestUser',
+    //             'password' => Hash::make('Test1234'),
+    //         ];
+    //     });
+    // }
+
+    // public function admin(): static
+    // {
+    //     return $this->state(function (array $attributes) {
+    //         $person = Person::factory()->create([
+    //             'first_name' => $this->faker->firstName,
+    //             'middle_name' => $this->faker->optional()->lastName,
+    //             'last_name' => $this->faker->lastName,
+    //         ]);
+
+    //         $customer = Customer::create([
+    //             'person_id' => $person->id,
+    //             'relation_number' => $this->faker->unique()->numberBetween(100000, 999999),
+    //         ]);
+
+    //         Contact::create([
+    //             'customer_id' => $customer->id,
+    //             'email' => 'admin@gmail.com',
+    //             // ...other required fields for Contact model...
+    //         ]);
+
+    //         return [
+    //             'person_id' => $person->id,
+    //             'name' => 'AdminUser',
+    //             'password' => Hash::make('Admin1234'),
+    //         ];
+    //     });
+    // }
 }
