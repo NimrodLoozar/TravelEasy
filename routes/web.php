@@ -43,7 +43,9 @@ Route::get('/chat', [ChatbotController::class, 'showChatForm'])->name('chat');
 Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $bookingController = new \App\Http\Controllers\BookingController();
+    $bookingStats = $bookingController->getBookingStats();
+    return view('dashboard', compact('bookingStats'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/underdevelopment', function () {
