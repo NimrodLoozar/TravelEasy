@@ -46,16 +46,15 @@
                             Bekijk accounts
                         </a>
                     </div>
-
                 </div>
 
                 <!-- Boekinggegevens -->
-                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8 lg:mb-0">
+                <div class="w-full lg:w-2/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8 lg:mb-0">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-2xl font-bold">Aantal boekingen per/</h3>
                         </div>
-                        <button onclick="toggleBookings()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        <button onclick="toggleBookings()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-4">
                                 Toon boekingen
                         </button>
                         <br>
@@ -85,19 +84,37 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Bottom Section -->
+            <div class="mt-8 flex flex-col lg:flex-row gap-8">
+                <!-- Omzet per maand -->
+                <div class="w-full lg:w-2/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">Omzet per maand</h3>
+                        </div>
+                        <!-- Hier kun je later je content toevoegen -->
+                    </div>
+                </div>
+
+                <!-- populairste bestemmingen -->
+                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">populairste bestemmingen</h3>
+                        </div>
+                        <!-- Hier kun je later je content toevoegen -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    
 
     <div>
         <a href="{{ route('chat') }}"
             class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
             Chatbot By: <span class="font-bold">T. Tadesse</span>
         </a>
-    </div>
-
-    </div>
     </div>
 
     <script>
