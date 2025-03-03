@@ -66,7 +66,10 @@
                                                 <button class="reveal-btn" onclick="toggleVisibility(this)">👁️</button>
                                             </td>
                                             <td class="py-3 px-6">
-                                                <span class="px-2 py-1 rounded {{ $account->is_active ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                                <span class="text-white py-1 px-3 rounded-full text-xs font-medium 
+                                                {{ $account->is_active ? 
+                                                 'bg-green-500 text-white py-1 px-3 rounded-full text-xs font-medium' 
+                                                 : 'bg-red-500  text-white py-1 px-3 rounded-full text-xs font-medium' }}">
                                                     {{ $account->is_active ? 'Actief' : 'Inactief' }}
                                                 </span>
                                             </td>

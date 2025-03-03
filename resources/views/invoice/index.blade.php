@@ -33,7 +33,7 @@
                                         <th class="py-4 px-6 text-left">Factuurnummer</th>
                                         <th class="py-4 px-6 text-left">Naam</th>
                                         <th class="py-4 px-6 text-left">Datum</th>
-                                        <th class="py-4 px-6 text-left">Status</th>
+                                        <th class="py-4 px-6 text-center">Status</th>
                                         <th class="py-4 px-6 text-center">Acties</th>
                                     </tr>
                                 </thead>
@@ -50,7 +50,7 @@
                                             {{ \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') }}
                                             </td>
 
-                                            <td class="py-3 px-6 text-left">
+                                            <td class="py-3 px-6 text-center">
                                                 @if($invoice->status == 'in behandeling')
                                                     <span class="bg-yellow-400 text-white py-1 px-3 rounded-full text-xs font-medium">in behandeling</span>
                                                 @elseif($invoice->status == 'betaald')
