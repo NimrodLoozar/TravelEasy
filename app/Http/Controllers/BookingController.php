@@ -135,15 +135,23 @@ class BookingController extends Controller
     public function getBookingStats()
     {
         $currentYear = now()->year;
+        $currentMonth = now()->month;
         
         // Maandelijkse statistieken
-        $monthlyStats = Booking::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', $currentYear)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->pluck('count', 'month')
-            ->toArray();
+        $monthlyStats = collect(range(1, $currentMonth))->mapWithKeys(function ($month) use ($currentYear) {
+            $count = Booking::whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $month)
+                ->count();
+            return [$month => $count];
+        })->toArray();
+
+        // Maandelijkse omzet
+        $monthlyRevenue = collect(range(1, $currentMonth))->mapWithKeys(function ($month) use ($currentYear) {
+            $revenue = Booking::whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $month)
+                ->sum(\DB::raw('price * quantity'));
+            return [$month => $revenue ?? 0];
+        })->toArray();
 
         // Kwartaal statistieken
         $quarterlyStats = Booking::selectRaw('QUARTER(created_at) as quarter, COUNT(*) as count')
@@ -154,9 +162,21 @@ class BookingController extends Controller
             ->pluck('count', 'quarter')
             ->toArray();
 
+        // Top 5 bestemmingen
+        $topDestinations = Booking::select('trips.destination_id')
+            ->join('trips', 'bookings.trip_id', '=', 'trips.id')
+            ->join('destinations', 'trips.destination_id', '=', 'destinations.id')
+            ->selectRaw('destinations.country, destinations.airport, COUNT(*) as booking_count')
+            ->groupBy('trips.destination_id', 'destinations.country', 'destinations.airport')
+            ->orderByDesc('booking_count')
+            ->limit(5)
+            ->get();
+
         return [
             'monthly' => $monthlyStats,
-            'quarterly' => $quarterlyStats
+            'quarterly' => $quarterlyStats,
+            'monthlyRevenue' => $monthlyRevenue,
+            'topDestinations' => $topDestinations
         ];
     }
 }

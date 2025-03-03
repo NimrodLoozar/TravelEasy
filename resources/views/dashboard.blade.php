@@ -93,7 +93,9 @@
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-2xl font-bold">Omzet per maand</h3>
                         </div>
-                        <!-- Hier kun je later je content toevoegen -->
+                        <div>
+                            <canvas id="revenueChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -101,9 +103,19 @@
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-2xl font-bold">populairste bestemmingen</h3>
+                            <h3 class="text-2xl font-bold">Top 5 Bestemmingen</h3>
                         </div>
-                        <!-- Hier kun je later je content toevoegen -->
+                        <div class="space-y-4">
+                            @foreach($bookingStats['topDestinations'] as $destination)
+                                <div class="flex justify-between items-center p-3 bg-gray-700 rounded">
+                                    <div>
+                                        <div class="font-bold">{{ $destination->country }}</div>
+                                        <div class="text-sm text-gray-300">{{ $destination->airport }}</div>
+                                    </div>
+                                    <div class="text-xl font-bold">{{ $destination->booking_count }}</div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,6 +129,8 @@
         </a>
     </div>
 
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function toggleBookings() {
             const stats = document.getElementById('bookingStats');
@@ -129,5 +143,49 @@
                 button.textContent = 'Toon boekingen';
             }
         }
+
+        // Revenue Chart
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const revenueData = @json($bookingStats['monthlyRevenue']);
+        
+        const labels = Object.keys(revenueData).map(month => monthNames[month - 1]);
+        const values = Object.values(revenueData);
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Maandelijkse Omzet (€)',
+                    data: values,
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '€' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '€' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </x-app-layout>
