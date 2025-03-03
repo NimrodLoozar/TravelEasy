@@ -131,4 +131,32 @@ class BookingController extends Controller
             'message' => 'Booking deleted successfully'
         ]);
     }
+
+    public function getBookingStats()
+    {
+        $currentYear = now()->year;
+        
+        // Maandelijkse statistieken
+        $monthlyStats = Booking::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Kwartaal statistieken
+        $quarterlyStats = Booking::selectRaw('QUARTER(created_at) as quarter, COUNT(*) as count')
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('quarter')
+            ->orderBy('quarter')
+            ->get()
+            ->pluck('count', 'quarter')
+            ->toArray();
+
+        return [
+            'monthly' => $monthlyStats,
+            'quarterly' => $quarterlyStats
+        ];
+    }
 }

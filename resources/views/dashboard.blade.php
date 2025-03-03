@@ -17,6 +17,7 @@
                     {{ session('success') }}
                 </div>
             @endif
+
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Gebruikersgegevens -->
                 <div
@@ -26,22 +27,11 @@
 
 
                         <h4 class="text-xl font-semibold">Naam</h4>
+                        <br>
                         <p>{{ Auth::user()->name }}</p>
-
-                        <h4 class="text-xl font-semibold mt-4">Email</h4>
-                        <p>{{ Auth::user()->email }}</p>
 
                         {{-- <a href="{{ route('messages.index') }}">View All Communications</a> --}}
                     </div>
-
-                    @if (Auth::check() && Auth::user()->role === 'admin')
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                            <h3 class="text-2xl font-bold mb-4">Facturen</h3>
-                            <a href="{{ route('invoice.index') }}" class="text-blue-500 hover:underline">
-                                Bekijk facturen
-                            </a>
-                        </div>
-                    @endif
 
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <h3 class="text-2xl font-bold mb-4">Facturen</h3>
@@ -58,27 +48,69 @@
                     </div>
 
                 </div>
+
+                <!-- Boekinggegevens -->
+                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8 lg:mb-0">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-2xl font-bold">Aantal boekingen per/</h3>
+                        </div>
+                        <button onclick="toggleBookings()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Toon boekingen
+                        </button>
+                        <br>
+                        <hr>
+                        <br>
+                        <div id="bookingStats" class="hidden">
+                            <h4 class="text-2xl font-bold mb-4">kwartaal</h4>
+                            <div class="mb-4">
+                                @foreach($bookingStats['quarterly'] as $quarter => $count)
+                                    <div class="flex justify-between items-center mb-2">
+                                        <a href="{{ route('bookings.index') }}" class="text-blue-500 hover:underline">Q{{ $quarter }}:</a>
+                                        <a href="{{ route('bookings.index') }}" class="font-bold text-blue-500 hover:underline">{{ $count }} boekingen</a>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <h4 class="text-2xl font-bold mb-4">maand</h4>
+                            <div>
+                                @foreach($bookingStats['monthly'] as $month => $count)
+                                    <div class="flex justify-between items-center mb-2">
+                                        <a href="{{ route('bookings.index') }}" class="text-blue-500 hover:underline">{{ DateTime::createFromFormat('!m', $month)->format('F') }}:</a>
+                                        <a href="{{ route('bookings.index') }}" class="font-bold text-blue-500 hover:underline">{{ $count }} boekingen</a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 
-    <div class="py-12">
-        <x-responsive-nav-link :href="route('logout')"
-            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-            {{ __('Log Out') }}
-        </x-responsive-nav-link>
-    </div>
-
-
-
+    
 
     <div>
         <a href="{{ route('chat') }}"
             class="block w-full p-6 text-center text-white bg-[#FF2D20] rounded-lg shadow-lg hover:bg-[#FF1A00] focus:outline-none focus-visible:ring focus-visible:ring-[#FF2D20] focus-visible:ring-opacity-50">
-            Start Chatting with a chatbot
+            Chatbot By: <span class="font-bold">T. Tadesse</span>
         </a>
     </div>
+
     </div>
+    </div>
+
+    <script>
+        function toggleBookings() {
+            const stats = document.getElementById('bookingStats');
+            const button = event.target;
+            if (stats.classList.contains('hidden')) {
+                stats.classList.remove('hidden');
+                button.textContent = 'Verberg boekingen';
+            } else {
+                stats.classList.add('hidden');
+                button.textContent = 'Toon boekingen';
+            }
+        }
+    </script>
 </x-app-layout>
