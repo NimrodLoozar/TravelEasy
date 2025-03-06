@@ -24,6 +24,9 @@
                     <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
                         {{ __('Reizen') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.index')">
+                        {{ __('Booking') }}
+                    </x-nav-link>
                 </div>
             </div>
 
