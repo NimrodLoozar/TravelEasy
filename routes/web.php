@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AccountController;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Http;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
-
+ 
 Route::get('/destinations', function () {
     return view('destinations');
 })->name('destinations');
@@ -41,7 +43,9 @@ Route::get('/chat', [ChatbotController::class, 'showChatForm'])->name('chat');
 Route::post('/huggingface/generate', [ChatbotController::class, 'generate'])->name('huggingface.generate');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $bookingController = new \App\Http\Controllers\BookingController();
+    $bookingStats = $bookingController->getBookingStats();
+    return view('dashboard', compact('bookingStats'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/underdevelopment', function () {
@@ -84,6 +88,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/latest-number', [InvoiceController::class, 'latestNumber'])->name('invoice.latestNumber');
 
 
+    // Bookings
+    Route::resource('bookings', BookingController::class);
+    
     // ReisOverzicht 
     Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');
     Route::get('/reisoverzicht/create', [ReizenOverzichtController::class, 'create'])->name('reisoverzicht.create');
