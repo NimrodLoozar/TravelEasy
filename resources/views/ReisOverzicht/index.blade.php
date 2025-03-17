@@ -26,6 +26,11 @@
                 <!-- Reis List -->
                 <div class="w-full overflow-x-auto">
                     <div class="bg-white shadow-lg rounded-lg my-6">
+                        @if (session('success'))
+                            <div class="bg-green-100 border-t-4 border-green-600 rounded-b px-4 py-3 text-green-700" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
                         @if ($reizen->count() > 0)
                             <table class="min-w-full table-auto">
                                 <thead>
@@ -66,6 +71,7 @@
                             <p class="text-red-500 p-4">Geen reizen gevonden.</p>
                         @endif
                     </div>
+  
                 </div>
             </div>
         </div>
