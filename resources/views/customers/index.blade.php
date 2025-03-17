@@ -21,6 +21,11 @@
                 <button id="searchButton"
                     class="bg-blue-600 text-white px-5 py-2.5 rounded-r-lg transition duration-300 hover:bg-green-700 transform hover:scale-105 -ml-1">Search</button>
             </div>
+
+            <a href="{{ route('customers.create') }}"
+                class="bg-green-600 text-white px-5 py-2.5 rounded-lg transition duration-300 hover:bg-green-700 transform hover:scale-105">
+                Add New Customer
+            </a>
         </div>
     </x-slot>
 
