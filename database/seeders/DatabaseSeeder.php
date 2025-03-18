@@ -104,11 +104,11 @@ class DatabaseSeeder extends Seeder
         $employees = Employee::factory()->count(10)->create();
 
         // Luchthavens en bestemmingen
-        $departures = Departure::factory()->count(10)->create();
-        $destinations = Destination::factory()->count(10)->create();
+        $departures = Departure::factory()->count(20)->create();
+        $destinations = Destination::factory()->count(20)->create();
 
         // Reizen genereren (gekoppeld aan medewerkers, luchthavens)
-        // $trips = Trip::factory()->count(20)->create();
+        $trips = Trip::factory()->count(500)->create();
 
         // Boekingen (gekoppeld aan klanten en reizen)
         // $bookings = Booking::factory()->count(50)->create();
