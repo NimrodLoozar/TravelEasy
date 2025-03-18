@@ -12,18 +12,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
-                        {{ __('Factuuren') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
-                        {{ __('Klanten') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('account.index')" :active="request()->routeIs('account.index')">
-                        {{ __('Accounts') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
-                        {{ __('Reizen') }}
-                    </x-nav-link>
+                    @auth
+                        @if (Auth::user()->roles && Auth::user()->roles->pluck('name')->contains('Admin'))
+                            <x-nav-link :href="route('invoice.index')" :active="request()->routeIs('invoice.index')">
+                                {{ __('Factuuren') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                                {{ __('Klanten') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('account.index')" :active="request()->routeIs('account.index')">
+                                {{ __('Accounts') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('reisoverzicht.index')" :active="request()->routeIs('reisoverzicht.index')">
+                                {{ __('Reizen') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
