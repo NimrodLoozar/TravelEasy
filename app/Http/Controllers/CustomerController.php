@@ -15,7 +15,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::getJoinedData()->paginate(10);
+        $customers = Customer::getJoinedData()->paginate(100);
         return view('customers.index', compact('customers'));
     }
 

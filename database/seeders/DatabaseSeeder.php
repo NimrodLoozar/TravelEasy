@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Nu de rest van de gebruikers (gekoppeld aan een persoon)
-        User::factory()->count(10)->create();
+        User::factory()->count(300)->create();
 
         // Rollen aanmaken
         // Role::factory()->count(10)->create();

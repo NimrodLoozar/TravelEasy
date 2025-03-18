@@ -31,7 +31,10 @@
 
     <div id="dataContainer" class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="mt-4">
+                {{ $customers->links() }}
+            </div>
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-4">
                 <table class="min-w-full divide-y divide-gray-200 hidden md:table">
                     <thead>
                         <tr>
