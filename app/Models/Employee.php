@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    /** @use HasFactory<\Database\Factories\EmployeeFactory> */
     use HasFactory;
 
     protected $fillable = ['first_name', 'last_name', 'email', 'phone', 'is_active', 'note'];

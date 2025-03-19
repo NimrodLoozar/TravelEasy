@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Destination extends Model
 {
-    /** @use HasFactory<\Database\Factories\DestinationFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'country',
+        'airport',
+        'is_active',
+        'note',
+    ];
 }

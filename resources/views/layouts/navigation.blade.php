@@ -28,6 +28,9 @@
                             </x-nav-link>
                         @endif
                     @endauth
+                    <x-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.index')">
+                        {{ __('Booking') }}
+                    </x-nav-link>
                 </div>
             </div>
 
