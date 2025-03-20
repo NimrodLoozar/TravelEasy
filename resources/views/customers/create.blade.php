@@ -23,7 +23,7 @@
                             <div class="space-y-4">
                                 <div>
                                     <!-- First Name -->
-                                    <x-input-label for="first_name" :value="__('First Name')" />
+                                    <x-input-label-create for="first_name" :value="__('First Name')" />
                                     <x-text-input-login-reg id="first_name" class="block mt-1 w-full" type="text"
                                         name="first_name" :value="old('first_name')" required autofocus
                                         autocomplete="first_name" />
@@ -32,7 +32,7 @@
 
                                 <div>
                                     <!-- Middle Name -->
-                                    <x-input-label for="middle_name" :value="__('Middle Name')" />
+                                    <x-input-label-create for="middle_name" :value="__('Middle Name')" />
                                     <x-text-input-login-reg id="middle_name" class="block mt-1 w-full" type="text"
                                         name="middle_name" :value="old('middle_name')" autocomplete="middle_name" />
                                     <x-input-error :messages="$errors->get('middle_name')" class="mt-2" />
@@ -40,7 +40,7 @@
 
                                 <div>
                                     <!-- Last Name -->
-                                    <x-input-label for="last_name" :value="__('Last Name')" />
+                                    <x-input-label-create for="last_name" :value="__('Last Name')" />
                                     <x-text-input-login-reg id="last_name" class="block mt-1 w-full" type="text"
                                         name="last_name" :value="old('last_name')" required autocomplete="last_name" />
                                     <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
@@ -48,7 +48,7 @@
 
                                 <div>
                                     <!-- Username -->
-                                    <x-input-label for="username" :value="__('Username')" />
+                                    <x-input-label-create for="username" :value="__('Username')" />
                                     <x-text-input-login-reg id="username" class="block mt-1 w-full" type="text"
                                         name="username" :value="old('username')" required autocomplete="username" />
                                     <x-input-error :messages="$errors->get('username')" class="mt-2" />
@@ -57,7 +57,7 @@
                             <div class="space-y-4">
                                 <div>
                                     <!-- Email Address -->
-                                    <x-input-label for="email" :value="__('Email')" />
+                                    <x-input-label-create for="email" :value="__('Email')" />
                                     <x-text-input-login-reg id="email" class="block mt-1 w-full" type="email"
                                         name="email" :value="old('email')" required autocomplete="username" />
                                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -65,7 +65,7 @@
 
                                 <div>
                                     <!-- Phone Number -->
-                                    <x-input-label for="mobile" :value="__('Phone Number')" />
+                                    <x-input-label-create for="mobile" :value="__('Phone Number')" />
                                     <x-text-input-login-reg id="mobile" class="block mt-1 w-full" type="text"
                                         name="mobile" :value="old('mobile')" required autocomplete="mobile" />
                                     <x-input-error :messages="$errors->get('mobile')" class="mt-2" />
@@ -73,7 +73,7 @@
 
                                 <div>
                                     <!-- Password -->
-                                    <x-input-label for="password" :value="__('Password')" />
+                                    <x-input-label-create for="password" :value="__('Password')" />
                                     <x-text-input-login-reg id="password" class="block mt-1 w-full" type="password"
                                         name="password" required autocomplete="new-password" />
                                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -81,7 +81,7 @@
 
                                 <div>
                                     <!-- Confirm Password -->
-                                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                                    <x-input-label-create for="password_confirmation" :value="__('Confirm Password')" />
                                     <x-text-input-login-reg id="password_confirmation" class="block mt-1 w-full"
                                         type="password" name="password_confirmation" required
                                         autocomplete="new-password" />
