@@ -9,6 +9,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReizenOverzichtController;
+use App\Http\Controllers\DepartureController;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -16,9 +17,12 @@ use Illuminate\Support\Facades\Http;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    $departureController = new \App\Http\Controllers\DepartureController();
+    $departures = $departureController->getDepartures();
+    $destinations = $departureController->getDestinations();
+    return view('welcome', compact('departures', 'destinations'));
 })->name('welcome');
- 
+
 Route::get('/destinations', function () {
     return view('destinations');
 })->name('destinations');
@@ -88,6 +92,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
     Route::get('/invoice/latest-number', [InvoiceController::class, 'latestNumber'])->name('invoice.latestNumber');
 
+    // Departures
+    Route::get('/departures', [DepartureController::class, 'index'])->name('departure.index');
 
     // Bookings
     Route::resource('bookings', BookingController::class);
