@@ -7,6 +7,7 @@ use App\Http\Controllers\CommunicationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReizenOverzichtController;
 
 use Illuminate\Support\Facades\Route;
@@ -90,7 +91,17 @@ Route::middleware('auth')->group(function () {
 
     // Bookings
     Route::resource('bookings', BookingController::class);
-    
+
+    // Messages
+    Route::resource('messages', MessageController::class)->only(['index', 'create', 'store', 'update', 'destroy']);
+
+    // Custom routes
+    Route::post('/conversations/{conversation}/reply', [MessageController::class, 'reply'])->name('messages.reply');
+    Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.markAsRead');
+    Route::post('/conversations', [MessageController::class, 'createConversation'])->name('messages.createConversation');
+    Route::delete('/conversations/{conversation}/last-message', [MessageController::class, 'deleteLastMessage'])->name('messages.deleteLastMessage');
+    Route::post('/messages/delete-selected', [MessageController::class, 'deleteSelected'])->name('messages.deleteSelected');
+
     // ReisOverzicht 
     Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');
     Route::get('/reisoverzicht/create', [ReizenOverzichtController::class, 'create'])->name('reisoverzicht.create');

@@ -1,155 +1,222 @@
 <x-app-layout>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Berichten Overzicht</h1>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-200 leading-tight">
+                {{ __('Berichten') }}
+            </h2>
+            <label class="flex items-center">
+                <span class="mr-2 text-gray-200">Toon Berichten</span>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" id="dataToggle"
+                        class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        checked />
+                    <label for="dataToggle"
+                        class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+            </label>
+        </div>
+    </x-slot>
 
-        @if ($conversations->isEmpty())
-            <p class="text-gray-500">Er zijn momenteel geen berichten te zien.</p>
-        @else
-            <ul class="space-y-4">
-                @foreach ($conversations as $conversation)
-                    <li class="p-4 bg-gray-800 shadow rounded-lg mb-4">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-300">
-                                    Gesprek met {{ $conversation->user->name ?? 'Onbekende gebruiker' }}</h3>
-                                <small class="text-gray-500">Gestart op:
-                                    {{ $conversation->created_at->format('d-m-Y H:i') }}</small>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button
-                                    onclick="document.getElementById('edit-conversation-form-{{ $conversation->id }}').classList.toggle('hidden')"
-                                    class="text-yellow-500 hover:text-yellow-700">
-                                    {{-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                    </svg> --}}
-                                </button>
-                                <button onclick="openDeleteModal({{ $conversation->id }})"
-                                    class="text-red-500 hover:text-red-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                                <form id="delete-conversation-form-{{ $conversation->id }}"
-                                    action="{{ route('conversations.destroy', ['conversation' => $conversation->id]) }}"
-                                    method="POST" class="hidden">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </div>
-                        </div>
-                        @foreach ($conversation->messages as $message)
-                            <div
-                                class="p-4 bg-gray-300 shadow rounded-lg mb-4 mr-8 {{ $message->user_id == Auth::id() ? 'text-right' : 'text-left' }}">
-                                <span class="text-gray-800 break-words">{{ $message->content }}</span>
-                                @if ($message->user_id == Auth::id())
-                                    <button
-                                        onclick="document.getElementById('edit-message-form-{{ $message->id }}').classList.toggle('hidden')"
-                                        class="text-yellow-500 hover:text-yellow-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                        </svg>
-                                    </button>
-                                    <form id="edit-message-form-{{ $message->id }}"
-                                        action="{{ route('messages.update', ['conversation' => $conversation->id]) }}"
-                                        method="POST" class="hidden mt-4">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="flex items-center space-x-4">
-                                            <input type="text" name="content" value="{{ $message->content }}"
-                                                required class="flex-1 p-2 border border-gray-300 rounded">
-                                            <button type="submit"
-                                                class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Update</button>
-                                        </div>
-                                    </form>
-                                @endif
-                            </div>
-                        @endforeach
-                        <form action="{{ route('messages.reply', $conversation) }}" method="POST" class="mt-4">
-                            @csrf
-                            <div class="flex items-center space-x-4">
-                                <input type="text" name="content" placeholder="Uw antwoord" required
-                                    class="flex-1 p-2 border border-gray-300 rounded">
-                                <button type="submit"
-                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Antwoord</button>
-                            </div>
-                        </form>
-                    </li>
-                @endforeach
-            </ul>
-        @endif
-    </div>
-    <div id="delete-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
-        <div class="bg-white p-6 rounded shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Verwijderen</h2>
-            <p class="mb-4">Wat wil je verwijderen?</p>
-            <div class="flex space-x-4">
-                <button onclick="deleteConversation()"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Gesprek</button>
-                <button onclick="openMessageSelectionModal()"
-                    class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Bericht</button>
+    <div id="dataContainer" class="container mx-auto p-4">
+        @if (session('success'))
+            <div class="bg-green-900 border-t-4 border-green-600 rounded-b px-4 py-3 text-green-200 mb-4"
+                role="alert">
+                {{ session('success') }}
             </div>
-            <button onclick="closeDeleteModal()" class="mt-4 text-gray-500 hover:text-gray-700">Annuleren</button>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-900 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-200 mb-4" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <div class="flex justify-between items-center mb-4">
+            <a href="{{ route('messages.create') }}"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Nieuw Gesprek
+            </a>
         </div>
-    </div>
-    <div id="message-selection-modal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
-        <div class="bg-white p-6 rounded shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Selecteer berichten om te verwijderen</h2>
-            <form id="delete-messages-form" action="{{ route('messages.deleteSelected') }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <input type="hidden" name="conversation_id" id="conversation-id-to-delete">
-                <div class="mb-4">
-                    @if (isset($conversation))
-                        @foreach ($conversation->messages as $message)
-                            <div class="flex items-center mb-2">
-                                <input type="checkbox" name="message_ids[]" value="{{ $message->id }}" class="mr-2">
-                                <span class="text-gray-800">{{ $message->content }}</span>
-                            </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Conversations List -->
+            <div class="bg-gray-800 rounded-lg shadow-sm border border-gray-700 p-4">
+                <h2 class="text-xl font-bold text-white mb-4">Gesprekken</h2>
+
+                @if ($conversations->isEmpty())
+                    <div class="bg-yellow-900 border-t-4 border-yellow-600 rounded-b px-4 py-3 text-yellow-200">
+                        Geen gesprekken gevonden.
+                    </div>
+                @else
+                    <div class="space-y-2">
+                        @foreach ($conversations as $conv)
+                            <a href="{{ route('messages.index', ['conversation_id' => $conv->id]) }}"
+                                class="block p-3 rounded-lg {{ isset($conversation) && $conversation->id == $conv->id ? 'bg-blue-700' : 'bg-gray-700 hover:bg-gray-600' }}">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium text-white">{{ $conv->user->name ?? 'Onbekend' }}</p>
+                                        @if ($conv->messages->isNotEmpty())
+                                            <p class="text-sm text-gray-300 truncate">
+                                                {{ $conv->messages->last()->content ?? 'Geen berichten' }}
+                                            </p>
+                                        @else
+                                            <p class="text-sm text-gray-400 italic">Geen berichten</p>
+                                        @endif
+                                    </div>
+
+                                    @php
+                                        $unreadCount = $conv->unreadMessagesCount(Auth::id());
+                                    @endphp
+
+                                    @if ($unreadCount > 0)
+                                        <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="text-xs text-gray-400 mt-1">
+                                    {{ $conv->messages->isNotEmpty() ? $conv->messages->last()->created_at->format('d M Y H:i') : $conv->created_at->format('d M Y H:i') }}
+                                </div>
+                            </a>
                         @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <!-- Messages Display -->
+            <div class="bg-gray-800 rounded-lg shadow-sm border border-gray-700 p-4 md:col-span-2">
+                @if (isset($conversation))
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-white">
+                            Gesprek met {{ $conversation->user->name ?? 'Onbekend' }}
+                        </h2>
+                        <div class="flex space-x-2">
+                            <form action="{{ route('messages.destroy', $conversation->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" aQW Q
+                                    class="bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-2 rounded"
+                                    onclick="return confirm('Weet je zeker dat je dit gesprek wilt verwijderen?')">
+                                    Verwijder Gesprek
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-700 rounded-lg p-4 h-96 overflow-y-auto mb-4">
+                        @if ($conversation->messages->isEmpty())
+                            <div class="text-center py-10">
+                                <p class="text-gray-400 italic">Geen berichten in dit gesprek.</p>
+                            </div>
+                        @else
+                            <div class="space-y-4">
+                                @foreach ($conversation->messages as $message)
+                                    <div
+                                        class="flex {{ $message->user_id == Auth::id() ? 'justify-end' : 'justify-start' }}">
+                                        <div
+                                            class="{{ $message->user_id == Auth::id() ? 'bg-blue-600 text-white' : 'bg-gray-600 text-gray-200' }} 
+                                                   rounded-lg px-4 py-2 max-w-[70%]">
+                                            <div class="text-sm font-medium">
+                                                {{ $message->user->name ?? 'Onbekend' }}
+                                            </div>
+                                            <div class="mt-1">{{ $message->content }}</div>
+                                            <div
+                                                class="text-xs {{ $message->user_id == Auth::id() ? 'text-blue-200' : 'text-gray-400' }} mt-1 text-right">
+                                                {{ $message->created_at->format('d M Y H:i') }}
+                                                @if ($message->user_id != Auth::id())
+                                                    @if ($message->is_read)
+                                                        <span class="ml-2">✓</span>
+                                                    @else
+                                                        <span class="ml-2">
+                                                            <form
+                                                                action="{{ route('messages.markAsRead', $message->id) }}"
+                                                                method="POST" class="inline">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                    class="text-blue-400 hover:text-blue-300">
+                                                                    Markeer als gelezen
+                                                                </button>
+                                                            </form>
+                                                        </span>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('messages.reply', $conversation->id) }}" method="POST">
+                        @csrf
+                        <div class="flex">
+                            <input type="text" name="content" placeholder="Schrijf een bericht..."
+                                class="flex-grow bg-gray-700 text-white rounded-l px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                maxlength="25" required>
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r">
+                                Versturen
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Max. 25 tekens</p>
+                    </form>
+
+                    @if ($conversation->messages->where('user_id', Auth::id())->isNotEmpty())
+                        <div class="flex space-x-2 mt-4">
+                            <form action="{{ route('messages.deleteLastMessage', $conversation->id) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-yellow-600 hover:bg-yellow-700 text-white text-sm py-1 px-2 rounded"
+                                    onclick="return confirm('Weet je zeker dat je je laatste bericht wilt verwijderen?')">
+                                    Verwijder Laatste Bericht
+                                </button>
+                            </form>
+                        </div>
                     @endif
-                </div>
-                <div class="flex space-x-4">
-                    <button type="submit"
-                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Verwijderen</button>
-                    <button type="button" onclick="closeMessageSelectionModal()"
-                        class="text-gray-500 hover:text-gray-700">Annuleren</button>
-                </div>
-            </form>
+                @else
+                    <div class="text-center py-20">
+                        <p class="text-gray-400 text-lg">Selecteer een gesprek of maak een nieuwe aan.</p>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
-    <script>
-        let conversationIdToDelete;
 
-        function openDeleteModal(conversationId) {
-            conversationIdToDelete = conversationId;
-            document.getElementById('delete-modal').classList.remove('hidden');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('delete-modal').classList.add('hidden');
-        }
-
-        function deleteConversation() {
-            if (confirm('Weet je zeker dat je dit gesprek wilt verwijderen?')) {
-                document.getElementById('delete-conversation-form-' + conversationIdToDelete).submit();
-            }
-        }
-
-        function openMessageSelectionModal() {
-            document.getElementById('conversation-id-to-delete').value = conversationIdToDelete;
-            document.getElementById('message-selection-modal').classList.remove('hidden');
-            closeDeleteModal();
-        }
-
-        function closeMessageSelectionModal() {
-            document.getElementById('message-selection-modal').classList.add('hidden');
-        }
-    </script>
+    <div id="errorContainer" class="container mx-auto mt-8 hidden ml-64">
+        <p class="text-red-500">Geen berichten gevonden.</p>
+    </div>
 </x-app-layout>
+
+<script>
+    document.getElementById('dataToggle').addEventListener('change', function() {
+        const dataContainer = document.getElementById('dataContainer');
+        const errorContainer = document.getElementById('errorContainer');
+        if (this.checked) {
+            dataContainer.classList.remove('hidden');
+            errorContainer.classList.add('hidden');
+        } else {
+            dataContainer.classList.add('hidden');
+            errorContainer.classList.remove('hidden');
+        }
+    });
+
+    // Auto-scroll to bottom of messages on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageContainer = document.querySelector('.overflow-y-auto');
+        if (messageContainer) {
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+    });
+</script>
+
+<style>
+    .toggle-checkbox:checked {
+        right: 0;
+        border-color: #68D391;
+    }
+
+    .toggle-checkbox:checked+.toggle-label {
+        background-color: #68D391;
+    }
+</style>

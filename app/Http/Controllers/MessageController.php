@@ -4,142 +4,135 @@ namespace App\Http\Controllers;
 
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-    /**
-     * Get all conversations for the authenticated user
-     */
-    public function getConversations()
+    public function index()
     {
-        $conversations = Conversation::where('user_id', Auth::id())
-            ->orWhere('recipient', Auth::user()->name)
-            ->with(['messages' => function ($query) {
-                $query->latest()->first();
-            }])
-            ->latest()
-            ->get();
-
-        return response()->json([
-            'conversations' => $conversations
-        ]);
+        $user = Auth::user();
+        $conversations = Conversation::with('user', 'messages.user')->get();
+        $conversation = $conversations->first();
+        return view('messages.index', compact('conversations', 'conversation'));
     }
 
-    /**
-     * Get a specific conversation with all messages
-     */
-    public function getConversation($id)
+    public function create()
     {
-        $conversation = Conversation::with(['messages' => function ($query) {
-            $query->with('user')->orderBy('created_at', 'asc');
-        }])->findOrFail($id);
-
-        // Mark all unread messages as read
-        Message::where('conversation_id', $id)
-            ->where('user_id', '!=', Auth::id())
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
-
-        return response()->json([
-            'conversation' => $conversation
-        ]);
+        return view('messages.create');
     }
 
-    /**
-     * Start a new conversation or get existing one
-     */
-    public function startConversation(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'recipient' => 'required|exists:users,name'
+            'content' => 'required|string|max:255',
         ]);
 
-        // Check if conversation already exists
-        $conversation = Conversation::where(function ($query) use ($request) {
-            $query->where('user_id', Auth::id())
-                ->where('recipient', $request->recipient);
-        })->orWhere(function ($query) use ($request) {
-            $query->where('user_id', User::where('name', $request->recipient)->first()->id)
-                ->where('recipient', Auth::user()->name);
-        })->first();
-
-        if (!$conversation) {
-            $conversation = Conversation::create([
-                'user_id' => Auth::id(),
-                'recipient' => $request->recipient
-            ]);
+        // Max length validation
+        if (strlen($request->content) > 25) {
+            return redirect()->back()->with('error', 'Bericht kan niet worden verzonden omdat het te lang is.');
         }
 
-        return response()->json([
-            'conversation' => $conversation
-        ]);
-    }
+        // Create or get conversation
+        $conversation = Conversation::firstOrCreate(['user_id' => Auth::id()]);
 
-    /**
-     * Send a message in a conversation
-     */
-    public function sendMessage(Request $request, $conversationId)
-    {
-        $request->validate([
-            'content' => 'required|string'
-        ]);
-
-        $conversation = Conversation::findOrFail($conversationId);
-
-        // Verify user is part of the conversation
-        if ($conversation->user_id !== Auth::id() && $conversation->recipient !== Auth::user()->name) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        $message = Message::create([
-            'conversation_id' => $conversationId,
+        // Create message
+        Message::create([
+            'conversation_id' => $conversation->id,
             'user_id' => Auth::id(),
             'content' => $request->content,
-            'is_read' => false
         ]);
 
-        return response()->json([
-            'message' => $message->load('user')
-        ]);
+        return redirect()->route('messages.index', ['conversation_id' => $conversation->id])
+            ->with('success', 'Nieuw gesprek succesvol gestart!');
     }
 
-    /**
-     * Get unread messages count
-     */
-    public function getUnreadCount()
+    public function reply(Request $request, Conversation $conversation)
     {
-        $count = Message::whereHas('conversation', function ($query) {
-            $query->where('user_id', Auth::id())
-                ->orWhere('recipient', Auth::user()->name);
-        })
-        ->where('user_id', '!=', Auth::id())
-        ->where('is_read', false)
-        ->count();
-
-        return response()->json([
-            'unread_count' => $count
+        $request->validate([
+            'content' => 'required|string|max:255',
         ]);
-    }
 
-    /**
-     * Delete a conversation
-     */
-    public function deleteConversation($id)
-    {
-        $conversation = Conversation::findOrFail($id);
+        $maxLength = 25; // Set your desired maximum length here
 
-        // Verify user is part of the conversation
-        if ($conversation->user_id !== Auth::id() && $conversation->recipient !== Auth::user()->name) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if (strlen($request->content) > $maxLength) {
+            return redirect()->back()->with('error', 'Bericht kan niet worden verzonden omdat het te lang is.');
         }
 
+        Message::create([
+            'conversation_id' => $conversation->id,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return redirect()->back()->with('success', 'Antwoord succesvol verzonden!');
+    }
+
+    public function markAsRead(Message $message)
+    {
+        $message->is_read = true;
+        $message->save();
+
+        return redirect()->route('messages.index');
+    }
+
+    public function createConversation(Request $request)
+    {
+        // Create a new conversation
+        $conversation = Conversation::create([
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()->route('dashboard', ['conversation_id' => $conversation->id])->with('success', 'Nieuw gesprek succesvol aangemaakt!');
+    }
+
+    public function update(Request $request, Conversation $conversation)
+    {
+        $request->validate([
+            'content' => 'required|string|max:255',
+        ]);
+
+        $maxLength = 25; // Set your desired maximum length here
+
+        if (strlen($request->content) > $maxLength) {
+            return redirect()->back()->with('error', 'Bericht kan niet worden bijgewerkt omdat het te lang is.');
+        }
+
+        $lastMessage = $conversation->messages()->where('user_id', Auth::id())->latest()->first();
+        if ($lastMessage) {
+            $lastMessage->content = $request->content;
+            $lastMessage->save();
+        }
+
+        return redirect()->back()->with('success', 'Bericht succesvol bijgewerkt!');
+    }
+
+    public function deleteLastMessage(Request $request, Conversation $conversation)
+    {
+        $lastMessage = $conversation->messages()->where('user_id', Auth::id())->latest()->first();
+        if ($lastMessage) {
+            $lastMessage->delete();
+        }
+
+        return redirect()->route('dashboard', ['conversation_id' => $conversation->id])->with('success', 'Laatste bericht succesvol verwijderd!');
+    }
+
+    public function destroy(Conversation $conversation)
+    {
         $conversation->delete();
 
-        return response()->json([
-            'message' => 'Conversation deleted successfully'
+        return redirect()->route('messages.index')->with('success', 'Gesprek succesvol verwijderd!');
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        $request->validate([
+            'message_ids' => 'required|array',
+            'message_ids.*' => 'exists:messages,id',
         ]);
+
+        Message::whereIn('id', $request->message_ids)->delete();
+
+        return redirect()->route('messages.index')->with('success', 'Geselecteerde berichten succesvol verwijderd!');
     }
 }
