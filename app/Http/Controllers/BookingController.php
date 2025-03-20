@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Customer;
+use App\Models\Trip;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -37,7 +38,7 @@ class BookingController extends Controller
             });
         }
 
-        $bookings = $query->paginate(10)->withQueryString();
+        $bookings = $query->paginate(10);
         return view('bookings.index', compact('bookings'));
     }
 
@@ -46,8 +47,8 @@ class BookingController extends Controller
      */
     public function create()
     {
-        $customers = \App\Models\Customer::with('person')->get();
-        $trips = \App\Models\Trip::with(['departure', 'destination'])->get();
+        $customers = Customer::with('person')->get();
+        $trips = Trip::with(['departure', 'destination'])->get();
 
         return view('bookings.create', compact('customers', 'trips'));
     }
@@ -55,9 +56,16 @@ class BookingController extends Controller
     /**
      * Store a newly created booking.
      */
+    /**
+     * Store a newly created booking.
+     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        // Transform the checkbox value
+        $input = $request->all();
+        $input['is_active'] = $request->has('is_active') ? true : false;
+
+        $validator = Validator::make($input, [
             'customer_id' => 'required|exists:customers,id',
             'trip_id' => 'required|exists:trips,id',
             'seat_number' => 'required|string',
@@ -72,18 +80,15 @@ class BookingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Validation failed',
-                'messages' => $validator->errors()
-            ], Response::HTTP_BAD_REQUEST);
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        $booking = Booking::create($request->all());
+        $booking = Booking::create($input);
 
-        return response()->json([
-            'message' => 'Booking created successfully',
-            'booking' => $booking
-        ], Response::HTTP_CREATED);
+        return redirect()->route('bookings.index')
+            ->with('success', 'Boeking succesvol aangemaakt');
     }
 
     /**
@@ -91,9 +96,19 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        return response()->json([
-            'booking' => $booking->load(['customer', 'trip'])
-        ]);
+        $booking->load(['customer.person', 'trip.departure', 'trip.destination']);
+        return view('bookings.show', compact('booking'));
+    }
+
+    /**
+     * Show the form for editing the specified booking.
+     */
+    public function edit(Booking $booking)
+    {
+        $customers = Customer::with('person')->get();
+        $trips = Trip::with(['departure', 'destination'])->get();
+
+        return view('bookings.edit', compact('booking', 'customers', 'trips'));
     }
 
     /**
@@ -101,7 +116,11 @@ class BookingController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
-        $validator = Validator::make($request->all(), [
+        // Transform the checkbox value
+        $input = $request->all();
+        $input['is_active'] = $request->has('is_active') ? true : false;
+
+        $validator = Validator::make($input, [
             'customer_id' => 'exists:customers,id',
             'trip_id' => 'exists:trips,id',
             'seat_number' => 'string',
@@ -116,18 +135,15 @@ class BookingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Validation failed',
-                'messages' => $validator->errors()
-            ], Response::HTTP_BAD_REQUEST);
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        $booking->update($request->all());
+        $booking->update($input);
 
-        return response()->json([
-            'message' => 'Booking updated successfully',
-            'booking' => $booking
-        ]);
+        return redirect()->route('bookings.index')
+            ->with('success', 'Boeking succesvol bijgewerkt');
     }
 
     /**
@@ -137,56 +153,7 @@ class BookingController extends Controller
     {
         $booking->delete();
 
-        return response()->json([
-            'message' => 'Booking deleted successfully'
-        ]);
-    }
-
-    public function getBookingStats()
-    {
-        $currentYear = now()->year;
-        $currentMonth = now()->month;
-        
-        // Maandelijkse statistieken
-        $monthlyStats = collect(range(1, $currentMonth))->mapWithKeys(function ($month) use ($currentYear) {
-            $count = Booking::whereYear('created_at', $currentYear)
-                ->whereMonth('created_at', $month)
-                ->count();
-            return [$month => $count];
-        })->toArray();
-
-        // Maandelijkse omzet
-        $monthlyRevenue = collect(range(1, $currentMonth))->mapWithKeys(function ($month) use ($currentYear) {
-            $revenue = Booking::whereYear('created_at', $currentYear)
-                ->whereMonth('created_at', $month)
-                ->sum(\DB::raw('price * quantity'));
-            return [$month => $revenue ?? 0];
-        })->toArray();
-
-        // Kwartaal statistieken
-        $quarterlyStats = Booking::selectRaw('QUARTER(created_at) as quarter, COUNT(*) as count')
-            ->whereYear('created_at', $currentYear)
-            ->groupBy('quarter')
-            ->orderBy('quarter')
-            ->get()
-            ->pluck('count', 'quarter')
-            ->toArray();
-
-        // Top 5 bestemmingen
-        $topDestinations = Booking::select('trips.destination_id')
-            ->join('trips', 'bookings.trip_id', '=', 'trips.id')
-            ->join('destinations', 'trips.destination_id', '=', 'destinations.id')
-            ->selectRaw('destinations.country, destinations.airport, COUNT(*) as booking_count')
-            ->groupBy('trips.destination_id', 'destinations.country', 'destinations.airport')
-            ->orderByDesc('booking_count')
-            ->limit(5)
-            ->get();
-
-        return [
-            'monthly' => $monthlyStats,
-            'quarterly' => $quarterlyStats,
-            'monthlyRevenue' => $monthlyRevenue,
-            'topDestinations' => $topDestinations
-        ];
+        return redirect()->route('bookings.index')
+            ->with('success', 'Boeking succesvol verwijderd');
     }
 }
