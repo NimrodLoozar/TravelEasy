@@ -55,12 +55,12 @@
                                             </td>
                                             <td class="py-3 px-6 text-center">
                                                 <!-- Acties -->
-                                                <a href="{{ route('reisoverzicht.show', $reis->id) }}" class="text-blue-500 hover:text-blue-700">Bekijk</a>
-                                                <a href="{{ route('reisoverzicht.edit', $reis->id) }}" class="text-yellow-500 hover:text-yellow-700 ml-2">Bewerk</a>
+                                                <a href="{{ route('reisoverzicht.show', $reis->id) }}" class="text-blue-500 hover:text-blue-700">ⓘ</a>
+                                                <a href="{{ route('reisoverzicht.edit', $reis->id) }}" class="text-yellow-500 hover:text-yellow-700 ml-2">✎</a>
                                                 <form action="{{ route('reisoverzicht.destroy', $reis->id) }}" method="POST" class="inline-block ml-2">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-500 hover:text-red-700">Verwijder</button>
+                                                    <button type="submit" class="text-red-500 hover:text-red-700">🗑️</button>
                                                 </form>
                                             </td>
                                         </tr>
