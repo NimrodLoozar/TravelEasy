@@ -62,9 +62,9 @@ class BookingController extends Controller
         // Check developer connection
         if (!$request->has('dev_connection')) {
             return redirect()->route('bookings.create')
-                ->with('connection_error', 'Geen connectie met de server, probeer later opnieuw.');
+                ->with('connection_error', 'Kan boeking niet opslaan. probeer het later opnieuw.');
         }
-
+        
         // Transform the checkbox value
         $input = $request->all();
         $input['is_active'] = $request->has('is_active') ? true : false;
