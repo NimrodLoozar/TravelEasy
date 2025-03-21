@@ -63,8 +63,46 @@ class CustomerController extends Controller
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
-    public function edit($customer)
+    public function edit(Customer $customer)
     {
         return view('customers.edit', compact('customer'));
+    }
+
+    public function update(Request $request, Customer $customer)
+    {
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,name,' . $customer->id],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:contacts,email,' . $customer->id],
+            'mobile' => ['required', 'string', 'max:255'], // Ensure mobile is validated
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $customer->person->update([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+        ]);
+
+        $customer->update([
+            'name' => $request->username,
+            'password' => $request->password ? Hash::make($request->password) : $customer->password,
+        ]);
+
+        Contact::where('customer_id', $customer->id)->update([
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            // ...other required fields for Contact model...
+        ]);
+
+        return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
+    }
+
+    public function destroy(Customer $customer)
+    {
+        $customer->delete();
+        return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
 }
