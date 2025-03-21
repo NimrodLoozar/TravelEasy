@@ -50,12 +50,7 @@ class BookingController extends Controller
         $customers = Customer::with('person')->get();
         $trips = Trip::with(['departure', 'destination'])->get();
 
-        // Check if there's a connection error message
-        if ($request->has('connection_error')) {
-            return view('bookings.create', compact('customers', 'trips'))
-                ->with('connection_error', 'Geen connectie met de server, probeer later opnieuw.');
-        }
-
+        // Check if there's a connection error message in the session
         return view('bookings.create', compact('customers', 'trips'));
     }
 
@@ -66,7 +61,8 @@ class BookingController extends Controller
     {
         // Check developer connection
         if (!$request->has('dev_connection')) {
-            return redirect()->route('bookings.create', ['connection_error' => 1]);
+            return redirect()->route('bookings.create')
+                ->with('connection_error', 'Geen connectie met de server, probeer later opnieuw.');
         }
 
         // Transform the checkbox value

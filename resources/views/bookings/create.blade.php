@@ -150,7 +150,7 @@
                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                         Annuleren
                     </a>
-                    <button type="submit" 
+                    <button type="submit" id="submitButton"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Boeking Aanmaken
                     </button>
@@ -163,12 +163,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('bookingForm');
             const devConnection = document.getElementById('dev_connection');
+            const submitButton = document.getElementById('submitButton');
 
             form.addEventListener('submit', function(e) {
                 if (!devConnection.checked) {
                     e.preventDefault();
-                    // Redirect with error message
-                    window.location.href = "{{ route('bookings.create') }}?connection_error=1";
+                    
+                    // Toon direct de foutmelding zonder redirect
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'bg-red-900 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-200 mb-6';
+                    errorDiv.setAttribute('role', 'alert');
+                    
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'font-bold';
+                    errorMsg.textContent = 'Geen connectie met de server, probeer later opnieuw.';
+                    
+                    errorDiv.appendChild(errorMsg);
+                    
+                    // Plaats de foutmelding bovenaan het formulier
+                    const heading = document.querySelector('h1.text-2xl');
+                    heading.insertAdjacentElement('afterend', errorDiv);
+                    
+                    // Scroll naar boven om de foutmelding te tonen
+                    window.scrollTo(0, 0);
                 }
             });
         });
