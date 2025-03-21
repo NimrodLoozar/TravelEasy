@@ -144,7 +144,7 @@ class MessageController extends Controller
             return redirect()->back()
                 ->with('error', 'Het gesprek kon niet worden aangemaakt. Probeer het later opnieuw.');
         }
-    }
+    } 
 
     public function update(Request $request, Conversation $conversation)
     {
