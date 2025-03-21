@@ -18,21 +18,21 @@ class BookingController extends Controller
 
         // Search by departure date
         if ($request->filled('departure_date')) {
-            $query->whereHas('trip', function($q) use ($request) {
+            $query->whereHas('trip', function ($q) use ($request) {
                 $q->whereDate('departure_date', $request->departure_date);
             });
         }
 
         // Search by departure time
         if ($request->filled('departure_time')) {
-            $query->whereHas('trip', function($q) use ($request) {
+            $query->whereHas('trip', function ($q) use ($request) {
                 $q->where('departure_time', 'LIKE', $request->departure_time . '%');
             });
         }
 
         // Search by destination
         if ($request->filled('destination')) {
-            $query->whereHas('trip.destination', function($q) use ($request) {
+            $query->whereHas('trip.destination', function ($q) use ($request) {
                 $q->where('name', 'LIKE', '%' . $request->destination . '%');
             });
         }
@@ -41,6 +41,16 @@ class BookingController extends Controller
         return view('bookings.index', compact('bookings'));
     }
 
+    /**
+     * Show the form for creating a new booking.
+     */
+    public function create()
+    {
+        $customers = \App\Models\Customer::with('person')->get();
+        $trips = \App\Models\Trip::with(['departure', 'destination'])->get();
+
+        return view('bookings.create', compact('customers', 'trips'));
+    }
 
     /**
      * Store a newly created booking.
