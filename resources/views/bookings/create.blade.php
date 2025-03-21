@@ -28,7 +28,13 @@
                 </div>
             @endif
 
-            <form action="{{ route('bookings.store') }}" method="POST" class="space-y-6">
+            @if (session('connection_error'))
+                <div class="bg-red-900 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-200 mb-6" role="alert">
+                    <div class="font-bold">{{ session('connection_error') }}</div>
+                </div>
+            @endif
+
+            <form action="{{ route('bookings.store') }}" method="POST" class="space-y-6" id="bookingForm">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -133,6 +139,12 @@
                     <label for="is_active" class="ml-2 text-gray-300">Actieve boeking</label>
                 </div>
 
+                <!-- Developer Connection -->
+                <div class="flex items-center">
+                    <input type="checkbox" name="dev_connection" id="dev_connection" class="h-5 w-5 bg-gray-700 text-blue-600 rounded" checked>
+                    <label for="dev_connection" class="ml-2 text-gray-300 font-semibold">Connectie. Alleen voor developers.</label>
+                </div>
+
                 <div class="flex justify-end space-x-3 mt-6">
                     <a href="{{ route('bookings.index') }}" 
                        class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
@@ -146,4 +158,19 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bookingForm');
+            const devConnection = document.getElementById('dev_connection');
+
+            form.addEventListener('submit', function(e) {
+                if (!devConnection.checked) {
+                    e.preventDefault();
+                    // Redirect with error message
+                    window.location.href = "{{ route('bookings.create') }}?connection_error=1";
+                }
+            });
+        });
+    </script>
 </x-app-layout>

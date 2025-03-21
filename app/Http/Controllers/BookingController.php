@@ -45,10 +45,16 @@ class BookingController extends Controller
     /**
      * Show the form for creating a new booking.
      */
-    public function create()
+    public function create(Request $request)
     {
         $customers = Customer::with('person')->get();
         $trips = Trip::with(['departure', 'destination'])->get();
+
+        // Check if there's a connection error message
+        if ($request->has('connection_error')) {
+            return view('bookings.create', compact('customers', 'trips'))
+                ->with('connection_error', 'Geen connectie met de server, probeer later opnieuw.');
+        }
 
         return view('bookings.create', compact('customers', 'trips'));
     }
@@ -56,11 +62,13 @@ class BookingController extends Controller
     /**
      * Store a newly created booking.
      */
-    /**
-     * Store a newly created booking.
-     */
     public function store(Request $request)
     {
+        // Check developer connection
+        if (!$request->has('dev_connection')) {
+            return redirect()->route('bookings.create', ['connection_error' => 1]);
+        }
+
         // Transform the checkbox value
         $input = $request->all();
         $input['is_active'] = $request->has('is_active') ? true : false;
