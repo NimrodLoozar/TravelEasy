@@ -29,6 +29,12 @@ class ReizenOverzichtController extends Controller
         $request->validate([
             'country' => 'required|string|max:255',
             'airport' => 'required|string|max:255',
+            'departure_id' => 'required|string|max:255',
+            'departure_date' => 'required|date',
+            'departure_time' => 'required|date_format:H:i',
+            'destination_id' => 'required|string|max:255',
+            'arrival_date' => 'required|date',
+            'arrival_time' => 'required|date_format:H:i',
             'is_active' => 'required|boolean',
             'note' => 'nullable|string',
         ]);
@@ -49,6 +55,12 @@ class ReizenOverzichtController extends Controller
         $request->validate([
             'country' => 'required|string|max:255',
             'airport' => 'required|string|max:255',
+            'departure_id' => 'required|string|max:255',
+            'departure_date' => 'required|date',
+            'departure_time' => 'required|date_format:H:i',
+            'destination_id' => 'required|string|max:255',
+            'arrival_date' => 'required|date',
+            'arrival_time' => 'required|date_format:H:i',
             'is_active' => 'required|boolean',
             'note' => 'nullable|string',
         ]);

@@ -55,11 +55,47 @@
                                     placeholder="Bijv. most flyed planes." />
                             </div>
 
-                                    <div class="md:col-span-5 text-right">
-                                        <button type="submit"
-                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Verstuur</button>
-                                    </div>
-                                </div>
+                            <div class="md:col-span-5">
+                                <label for="departure_id">Vertrek Locatie</label>
+                                <input type="text" name="departure_id" id="departure_id"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
+                                    placeholder="Bijv. Amsterdam, Schiphol" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="departure_date">Vertrek Datum</label>
+                                <input type="date" name="departure_date" id="departure_date"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="departure_time">Vertrek Tijd</label>
+                                <input type="time" name="departure_time" id="departure_time"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="destination_id">Aankomst Locatie</label>
+                                <input type="text" name="destination_id" id="destination_id"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
+                                    placeholder="Bijv. New York, JFK" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_date">Aankomst Datum</label>
+                                <input type="date" name="arrival_date" id="arrival_date"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_time">Aankomst Tijd</label>
+                                <input type="time" name="arrival_time" id="arrival_time"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
+                            </div>
+
+                            <div class="md:col-span-5 text-right">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Verstuur</button>
                             </div>
                         </div>
                     </form>
