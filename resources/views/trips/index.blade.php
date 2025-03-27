@@ -10,7 +10,7 @@
         @endphp
     @endif
 
-    <div class="min-h-screen pt-6 bg-cover bg-center"
+    <div class="min-h-screen py-6  bg-cover bg-center"
         style="background-image: url('{{ $firstImage ?? asset('default-background.jpg') }}'); filter: brightness(1);">
         <div class="container mx-auto text-gray-900">
             @if ($trips->isNotEmpty() && $firstImage)

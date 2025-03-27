@@ -108,6 +108,7 @@ class DepartureFactory extends Factory
             'is_active' => true,
             'note' => 'Largest airport in Brazil',
         ],
+        /////////////
         [
             'country' => 'Canada',
             'airport' => 'Toronto Pearson International Airport',
