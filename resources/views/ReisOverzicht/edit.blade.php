@@ -9,37 +9,56 @@
                     @csrf
                     @method('PUT')
                     @if ($errors->any())
-                <div class="bg-red-100 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-700" role="alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+                        <div class="bg-red-100 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-700" role="alert">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <div class="md:col-span-5">
-                        <label for="country">country</label>
-                        <input type="text" id="country" name="country" value="{{ $reis->country }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" value="{{ old('country', $reis->departure->country ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">
-                        <label for="airport">airport</label>
-                        <input type="text" id="airport" name="airport" value="{{ $reis->airport }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <label for="airport">Airport</label>
+                        <input type="text" id="airport" name="airport" value="{{ old('airport', $reis->departure->airport ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">
-                                <label for="status">Status</label>
-                                <select name="is_active" id="status"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
-                                    <option value="1">Actief</option>
-                                    <option value="0">Inactief</option>
-                                </select>
-                            </div>
+                        <label for="departure_date">Departure Date</label>
+                        <input type="date" id="departure_date" name="departure_date" value="{{ old('departure_date', $reis->departure_date?->format('Y-m-d')) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
 
                     <div class="md:col-span-5">
-                        <label for="note">Note (optineel)</label>
-                        <input type="text" id="note" name="note" value="{{ $reis->note }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <label for="departure_time">Departure Time</label>
+                        <input type="time" id="departure_time" name="departure_time" value="{{ old('departure_time', $reis->departure_time) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="arrival_date">Arrival Date</label>
+                        <input type="date" id="arrival_date" name="arrival_date" value="{{ old('arrival_date', $reis->arrival_date?->format('Y-m-d')) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="arrival_time">Arrival Time</label>
+                        <input type="time" id="arrival_time" name="arrival_time" value="{{ old('arrival_time', $reis->arrival_time) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="status">Status</label>
+                        <select name="is_active" id="status" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                            <option value="1" {{ $reis->is_active ? 'selected' : '' }}>Actief</option>
+                            <option value="0" {{ !$reis->is_active ? 'selected' : '' }}>Inactief</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="note">Note (optioneel)</label>
+                        <input type="text" id="note" name="note" value="{{ old('note', $reis->note) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5 text-right">

@@ -95,8 +95,14 @@ return new class extends Migration {
             $table->id();
             $table->string('country');
             $table->string('airport');
+            $table->date('departure_date'); // Ensure this exists
+            $table->time('departure_time'); // Ensure this exists
+            $table->date('arrival_date');   // Corrected to 'date'
+            $table->time('arrival_time');   // Corrected to 'time'
+            $table->string('departure_country')->nullable(); // Ensure this exists
+            $table->string('arrival_country')->nullable();   // Ensure this exists
             $table->boolean('is_active')->default(true);
-            $table->text('note')->nullable();
+            $table->text('note')->nullable(); // Updated to match ReizenOverzicht
             $table->timestamps();
         });
 
@@ -115,9 +121,9 @@ return new class extends Migration {
             $table->foreignId('departure_id')->constrained('departures')->onDelete('cascade');
             $table->foreignId('destination_id')->constrained('destinations')->onDelete('cascade');
             $table->string('flight_number');
-            $table->date('departure_date');
+            $table->date('departure_date'); // Ensure this is defined as 'date'
             $table->time('departure_time');
-            $table->date('arrival_date');
+            $table->date('arrival_date');   // Ensure this is defined as 'date'
             $table->time('arrival_time');
             $table->string('trip_status');
             $table->boolean('is_active')->default(true);

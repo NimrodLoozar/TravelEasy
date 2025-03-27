@@ -55,6 +55,7 @@
                                     placeholder="Bijv. most flyed planes." />
                             </div>
 
+
                             <div class="md:col-span-5">
                                 <label for="departure_id">Vertrek Locatie</label>
                                 <input type="text" name="departure_id" id="departure_id"

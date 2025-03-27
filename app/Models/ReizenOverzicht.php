@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReizenOverzicht extends Model
 {
-    protected $table = 'trips'; // Gebruik de 'trips' tabel
+    protected $table = 'trips'; // Correct table name
 
     protected $fillable = [
         'employee_id',
@@ -19,14 +19,16 @@ class ReizenOverzicht extends Model
         'arrival_time',
         'trip_status',
         'is_active',
-        'note'
+        'note',
+        'departure_country', // Remove if not in trips table
+        'arrival_country'    // Remove if not in trips table
     ];
 
     protected $casts = [
-        'departure_date' => 'date',
-        'departure_time' => 'datetime',
-        'arrival_date' => 'date',
-        'arrival_time' => 'datetime',
+        'departure_date' => 'date', // Ensure this is cast as 'date'
+        'departure_time' => 'string', // Handle as plain string
+        'arrival_date' => 'date',   // Ensure this is cast as 'date'
+        'arrival_time' => 'string',  // Handle as plain string
         'is_active' => 'boolean',
     ];
 
