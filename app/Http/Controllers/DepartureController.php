@@ -10,10 +10,10 @@ class DepartureController extends Controller
 
     public function index()
     {
-        $departures = DB::table('departures')->get() ?? [];
-        $destinations = DB::table('destinations')->get() ?? [];
-        // $departures = DB::select('CALL spGetDepartures()') ?? [];
-        // $destinations = DB::select('CALL spGetDepartures()') ?? [];
+        // $departures = DB::table('departures')->get() ?? [];
+        // $destinations = DB::table('destinations')->get() ?? [];
+        $departures = DB::select('CALL spGetDepartures()') ?? [];
+        $destinations = DB::select('CALL spGetDepartures()') ?? [];
 
         return view('departure.index', compact('departures', 'destinations'));
     }
