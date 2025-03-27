@@ -44,8 +44,8 @@
                                 <tbody class="text-gray-800 text-sm font-light">
                                     @foreach ($reizen as $reis)
                                         <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                            <td class="py-3 px-6 text-left whitespace-nowrap font-medium">{{ $reis->country }}</td>
-                                            <td class="py-3 px-6 text-left">{{ $reis->airport }}</td>
+                                            <td class="py-3 px-6 text-left whitespace-nowrap font-medium">{{ $reis->departure->country ?? 'N/A' }}</td>
+                                            <td class="py-3 px-6 text-left">{{ $reis->departure->airport ?? 'N/A' }}</td>
                                             <td class="py-3 px-6 text-left">
                                                 @if($reis->is_active)
                                                     <span class="bg-green-400 text-white py-1 px-3 rounded-full text-xs font-medium">Actief</span>

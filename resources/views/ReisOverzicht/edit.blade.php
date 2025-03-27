@@ -35,7 +35,7 @@
 
                     <div class="md:col-span-5">
                         <label for="departure_time">Departure Time</label>
-                        <input type="time" id="departure_time" name="departure_time" value="{{ old('departure_time', $reis->departure_time) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <input type="time" id="departure_time" name="departure_time" value="{{ old('departure_time', substr($reis->departure_time, 0, 5)) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">
@@ -45,7 +45,7 @@
 
                     <div class="md:col-span-5">
                         <label for="arrival_time">Arrival Time</label>
-                        <input type="time" id="arrival_time" name="arrival_time" value="{{ old('arrival_time', $reis->arrival_time) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <input type="time" id="arrival_time" name="arrival_time" value="{{ old('arrival_time', substr($reis->arrival_time, 0, 5)) }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">

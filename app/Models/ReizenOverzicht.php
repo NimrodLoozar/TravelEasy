@@ -67,12 +67,12 @@ class ReizenOverzicht extends Model
     // Helper method to get formatted departure datetime
     public function getDepartureDateTimeAttribute(): string
     {
-        return $this->departure_date->format('Y-m-d') . ' ' . $this->departure_time->format('H:i:s');
+        return $this->departure_date->format('Y-m-d') . ' ' . substr($this->departure_time, 0, 5); // hh:mm
     }
 
     // Helper method to get formatted arrival datetime
     public function getArrivalDateTimeAttribute(): string
     {
-        return $this->arrival_date->format('Y-m-d') . ' ' . $this->arrival_time->format('H:i:s');
+        return $this->arrival_date->format('Y-m-d') . ' ' . substr($this->arrival_time, 0, 5); // hh:mm
     }
 }

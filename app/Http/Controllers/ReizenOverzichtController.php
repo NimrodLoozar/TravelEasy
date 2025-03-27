@@ -9,7 +9,7 @@ class ReizenOverzichtController extends Controller
 {
     public function index()
     {
-        $reizen = ReizenOverzicht::all();
+        $reizen = ReizenOverzicht::with(['departure', 'destination'])->get(); // Haal gerelateerde gegevens op
         return view('reisoverzicht.index', compact('reizen'));
     }
 
