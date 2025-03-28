@@ -23,6 +23,7 @@ class BookingFactory extends Factory
             'price' => $this->faker->randomFloat(2, 50, 1000),
             'quantity' => $this->faker->numberBetween(1, 5),
             'is_active' => $this->faker->boolean,
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }
