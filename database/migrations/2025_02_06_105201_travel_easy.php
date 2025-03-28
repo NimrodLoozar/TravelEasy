@@ -95,14 +95,8 @@ return new class extends Migration {
             $table->id();
             $table->string('country');
             $table->string('airport');
-            $table->date('departure_date'); // Ensure this exists
-            $table->time('departure_time'); // Ensure this exists
-            $table->date('arrival_date');   // Corrected to 'date'
-            $table->time('arrival_time');   // Corrected to 'time'
-            $table->string('departure_country')->nullable(); // Ensure this exists
-            $table->string('arrival_country')->nullable();   // Ensure this exists
             $table->boolean('is_active')->default(true);
-            $table->text('note')->nullable(); // Updated to match ReizenOverzicht
+            $table->text('note')->nullable(); 
             $table->timestamps();
         });
 

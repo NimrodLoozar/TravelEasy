@@ -19,13 +19,23 @@
                     @endif
 
                     <div class="md:col-span-5">
-                        <label for="country">Country</label>
-                        <input type="text" id="country" name="country" value="{{ old('country', $reis->departure->country ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <label for="departure_country">Departure Country</label>
+                        <input type="text" id="departure_country" name="departure_country" value="{{ old('departure_country', $reis->departure->country ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">
-                        <label for="airport">Airport</label>
-                        <input type="text" id="airport" name="airport" value="{{ old('airport', $reis->departure->airport ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                        <label for="departure_airport">Departure Airport</label>
+                        <input type="text" id="departure_airport" name="departure_airport" value="{{ old('departure_airport', $reis->departure->airport ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="arrival_country">Arrival Country</label>
+                        <input type="text" id="arrival_country" name="arrival_country" value="{{ old('arrival_country', $reis->departure->arrival_country ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
+                    </div>
+
+                    <div class="md:col-span-5">
+                        <label for="arrival_airport">Arrival Airport</label>
+                        <input type="text" id="arrival_airport" name="arrival_airport" value="{{ old('arrival_airport', $reis->destination->airport ?? '') }}" class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full">
                     </div>
 
                     <div class="md:col-span-5">

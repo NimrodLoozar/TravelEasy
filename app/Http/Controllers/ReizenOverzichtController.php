@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ReizenOverzicht;
+use Illuminate\Support\Facades\DB;
 
 class ReizenOverzichtController extends Controller
 {
@@ -53,20 +54,37 @@ class ReizenOverzichtController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'country' => 'required|string|max:255',
-            'airport' => 'required|string|max:255',
-            //'departure_id' => 'required|integer', // Ensure departure_id is an integer
-            'departure_date' => 'required|date', // Ensure this is validated as 'date'
+            'departure_country' => 'required|string|max:255',
+            'departure_airport' => 'required|string|max:255',
+            'arrival_country' => 'required|string|max:255',
+            'arrival_airport' => 'required|string|max:255',
+            'departure_date' => 'required|date',
             'departure_time' => 'required|date_format:H:i',
-            //'destination_id' => 'required|integer', // Ensure destination_id is an integer
-            'arrival_date' => 'required|date', // Ensure this is validated as 'date'
+            'arrival_date' => 'required|date',
             'arrival_time' => 'required|date_format:H:i',
-            'is_active' => 'required|boolean',
             'note' => 'nullable|string',
         ]);
 
-        $reis = ReizenOverzicht::findOrFail($id);
-        $reis->update($request->all());
+        $reis = ReizenOverzicht::with(['departure', 'destination'])->findOrFail($id);
+
+        // Call the stored procedure
+        DB::statement('CALL spEditReis(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $reis->departure_id,
+            $request->input('departure_country'),
+            $request->input('departure_airport'),
+            $request->input('arrival_country'),
+            $request->input('arrival_airport'),
+            $reis->id,
+            $request->input('departure_date'),
+            $request->input('departure_time'),
+            $request->input('arrival_date'),
+            $request->input('arrival_time'),
+        ]);
+
+        // Update the note field in the trips table
+        $reis->update([
+            'note' => $request->input('note'),
+        ]);
 
         return redirect()->route('reisoverzicht.index')->with('success', 'Reis succesvol bijgewerkt.');
     }
