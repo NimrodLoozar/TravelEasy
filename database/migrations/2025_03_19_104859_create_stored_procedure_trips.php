@@ -20,6 +20,8 @@ BEGIN
         SELECT    TRIP.flight_number    AS FlightNo
                 ,DEPA.country          AS DepCountry
                 ,DEPA.airport          AS DepAirport
+                ,TRIP.departure_date   AS DepDate
+                ,TRIP.arrival_date     AS ArrDate
                 ,TRIP.departure_time   AS DepTime
                 ,TRIP.arrival_time     AS ArrTime
                 ,DEST.country          AS DesCountry

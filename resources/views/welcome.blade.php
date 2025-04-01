@@ -35,6 +35,33 @@
                                 <option value="">Select a destination</option>
                             </select>
                         </div>
+
+                        <div class="w-64 mb-6">
+                            <x-input-label for="date" :value="__('Wanneer?')" />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
+                                onfocus="showDatePicker()" />
+                        </div>
+                        {{-- <form action="{{ route('trips.index') }}" method="GET" class="flex space-x-4">
+                            <!-- Dropdown voor startdatum & einddatum -->
+                            <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md">
+                                <input type="text" name="start_date"
+                                    class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+                                    placeholder="Kies startdatum" value="{{ request('start_date') }}" id="start_date">
+
+                                <span class="text-gray-500 font-medium">tot</span>
+
+                                <input type="text" name="end_date"
+                                    class="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+                                    placeholder="Kies einddatum" value="{{ request('end_date') }}" id="end_date">
+                            </div>
+
+                            <!-- Maak Selectie Knop -->
+                            <button type="submit"
+                                class="bg-blue-300 text-white px-4 py-2 rounded-lg shadow hover:bg-green-300">
+                                Maak selectie
+                            </button>
+                        </form> --}}
+
                         {{-- <div class="w-64 mb-6">
                             <x-input-label for="date" :value="__('Waneer')" />
                             <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
@@ -430,5 +457,20 @@
                     });
                 });
         }
+    </script>
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const config = {
+            dateFormat: "Y-m-d",
+            minDate: "2025-01-01",
+            maxDate: "2026-12-31",
+            locale: "nl",
+            allowInput: true,
+            placeholder: "Kies een datum"
+        };
+
+        flatpickr("#start_date", config);
+        flatpickr("#end_date", config);
     </script>
 </x-html-layout>
