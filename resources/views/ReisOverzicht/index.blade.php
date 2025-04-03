@@ -57,7 +57,7 @@
                                                 <!-- Acties -->
                                                 <a href="{{ route('reisoverzicht.show', $reis->id) }}" class="text-blue-500 hover:text-blue-700">ⓘ</a>
                                                 <a href="{{ route('reisoverzicht.edit', $reis->id) }}" class="text-yellow-500 hover:text-yellow-700 ml-2">✎</a>
-                                                <form action="{{ route('reisoverzicht.destroy', $reis->id) }}" method="POST" class="inline-block ml-2">
+                                                <form action="{{ route('reisoverzicht.destroy', $reis->id) }}" method="POST" class="inline-block ml-2" onsubmit="return customConfirm(event, this);">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-500 hover:text-red-700">🗑️</button>
@@ -94,6 +94,22 @@
             errorContainer.classList.remove('hidden');
         }
     });
+
+    function customConfirm(event, form) {
+        event.preventDefault();
+        const message = 'Weet je zeker dat je deze reis wilt verwijderen?';
+        const confirmation = confirm(message);
+
+        if (confirmation) {
+            const unhappy = confirm('Klik op OK voor verwijderen of Annuleren voor Unhappy.');
+            if (unhappy) {
+                form.submit();
+            } else {
+                alert('Internet fout, probeer het later opnieuw');
+            }
+        }
+        return false;
+    }
 </script>
 
 <style>

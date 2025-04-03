@@ -28,19 +28,31 @@ class ReizenOverzichtController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'country' => 'required|string|max:255',
-            'airport' => 'required|string|max:255',
-            'departure_id' => 'required|integer', // Ensure departure_id is an integer
-            'departure_date' => 'required|date', // Ensure this is validated as 'date'
+            'departure_country' => 'required|string|max:255',
+            'departure_airport' => 'required|string|max:255',
+            'arrival_country' => 'required|string|max:255',
+            'arrival_airport' => 'required|string|max:255',
+            'departure_date' => 'required|date',
             'departure_time' => 'required|date_format:H:i',
-            'destination_id' => 'required|integer', // Ensure destination_id is an integer
-            'arrival_date' => 'required|date', // Ensure this is validated as 'date'
+            'arrival_date' => 'required|date',
             'arrival_time' => 'required|date_format:H:i',
             'is_active' => 'required|boolean',
             'note' => 'nullable|string',
         ]);
 
-        ReizenOverzicht::create($request->all());
+        // Call the stored procedure
+        DB::statement('CALL spCreateReis(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $request->input('departure_country'),
+            $request->input('departure_airport'),
+            $request->input('arrival_country'),
+            $request->input('arrival_airport'),
+            $request->input('departure_date'),
+            $request->input('departure_time'),
+            $request->input('arrival_date'),
+            $request->input('arrival_time'),
+            $request->input('is_active'),
+            $request->input('note'),
+        ]);
 
         return redirect()->route('reisoverzicht.index')->with('success', 'Reis succesvol aangemaakt.');
     }

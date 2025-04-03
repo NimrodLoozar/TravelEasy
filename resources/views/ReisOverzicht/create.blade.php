@@ -26,72 +26,80 @@
                             </div>
 
                             <div class="md:col-span-5">
-                                <label for="country">country</label>
-                                <input type="text" name="country" id="country"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
+                                <label for="departure_country">Departure Country</label>
+                                <input type="text" id="departure_country" name="departure_country"
+                                    value="{{ old('departure_country') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
                                     placeholder="Bijv. Nederland, Duitsland, China, enz." />
                             </div>
 
                             <div class="md:col-span-5">
-                                <label for="airport">Luchthaven</label>
-                                <input type="text" name="airport" id="airport"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
-                                    placeholder="Bijv. Hintzberg International Airport, Walkerbury International Airport, enz." />
+                                <label for="departure_airport">Departure Airport</label>
+                                <input type="text" id="departure_airport" name="departure_airport"
+                                    value="{{ old('departure_airport') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. Schiphol, Frankfurt Airport, enz." />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_country">Arrival Country</label>
+                                <input type="text" id="arrival_country" name="arrival_country"
+                                    value="{{ old('arrival_country') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. Verenigde Staten, Frankrijk, enz." />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_airport">Arrival Airport</label>
+                                <input type="text" id="arrival_airport" name="arrival_airport"
+                                    value="{{ old('arrival_airport') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. JFK, Charles de Gaulle, enz." />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="departure_date">Departure Date</label>
+                                <input type="date" id="departure_date" name="departure_date"
+                                    value="{{ old('departure_date') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="departure_time">Departure Time</label>
+                                <input type="time" id="departure_time" name="departure_time"
+                                    value="{{ old('departure_time') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_date">Arrival Date</label>
+                                <input type="date" id="arrival_date" name="arrival_date"
+                                    value="{{ old('arrival_date') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="arrival_time">Arrival Time</label>
+                                <input type="time" id="arrival_time" name="arrival_time"
+                                    value="{{ old('arrival_time') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full" />
                             </div>
 
                             <div class="md:col-span-5">
                                 <label for="status">Status</label>
                                 <select name="is_active" id="status"
                                     class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
-                                    <option value="1">Actief</option>
-                                    <option value="0">Inactief</option>
+                                    <option value="1" {{ old('is_active') == '1' ? 'selected' : '' }}>Actief</option>
+                                    <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactief</option>
                                 </select>
                             </div>
 
                             <div class="md:col-span-5">
-                                <label for="note">Note (optineel)</label>
-                                <input type="text" name="note" id="note"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
-                                    placeholder="Bijv. most flyed planes." />
-                            </div>
-
-
-                            <div class="md:col-span-5">
-                                <label for="departure_id">Vertrek Locatie</label>
-                                <input type="text" name="departure_id" id="departure_id"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
-                                    placeholder="Bijv. Amsterdam, Schiphol" />
-                            </div>
-
-                            <div class="md:col-span-5">
-                                <label for="departure_date">Vertrek Datum</label>
-                                <input type="date" name="departure_date" id="departure_date"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
-                            </div>
-
-                            <div class="md:col-span-5">
-                                <label for="departure_time">Vertrek Tijd</label>
-                                <input type="time" name="departure_time" id="departure_time"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
-                            </div>
-
-                            <div class="md:col-span-5">
-                                <label for="destination_id">Aankomst Locatie</label>
-                                <input type="text" name="destination_id" id="destination_id"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300"
-                                    placeholder="Bijv. New York, JFK" />
-                            </div>
-
-                            <div class="md:col-span-5">
-                                <label for="arrival_date">Aankomst Datum</label>
-                                <input type="date" name="arrival_date" id="arrival_date"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
-                            </div>
-
-                            <div class="md:col-span-5">
-                                <label for="arrival_time">Aankomst Tijd</label>
-                                <input type="time" name="arrival_time" id="arrival_time"
-                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300" />
+                                <label for="note">Note (optioneel)</label>
+                                <input type="text" id="note" name="note"
+                                    value="{{ old('note') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. Opmerkingen over de reis." />
                             </div>
 
                             <div class="md:col-span-5 text-right">
