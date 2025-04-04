@@ -15,7 +15,14 @@ class MessageController extends Controller
     {
         $user = Auth::user();
         $conversations = Conversation::with('user', 'messages.user')->get();
-        $conversation = $conversations->first();
+        
+        // Get conversation from URL parameter if exists
+        $conversation = null;
+        if(request()->has('conversation_id')) {
+            $conversation = Conversation::with('messages.user')
+                ->find(request('conversation_id'));
+        }
+    
         return view('messages.index', compact('conversations', 'conversation'));
     }
 
@@ -30,25 +37,14 @@ class MessageController extends Controller
             'content' => 'required|string|max:255',
         ]);
 
-        // Max length validation
         if (strlen($request->content) > 25) {
             return redirect()->back()->with('error', 'Bericht kan niet worden verzonden omdat het te lang is.');
         }
 
-        // Check if we should simulate an error
-        if ($request->has('simulate_error')) {
-            // Simulate a server error for testing
-            Log::info('Simulating server error for message creation');
-            return redirect()->back()
-                ->with('error', 'Het bericht kon niet worden verzonden. Probeer het later opnieuw.')
-                ->withInput();
-        }
-
         try {
-            // Create or get conversation
-            $conversation = Conversation::firstOrCreate(['user_id' => Auth::id()]);
+            // Replace firstOrCreate with create to always make a new conversation
+            $conversation = Conversation::create(['user_id' => Auth::id()]);
 
-            // Create message
             Message::create([
                 'conversation_id' => $conversation->id,
                 'user_id' => Auth::id(),
@@ -58,10 +54,7 @@ class MessageController extends Controller
             return redirect()->route('messages.index', ['conversation_id' => $conversation->id])
                 ->with('success', 'Nieuw gesprek succesvol gestart!');
         } catch (Exception $e) {
-            // Log the error
             Log::error('Failed to create message: ' . $e->getMessage());
-            
-            // Return with server error message
             return redirect()->back()
                 ->with('error', 'Het bericht kon niet worden verzonden. Probeer het later opnieuw.')
                 ->withInput();
@@ -100,7 +93,7 @@ class MessageController extends Controller
         } catch (Exception $e) {
             // Log the error
             Log::error('Failed to reply to conversation: ' . $e->getMessage());
-            
+
             // Return with server error message
             return redirect()->back()
                 ->with('error', 'Het bericht kon niet worden verzonden. Probeer het later opnieuw.')
@@ -144,7 +137,7 @@ class MessageController extends Controller
             return redirect()->back()
                 ->with('error', 'Het gesprek kon niet worden aangemaakt. Probeer het later opnieuw.');
         }
-    } 
+    }
 
     public function update(Request $request, Conversation $conversation)
     {
@@ -185,22 +178,21 @@ class MessageController extends Controller
 
     public function deleteLastMessage(Request $request, Conversation $conversation)
     {
-        // Check if we should simulate an error
-        if ($request->has('simulate_error')) {
-            // Simulate a server error for testing
-            Log::info('Simulating server error for delete last message');
-            return redirect()->back()
-                ->with('error', 'Het bericht kon niet worden verwijderd. Probeer het later opnieuw.');
-        }
-
         try {
-            $lastMessage = $conversation->messages()->where('user_id', Auth::id())->latest()->first();
+            $lastMessage = $conversation->messages()
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->first();
+    
             if ($lastMessage) {
                 $lastMessage->delete();
+                return redirect()->route('messages.index', ['conversation_id' => $conversation->id])
+                    ->with('success', 'Laatste bericht succesvol verwijderd!');
             }
-
-            return redirect()->route('dashboard', ['conversation_id' => $conversation->id])
-                ->with('success', 'Laatste bericht succesvol verwijderd!');
+    
+            return redirect()->back()
+                ->with('error', 'Geen berichten gevonden om te verwijderen.');
+    
         } catch (Exception $e) {
             Log::error('Failed to delete last message: ' . $e->getMessage());
             return redirect()->back()
@@ -211,9 +203,12 @@ class MessageController extends Controller
     public function destroy(Conversation $conversation)
     {
         try {
+            // Delete all messages first to avoid foreign key constraints
+            $conversation->messages()->delete();
             $conversation->delete();
-
-            return redirect()->route('messages.index')->with('success', 'Gesprek succesvol verwijderd!');
+    
+            return redirect()->route('messages.index')
+                ->with('success', 'Gesprek succesvol verwijderd!');
         } catch (Exception $e) {
             Log::error('Failed to delete conversation: ' . $e->getMessage());
             return redirect()->back()

@@ -101,12 +101,19 @@ Route::middleware('auth')->group(function () {
     // Messages
     Route::resource('messages', MessageController::class)->only(['index', 'create', 'store', 'update', 'destroy']);
 
+// Delete conversation (should already exist)
+Route::delete('/messages/{conversation}', [MessageController::class, 'destroy'])
+    ->name('messages.destroy');
+
+// Delete last message - NEW ROUTE DEFINITION
+Route::delete('/messages/{conversation}/last-message', [MessageController::class, 'deleteLastMessage'])
+    ->name('messages.deleteLastMessage');
+
     // Custom routes
     Route::post('/conversations/{conversation}/reply', [MessageController::class, 'reply'])->name('messages.reply');
     Route::put('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.markAsRead');
     Route::post('/conversations', [MessageController::class, 'createConversation'])->name('messages.createConversation');
     Route::delete('/conversations/{conversation}/last-message', [MessageController::class, 'deleteLastMessage'])->name('messages.deleteLastMessage');
-    Route::post('/messages/delete-selected', [MessageController::class, 'deleteSelected'])->name('messages.deleteSelected');
 
     // ReisOverzicht 
     Route::get('/reisoverzicht', [ReizenOverzichtController::class, 'index'])->name('reisoverzicht.index');

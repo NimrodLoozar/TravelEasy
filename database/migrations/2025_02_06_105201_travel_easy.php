@@ -159,7 +159,7 @@ return new class extends Migration {
 
         // Conversations table
         Schema::create('conversations', function (Blueprint $table) {
-            $table->id();   
+            $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -167,7 +167,9 @@ return new class extends Migration {
         // Messages table
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('conversation_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('content');
             $table->boolean('is_read')->default(false);
