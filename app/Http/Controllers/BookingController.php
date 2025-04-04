@@ -64,7 +64,7 @@ class BookingController extends Controller
             return redirect()->route('bookings.create')
                 ->with('connection_error', 'Kan boeking niet opslaan. probeer het later opnieuw.');
         }
-        
+
         // Transform the checkbox value
         $input = $request->all();
         $input['is_active'] = $request->has('is_active') ? true : false;
@@ -120,6 +120,12 @@ class BookingController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
+        // Check developer connection
+        if (!$request->has('dev_connection')) {
+            return redirect()->route('bookings.edit', $booking->id)
+                ->with('connection_error', 'Kan boeking niet bijwerken. probeer het later opnieuw.');
+        }
+
         // Transform the checkbox value
         $input = $request->all();
         $input['is_active'] = $request->has('is_active') ? true : false;
@@ -153,8 +159,17 @@ class BookingController extends Controller
     /**
      * Remove the specified booking.
      */
-    public function destroy(Booking $booking)
+    /**
+     * Remove the specified booking.
+     */
+    public function destroy(Request $request, Booking $booking)
     {
+        // Check developer connection
+        if (!$request->has('dev_connection')) {
+            return redirect()->route('bookings.index')
+                ->with('connection_error', 'Kan boeking niet verwijderen. probeer het later opnieuw.');
+        }
+
         $booking->delete();
 
         return redirect()->route('bookings.index')
@@ -165,7 +180,7 @@ class BookingController extends Controller
     {
         $currentYear = now()->year;
         $currentMonth = now()->month;
-        
+
         // Maandelijkse statistieken
         $monthlyStats = collect(range(1, $currentMonth))->mapWithKeys(function ($month) use ($currentYear) {
             $count = Booking::whereYear('created_at', $currentYear)
