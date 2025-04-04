@@ -13,14 +13,17 @@ return new class extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS spCreateReis;
             CREATE PROCEDURE spCreateReis(
+                IN employee_id INT,
                 IN departure_country VARCHAR(255),
                 IN departure_airport VARCHAR(255),
                 IN arrival_country VARCHAR(255),
                 IN arrival_airport VARCHAR(255),
+                IN flight_number VARCHAR(255),
                 IN departure_date DATE,
                 IN departure_time TIME,
                 IN arrival_date DATE,
                 IN arrival_time TIME,
+                IN trip_status VARCHAR(255),
                 IN is_active BOOLEAN,
                 IN note VARCHAR(255)
             )
@@ -35,8 +38,8 @@ return new class extends Migration
 
                 SET @destination_id = LAST_INSERT_ID();
 
-                INSERT INTO trips (departure_id, destination_id, departure_date, departure_time, arrival_date, arrival_time, is_active, note)
-                VALUES (@departure_id, @destination_id, departure_date, departure_time, arrival_date, arrival_time, is_active, note);
+                INSERT INTO trips (employee_id, departure_id, destination_id, flight_number, departure_date, departure_time, arrival_date, arrival_time, trip_status, is_active, note)
+                VALUES (employee_id, @departure_id, @destination_id, flight_number, departure_date, departure_time, arrival_date, arrival_time, trip_status, is_active, note);
             END;
         ');
     }
