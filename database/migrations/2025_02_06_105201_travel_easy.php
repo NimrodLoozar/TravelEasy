@@ -51,7 +51,7 @@ return new class extends Migration {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('role');
             $table->boolean('is_active')->default(true);
             $table->text('note')->nullable();
             $table->timestamps();
@@ -159,7 +159,7 @@ return new class extends Migration {
 
         // Conversations table
         Schema::create('conversations', function (Blueprint $table) {
-            $table->id();   
+            $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -178,6 +178,18 @@ return new class extends Migration {
         });
         // DB::statement('ALTER TABLE messages MODIFY is_read BIT(1) default 0');
 
+        //Offers
+        Schema::create('offers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('trip_id')->constrained('trips')->onDelete('cascade');
+            $table->string('offer_code')->unique();
+            $table->decimal('discount_percentage', 5, 2);
+            $table->date('valid_from');
+            $table->date('valid_until');
+            $table->boolean('is_active')->default(true);
+            $table->text('note')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down()

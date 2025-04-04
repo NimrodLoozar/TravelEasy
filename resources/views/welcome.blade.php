@@ -36,11 +36,11 @@
                             </select>
                         </div>
 
-                        <div class="w-64 mb-6">
+                        {{-- <div class="w-64 mb-6">
                             <x-input-label for="date" :value="__('Wanneer?')" />
                             <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
                                 onfocus="showDatePicker()" />
-                        </div>
+                        </div> --}}
                         {{-- <form action="{{ route('trips.index') }}" method="GET" class="flex space-x-4">
                             <!-- Dropdown voor startdatum & einddatum -->
                             <div class="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md">
