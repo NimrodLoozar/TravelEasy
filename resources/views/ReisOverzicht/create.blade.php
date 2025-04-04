@@ -26,6 +26,19 @@
                             </div>
 
                             <div class="md:col-span-5">
+                                <label for="employee_id">Employee</label>
+                                <select name="employee_id" id="employee_id"
+                                    class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                                    <option value="">Selecteer een medewerker</option>
+                                    @foreach($employees as $employee)
+                                        <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                                            {{ $employee->person->first_name }} {{ $employee->person->last_name }} ({{ $employee->number }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-5">
                                 <label for="departure_country">Departure Country</label>
                                 <input type="text" id="departure_country" name="departure_country"
                                     value="{{ old('departure_country') }}"
@@ -58,6 +71,14 @@
                             </div>
 
                             <div class="md:col-span-5">
+                                <label for="flight_number">Flight Number</label>
+                                <input type="text" id="flight_number" name="flight_number"
+                                    value="{{ old('flight_number') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. KL1234, LH5678, enz." />
+                            </div>
+
+                            <div class="md:col-span-5">
                                 <label for="departure_date">Departure Date</label>
                                 <input type="date" id="departure_date" name="departure_date"
                                     value="{{ old('departure_date') }}"
@@ -83,6 +104,14 @@
                                 <input type="time" id="arrival_time" name="arrival_time"
                                     value="{{ old('arrival_time') }}"
                                     class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full" />
+                            </div>
+
+                            <div class="md:col-span-5">
+                                <label for="trip_status">Trip Status</label>
+                                <input type="text" id="trip_status" name="trip_status"
+                                    value="{{ old('trip_status', 'Scheduled') }}"
+                                    class="mt-1 px-4 py-2 bg-gray-50 dark:bg-gray-700 dark:text-gray-300 rounded w-full"
+                                    placeholder="Bijv. Scheduled, In Progress, Completed, enz." />
                             </div>
 
                             <div class="md:col-span-5">
@@ -113,4 +142,3 @@
         </div>
     </div>
 </x-app-layout>
-

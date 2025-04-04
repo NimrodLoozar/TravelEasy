@@ -17,7 +17,13 @@
                 </div>
             @endif
 
-            <form action="{{ route('bookings.update', $booking->id) }}" method="POST">
+            @if (session('connection_error'))
+                <div class="bg-red-900 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-200 mb-6" role="alert">
+                    <div class="font-bold">{{ session('connection_error') }}</div>
+                </div>
+            @endif
+
+            <form action="{{ route('bookings.update', $booking->id) }}" method="POST" id="bookingForm">
                 @csrf
                 @method('PUT')
 
@@ -120,6 +126,13 @@
                             class="rounded bg-gray-700 border-gray-600" {{ $booking->is_active ? 'checked' : '' }}>
                         <label for="is_active" class="text-gray-300">Actieve boeking</label>
                     </div>
+
+                    <!-- Developer Connection -->
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" name="dev_connection" id="dev_connection"
+                            class="h-5 w-5 bg-gray-700 text-blue-600 rounded" checked>
+                        <label for="dev_connection" class="text-gray-300 font-semibold">Connectie. Alleen voor developers.</label>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex justify-end space-x-3">
@@ -134,4 +147,38 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bookingForm');
+            const devConnection = document.getElementById('dev_connection');
+
+            form.addEventListener('submit', function(e) {
+                if (!devConnection.checked) {
+                    e.preventDefault();
+                    
+                    // Toon direct de foutmelding zonder redirect
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'bg-red-900 border-t-4 border-red-600 rounded-b px-4 py-3 text-red-200 mb-6';
+                    errorDiv.setAttribute('role', 'alert');
+                    
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'font-bold';
+                    errorMsg.textContent = 'Kan boeking niet bijwerken. probeer het later opnieuw.';
+                    
+                    errorDiv.appendChild(errorMsg);
+                    
+                    // Verwijder bestaande foutmeldingen indien aanwezig
+                    const existingErrors = document.querySelectorAll('[role="alert"]');
+                    existingErrors.forEach(el => el.remove());
+                    
+                    // Plaats de foutmelding bovenaan het formulier
+                    form.insertBefore(errorDiv, form.firstChild);
+                    
+                    // Scroll naar boven om de foutmelding te tonen
+                    window.scrollTo(0, 0);
+                }
+            });
+        });
+    </script>
 </x-app-layout>
