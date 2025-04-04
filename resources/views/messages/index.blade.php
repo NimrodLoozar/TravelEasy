@@ -90,17 +90,16 @@
                         <h2 class="text-xl font-bold text-white">
                             Gesprek met {{ $conversation->user->name ?? 'Onbekend' }}
                         </h2>
-                        <div class="flex space-x-2">
-                            <form action="{{ route('messages.destroy', $conversation->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" aQW Q
-                                    class="bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-2 rounded"
-                                    onclick="return confirm('Weet je zeker dat je dit gesprek wilt verwijderen?')">
-                                    Verwijder Gesprek
-                                </button>
-                            </form>
-                        </div>
+                        {{-- Should already be correct --}}
+                        <form action="{{ route('messages.destroy', $conversation) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white text-sm py-1 px-2 rounded"
+                                onclick="return confirm('Weet je zeker dat je dit gesprek wilt verwijderen?')">
+                                Verwijder Gesprek
+                            </button>
+                        </form>
                     </div>
 
                     <div class="bg-gray-700 rounded-lg p-4 h-96 overflow-y-auto mb-4">
@@ -161,11 +160,12 @@
                         </div>
                         <p class="text-xs text-gray-400 mt-1">Max. 25 tekens</p>
                     </form>
-
+                    {{-- In the messages display section --}}
                     @if ($conversation->messages->where('user_id', Auth::id())->isNotEmpty())
                         <div class="flex space-x-2 mt-4">
-                            <form action="{{ route('messages.deleteLastMessage', $conversation->id) }}" method="POST">
+                            <form action="{{ route('messages.deleteLastMessage', $conversation) }}" method="POST">
                                 @csrf
+                                @method('DELETE') {{-- Add method spoofing --}}
                                 <button type="submit"
                                     class="bg-yellow-600 hover:bg-yellow-700 text-white text-sm py-1 px-2 rounded"
                                     onclick="return confirm('Weet je zeker dat je je laatste bericht wilt verwijderen?')">
